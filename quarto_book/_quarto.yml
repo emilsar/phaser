@@ -1,0 +1,34 @@
+project:
+  type: book
+  output-dir: _book
+
+book:
+  title: "Building Games with Phaser"
+  author:
+    - name: "Emil Sargsyan"
+      url: https://www.linkedin.com/in/emilsargsyan/
+  date: today
+
+  chapters:
+    - index.qmd
+    - chapter1.qmd
+
+  sidebar:
+    style: "floating"
+    search: true
+
+  page-navigation: true
+
+format:
+  html:
+    theme:
+      light: cosmo
+      dark: darkly
+    toc: true
+    toc-location: right
+    toc-depth: 3
+    code-copy: true
+    number-sections: true
+    number-depth: 3
+    highlight-style: github
+    css: styles.css

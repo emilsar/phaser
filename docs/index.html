@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Building Games with Phaser — Live Demos</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --border: #2e3147;
+      --accent: #5c9ded;
+      --accent2: #ffd700;
+      --text: #d0d4e8;
+      --muted: #7a7f9a;
+      --sidebar-w: 240px;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Top bar ── */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-shrink: 0;
+    }
+    header h1 { font-size: 1.1rem; font-weight: 700; color: var(--accent); letter-spacing: 0.02em; }
+    header .subtitle { color: var(--muted); font-size: 0.85rem; }
+    header a {
+      margin-left: auto;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.85rem;
+      border: 1px solid var(--accent);
+      padding: 5px 12px;
+      border-radius: 6px;
+      transition: background 0.15s;
+    }
+    header a:hover { background: rgba(92,157,237,0.12); }
+
+    /* ── Layout ── */
+    .layout {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+    }
+
+    /* ── Sidebar ── */
+    aside {
+      width: var(--sidebar-w);
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      overflow-y: auto;
+    }
+    aside h2 {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 16px 16px 8px;
+    }
+    .chapter-btn {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      border-left: 3px solid transparent;
+      padding: 12px 16px;
+      cursor: pointer;
+      color: var(--text);
+      font-size: 0.88rem;
+      line-height: 1.4;
+      transition: background 0.1s, border-color 0.1s;
+    }
+    .chapter-btn:hover { background: rgba(255,255,255,0.04); }
+    .chapter-btn.active {
+      border-left-color: var(--accent);
+      background: rgba(92,157,237,0.08);
+      color: #fff;
+    }
+    .chapter-btn .ch-num {
+      display: block;
+      font-size: 0.7rem;
+      color: var(--accent2);
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+    .chapter-btn .ch-desc {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    /* ── Main content ── */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      overflow-y: auto;
+    }
+
+    /* ── Game section ── */
+    .game-section {
+      background: #040434;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+    .game-wrapper {
+      position: relative;
+      width: 800px;
+      height: 500px;
+    }
+    .game-wrapper iframe {
+      width: 800px;
+      height: 500px;
+      border: none;
+      display: block;
+    }
+    .no-chapter {
+      color: var(--muted);
+      font-size: 0.95rem;
+      text-align: center;
+      padding: 60px 24px;
+    }
+
+    /* ── Source section ── */
+    .source-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    .source-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      padding: 0 16px;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: 10px 14px;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-family: 'Cascadia Code', 'Fira Code', monospace;
+      transition: color 0.1s, border-color 0.1s;
+      margin-bottom: -1px;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    .source-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0;
+    }
+    .source-body pre {
+      margin: 0;
+      padding: 20px 24px;
+      font-size: 0.82rem;
+      line-height: 1.6;
+      min-height: 100%;
+      background: #1a1d27 !important;
+    }
+    .source-body pre code {
+      background: none !important;
+    }
+
+    .placeholder-msg {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 200px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Building Games with Phaser</h1>
+    <div class="subtitle">Live chapter demos — select a chapter to play & explore the code</div>
+  </div>
+  <a href="https://cvmath.club/phaser" target="_blank">Read the Book →</a>
+</header>
+
+<div class="layout">
+  <aside>
+    <h2>Chapters</h2>
+    <div id="chapter-list"></div>
+  </aside>
+
+  <main>
+    <div class="game-section" id="game-section">
+      <div class="no-chapter" id="no-chapter-msg">← Select a chapter to play</div>
+      <div class="game-wrapper" id="game-wrapper" style="display:none">
+        <iframe id="game-frame" src="" title="Phaser game demo" allow="autoplay"></iframe>
+      </div>
+    </div>
+
+    <div class="source-section">
+      <div class="source-tabs" id="source-tabs" style="display:none">
+        <button class="tab-btn" data-file="index.html">index.html</button>
+        <button class="tab-btn" data-file="src/main.js">main.js</button>
+      </div>
+      <div class="source-body" id="source-body">
+        <div class="placeholder-msg">Source files will appear here.</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  // ── Chapter registry — add an entry here for each new chapter ──
+  const CHAPTERS = [
+    {
+      id: '01',
+      title: 'Chapter 1 — Getting Started',
+      desc: 'Phaser setup, canvas, player, platforms, coins',
+      sourceFiles: ['index.html', 'src/main.js', 'src/GameScene.js']
+    }
+    // { id: '02', title: 'Chapter 2 — ...', desc: '...', sourceFiles: [...] }
+  ];
+
+  // ── State ──
+  let activeChapter = null;
+  let activeFile = null;
+  const fileCache = {};
+
+  // ── Build sidebar ──
+  const list = document.getElementById('chapter-list');
+  CHAPTERS.forEach(ch => {
+    const btn = document.createElement('button');
+    btn.className = 'chapter-btn';
+    btn.dataset.id = ch.id;
+    btn.innerHTML = `
+      <span class="ch-num">Chapter ${ch.id}</span>
+      ${ch.title.replace(/^Chapter \d+ — /, '')}
+      <span class="ch-desc">${ch.desc}</span>
+    `;
+    btn.addEventListener('click', () => loadChapter(ch));
+    list.appendChild(btn);
+  });
+
+  async function loadChapter(ch) {
+    if (activeChapter === ch.id) return;
+    activeChapter = ch.id;
+
+    // Sidebar highlight
+    document.querySelectorAll('.chapter-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector(`.chapter-btn[data-id="${ch.id}"]`).classList.add('active');
+
+    // Load game
+    const frame = document.getElementById('game-frame');
+    frame.src = `./chapter${ch.id}/`;
+    document.getElementById('no-chapter-msg').style.display = 'none';
+    document.getElementById('game-wrapper').style.display = 'block';
+
+    // Build source tabs
+    const tabsEl = document.getElementById('source-tabs');
+    tabsEl.style.display = 'flex';
+    tabsEl.innerHTML = '';
+    ch.sourceFiles.forEach((file, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'tab-btn' + (i === 0 ? ' active' : '');
+      btn.dataset.file = file;
+      btn.textContent = file.replace('src/', '');
+      btn.addEventListener('click', () => loadFile(ch, file, btn));
+      tabsEl.appendChild(btn);
+    });
+
+    // Load first file
+    await loadFile(ch, ch.sourceFiles[0], tabsEl.querySelector('.tab-btn'));
+  }
+
+  async function loadFile(ch, file, btn) {
+    activeFile = file;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const cacheKey = `${ch.id}/${file}`;
+    if (!fileCache[cacheKey]) {
+      try {
+        const res = await fetch(`./chapter${ch.id}/source/${file}`);
+        fileCache[cacheKey] = await res.text();
+      } catch {
+        fileCache[cacheKey] = '// Could not load source file.';
+      }
+    }
+
+    const code = fileCache[cacheKey];
+    const lang = file.endsWith('.html') ? 'html' : 'javascript';
+    const body = document.getElementById('source-body');
+    const highlighted = hljs.highlight(code, { language: lang }).value;
+    body.innerHTML = `<pre><code class="hljs language-${lang}">${highlighted}</code></pre>`;
+  }
+</script>
+</body>
+</html>

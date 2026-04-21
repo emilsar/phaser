@@ -1,0 +1,4 @@
+node_modules/
+dist/
+/.quarto/
+**/*.quarto_ipynb

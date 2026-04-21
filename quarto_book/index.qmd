@@ -1,0 +1,20 @@
+# Preface {.unnumbered}
+
+This book walks through building 2D games with [Phaser](https://phaser.io/), a fast and free open-source framework for browser-based games. We use Phaser 4 with Vite as our build tool.
+
+Each chapter builds on the last, starting from project setup and working toward a complete playable game.
+
+## Prerequisites
+
+- Basic familiarity with JavaScript
+- Node.js installed
+- A code editor (VS Code recommended)
+
+## How to Run the Game Locally
+
+```bash
+npm install       # first time only
+npm run dev       # starts dev server at localhost:5174
+```
+
+Open the URL in your browser. Any file you edit and save will be reflected on reload.

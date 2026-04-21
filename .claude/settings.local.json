@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm init *)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(curl -s http://localhost:5173)",
+      "Bash(curl -s http://localhost:5174)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('exports',{}\\), indent=2\\)\\)\")",
+      "Bash(curl -s http://localhost:5174/src/main.js)",
+      "Bash(curl -s http://localhost:5174/src/GameScene.js)",
+      "Read(//c/Users/emils/projects/**)",
+      "Read(//c/Projects/cvmath/**)",
+      "Bash(quarto --version)",
+      "Bash(QUARTO_PYTHON=C:/Python313/python.exe quarto render)",
+      "Bash(sftp bluehost *)",
+      "Bash(quarto render *)",
+      "Bash(QUARTO_PYTHON=C:/Python313/python.exe quarto render --no-clean)",
+      "Bash(echo \"quarto move: $?\")",
+      "Bash(grep -n \"darkly\\\\|quarto-dark\\\\|color-scheme\" C:/Projects/phaser/quarto_book/_book/site_libs/bootstrap/bootstrap-dark*.min.css)",
+      "Bash(npx vite *)",
+      "Bash(git init *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "phaser",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:chapters": "node scripts/build-chapters.js",
+    "build:all": "npm run build:chapters"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "phaser": "^4.0.0"
+  },
+  "devDependencies": {
+    "vite": "^8.0.8"
+  }
+}

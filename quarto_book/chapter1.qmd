@@ -1,0 +1,684 @@
+# Getting Started with Phaser
+
+![The running game](images/chapter1/Game_Screen.png)
+
+---
+
+## The Phaser Library
+
+### What Phaser Is
+
+Phaser is an open-source HTML5 game framework for building 2D games that run in the browser. It handles everything a game needs below the level of your own logic: rendering, physics, input, audio, asset loading, animation, cameras, tilemaps, and the game loop itself. You write the game rules; Phaser handles the machinery.
+
+Phaser renders to an HTML `<canvas>` element using either **WebGL** (GPU-accelerated, default when available) or **Canvas 2D** (CPU-based fallback). On modern hardware, WebGL enables thousands of sprites at 60 fps with effects like lighting, shaders, and post-processing that would be impossible in Canvas 2D.
+
+### What Kinds of Games You Can Build
+
+Phaser is a general-purpose 2D game framework. It has been used to build:
+
+| Genre | Examples |
+|-------|---------|
+| **Platformers** | Side-scrolling jumpers, Metroidvanias |
+| **Top-down games** | RPGs, twin-stick shooters, Zelda-style adventures |
+| **Puzzle games** | Match-3, block puzzles, physics puzzlers |
+| **Shoot-em-ups** | Vertical and horizontal bullet-hell games |
+| **Idle / clicker games** | Resource management, incremental games |
+| **Card games** | Turn-based games with drag-and-drop mechanics |
+| **Tilemapped worlds** | Large scrolling maps built from reusable tile grids |
+| **Visual novels** | Dialogue trees, cutscenes, branching narratives |
+
+What Phaser is *not* suited for: 3D games (use Three.js or Babylon.js), very large MMOs, or applications that are more app than game. It is purpose-built for 2D interactive experiences delivered in the browser.
+
+### Phaser's Major Subsystems
+
+Phaser is organized into subsystems — each one responsible for a different aspect of the game. You access them through the scene as `this.<system>`. Here are the ones most relevant to a platformer:
+
+#### The Scene System
+
+A **Scene** is the fundamental unit of organization in Phaser. Every screen in your game — the title screen, the game level, the pause menu, the game-over screen — is a separate scene.
+
+Each scene has three lifecycle methods you override:
+
+```javascript
+preload()  // load assets (images, audio, tilemaps) before the scene runs
+create()   // set up game objects once when the scene starts
+update()   // called every frame (~60 times/second) — game logic goes here
+```
+
+Our game currently has one scene (`GameScene`). In a larger game you might have:
+
+```
+BootScene      → loads a loading bar graphic
+PreloadScene   → loads all game assets while showing the loading bar
+MenuScene      → title screen with Play button
+GameScene      → the actual level
+PauseScene     → overlay rendered on top of GameScene
+GameOverScene  → shown when the player dies
+```
+
+Scenes can run simultaneously (e.g. a HUD scene layered over the game scene), be paused, resumed, put to sleep, or shut down entirely. The scene manager (`this.scene`) controls all of this.
+
+#### Physics — Arcade
+
+`this.physics` is the arcade physics system. It gives game objects a **body** — a rectangle or circle that participates in the physics simulation each frame.
+
+There are two kinds of physics bodies:
+
+- **Dynamic** — affected by gravity, velocity, and collisions. The player is dynamic.
+- **Static** — fixed in place, immovable. Platforms and the ground are static.
+
+Key arcade physics concepts used in the platformer:
+
+```javascript
+// Create a dynamic physics sprite
+this.player = this.physics.add.sprite(x, y, 'key');
+
+// Create a static group (platforms)
+this.platforms = this.physics.add.staticGroup();
+
+// Prevent the player from leaving the canvas
+this.player.setCollideWorldBounds(true);
+
+// Make player land on platforms
+this.physics.add.collider(this.player, this.platforms);
+
+// Detect when player touches a coin (no solid collision — just detection)
+this.physics.add.overlap(this.player, this.coins, callback);
+
+// Read velocity and blocked state in update()
+this.player.body.setVelocityX(-220);
+this.player.body.setVelocityY(-550);  // jump
+this.player.body.blocked.down;        // true when standing on something
+```
+
+The difference between **collider** and **overlap** is important:
+
+- `collider` — objects physically push each other apart (player lands on a platform)
+- `overlap` — detects contact without any physical response (player touches a coin)
+
+#### Game Objects
+
+Everything visible in the scene is a **game object**. The main types:
+
+| Type | Created via | Use case |
+|------|-------------|----------|
+| `Sprite` | `this.physics.add.sprite()` | Animated characters, enemies |
+| `Image` | `this.physics.add.staticImage()` | Non-animated objects (ground) |
+| `Text` | `this.add.text()` | Score display, labels, UI |
+| `Graphics` | `this.make.graphics()` | Drawing shapes procedurally |
+| `Group` | `this.physics.add.staticGroup()` | Managing collections of objects |
+| `TilemapLayer` | `map.createLayer()` | Tile-based level geometry |
+
+In our game, all textures are generated procedurally via `this.make.graphics()` so no image files are needed. This is the `genRect()` and `genCircle()` helper approach in `GameScene.js`.
+
+#### Input
+
+`this.input` manages all input devices. For a platformer, keyboard input is the main concern:
+
+```javascript
+// Arrow keys + Space (built-in shortcut)
+this.cursors = this.input.keyboard.createCursorKeys();
+
+// Custom keys (WASD)
+this.wasd = this.input.keyboard.addKeys({
+  left:  Phaser.Input.Keyboard.KeyCodes.A,
+  right: Phaser.Input.Keyboard.KeyCodes.D,
+  jump:  Phaser.Input.Keyboard.KeyCodes.W
+});
+```
+
+Two ways to read a key:
+
+- **`key.isDown`** — `true` on every frame the key is held. Use for continuous actions like moving left/right.
+- **`Phaser.Input.Keyboard.JustDown(key)`** — `true` only on the single frame the key is first pressed. Use for one-shot actions like jumping (prevents holding the jump key from triggering multiple jumps).
+
+#### The Camera
+
+`this.cameras.main` is the default camera. For a small fixed-screen game like ours, the camera never moves. But in a scrolling platformer, you bind it to follow the player:
+
+```javascript
+this.cameras.main.startFollow(this.player);
+this.cameras.main.setBounds(0, 0, worldWidth, worldHeight);
+```
+
+The camera crops and offsets what is drawn each frame, allowing a world much larger than the canvas.
+
+#### Asset Loading
+
+`preload()` is where you load external assets before the scene runs. Phaser queues all load calls and shows a built-in loading bar, then fires `create()` only after everything is ready:
+
+```javascript
+preload() {
+  this.load.image('sky', 'assets/sky.png');
+  this.load.spritesheet('player', 'assets/dude.png', {
+    frameWidth: 32, frameHeight: 48
+  });
+  this.load.audio('jump', 'assets/jump.mp3');
+  this.load.tilemapTiledJSON('map', 'assets/level1.json');
+}
+```
+
+Our current game skips `preload()` entirely because all textures are generated programmatically. This is useful for prototyping — no asset pipeline needed.
+
+#### Animations
+
+`this.anims` manages sprite animations. An animation is a sequence of frames from a spritesheet played at a given frame rate:
+
+```javascript
+// Define once in create()
+this.anims.create({
+  key: 'run',
+  frames: this.anims.generateFrameNumbers('player', { start: 0, end: 3 }),
+  frameRate: 12,
+  repeat: -1       // -1 = loop forever
+});
+
+// Play it on a sprite
+this.player.play('run');
+this.player.play('idle');
+```
+
+Our current game has no animations because the player is a plain rectangle. Adding a spritesheet and animations is the natural next step.
+
+#### Audio
+
+`this.sound` plays audio files loaded in `preload()`:
+
+```javascript
+// One-shot sound effect
+this.sound.play('jump');
+
+// Looping background music
+this.bgMusic = this.sound.add('music', { loop: true, volume: 0.5 });
+this.bgMusic.play();
+```
+
+### How Phaser Is Structured as a Package
+
+When you run `npm install`, Phaser is downloaded into `node_modules/phaser/`. The library is one large bundle that includes all its subsystems. You import it in `main.js` as:
+
+```javascript
+import * as Phaser from 'phaser';
+```
+
+Vite then performs **tree-shaking** at build time — it analyzes which parts of Phaser your code actually uses and strips out the rest. This keeps the final `dist/` bundle smaller than the full library.
+
+The `^4.0.0` version in `package.json` means Phaser 4, which was released in 2024. Phaser 4 is a significant rewrite of Phaser 3, with a new renderer architecture and updated APIs. Most online tutorials and documentation target Phaser 3; be aware of version differences when reading external resources.
+
+---
+
+## The Local Development Workflow
+
+Because we use Vite's dev server (`npm run dev`), there is no build step during development:
+
+1. Edit any file in VS Code and save
+2. Reload the browser tab
+3. Changes are live immediately
+
+Vite serves your files directly from disk in dev mode — there is no `dist/` folder until you run `npm run build`. The `dist/` folder only exists for deployment.
+
+::: {.callout-tip}
+## `npm run dev` vs `npm run build`
+
+| Command | What it does | When to use |
+|---------|-------------|-------------|
+| `npm run dev` | Starts a local dev server (e.g. `localhost:5174`). No output folder. Hot-reload friendly. | During development |
+| `npm run build` | Bundles and minifies everything into `dist/`. No server. | Before deploying |
+:::
+
+---
+
+## Project Structure and Bootstrapping Phaser
+
+Every Phaser project built with Vite has the same three core files. Understanding what each one does — and how they connect — is the foundation for everything that follows.
+
+```
+phaser/
+├── index.html      ← shell page loaded by the browser
+├── src/
+│   ├── main.js     ← configures and starts the Phaser engine
+│   └── GameScene.js ← all game logic lives here
+└── package.json    ← Vite + Phaser dependencies
+```
+
+### index.html — The Shell
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Phaser Starter</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #2e251a; display: flex; justify-content: center;
+           align-items: center; height: 100vh; }
+  </style>
+</head>
+<body>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
+```
+
+`index.html` is nearly empty by design. Its only real job is this one line:
+
+```html
+<script type="module" src="/src/main.js"></script>
+```
+
+This tells the browser to load `main.js` as a JavaScript module, which kicks off the entire game. The CSS centers the canvas and sets the page background color so the game sits flush in the middle of the screen.
+
+::: {.callout-note}
+`type="module"` is required here because `main.js` uses ES module `import` syntax. Without it, the browser would throw a syntax error on the `import` statement.
+:::
+
+### main.js — Configuring and Starting Phaser
+
+```javascript
+import * as Phaser from 'phaser';
+import GameScene from './GameScene.js';
+
+const config = {
+  type: Phaser.AUTO,
+  width: 800,
+  height: 500,
+  backgroundColor: '#2d2d44',
+  physics: {
+    default: 'arcade',
+    arcade: { gravity: { y: 600 }, debug: false }
+  },
+  scene: [GameScene]
+};
+
+new Phaser.Game(config);
+```
+
+`config` is a plain JavaScript object that describes how the game should be set up. It is passed directly to `new Phaser.Game()`.
+
+| Key | Value | What it does |
+|-----|-------|--------------|
+| `type` | `Phaser.AUTO` | Let Phaser choose WebGL or Canvas based on what the browser supports. You can force one with `Phaser.WEBGL` or `Phaser.CANVAS`. |
+| `width` / `height` | `800` / `500` | Canvas size in pixels. |
+| `backgroundColor` | `'#2d2d44'` | Color painted behind all game objects. |
+| `physics.default` | `'arcade'` | Which physics engine to use. |
+| `physics.arcade.gravity.y` | `600` | Downward gravitational pull in units per second². Higher = heavier feel. |
+| `physics.arcade.debug` | `false` | When `true`, draws collision boxes over every physics body. Useful during development. |
+| `scene` | `[GameScene]` | The list of scenes to register. The first scene starts automatically. |
+
+Phaser ships with two physics engines:
+
+- **`arcade`** — Simple, fast, axis-aligned rectangles and circles. Ideal for most 2D games. Does not support rotation-based collisions.
+- **`matter`** — Full rigid-body physics via Matter.js. Supports rotation, complex polygon shapes, joints, and constraints. More realistic but computationally heavier.
+
+**`new Phaser.Game(config)`** is what actually starts the game. When called, Phaser:
+
+1. Creates the `<canvas>` element and injects it into the DOM
+2. Initializes the renderer (WebGL or Canvas per `type`)
+3. Sets up the physics engine
+4. Starts the game loop (the update/render cycle that runs every frame)
+5. Launches the first scene in the `scene` array — in this case, `GameScene`
+
+Without it, `config` is just an inert object in memory.
+
+### package.json — Project Manifest
+
+```json
+{
+  "name": "phaser",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "phaser": "^4.0.0"
+  },
+  "devDependencies": {
+    "vite": "^8.0.8"
+  }
+}
+```
+
+`package.json` is the manifest file that Node.js and npm use to understand your project. Every JavaScript project that uses npm has one.
+
+**Metadata fields:**
+
+| Field | Value | Purpose |
+|-------|-------|---------|
+| `name` | `"phaser"` | The project name. Matters if you publish to npm; otherwise just a label. |
+| `version` | `"1.0.0"` | Semantic version of your project (`major.minor.patch`). |
+| `description` | `""` | Short description — empty here, but useful for published packages. |
+| `main` | `"index.js"` | The entry point if this package were imported by another project. Not used directly by Vite, but kept for compatibility. |
+| `keywords` | `[]` | Tags for npm search. Not relevant for a private game project. |
+| `author` | `""` | Your name or organization. |
+| `license` | `"ISC"` | The open-source license. ISC is a permissive license similar to MIT. |
+
+**`scripts`** are shortcuts you run with `npm run <name>`:
+
+- **`npm run dev`** — runs `vite`, starting the local dev server
+- **`npm run build`** — runs `vite build`, bundling the project into `dist/`
+
+**`type: "commonjs"`** tells Node.js which module system to use for `.js` files. This governs the build process; the `type="module"` attribute in `index.html` is a separate, browser-side setting. Vite bridges the two automatically.
+
+**`dependencies` vs `devDependencies`:**
+
+- **`dependencies`** — packages your game needs at runtime. Phaser belongs here because it runs in the browser alongside your game code.
+- **`devDependencies`** — packages only needed during development. Vite belongs here because once the game is built, the browser never sees it.
+
+**Version ranges:** The caret (`^`) in `"phaser": "^4.0.0"` means accept any version `>=4.0.0` and `<5.0.0`. When you run `npm install`, the exact versions installed are written into `package-lock.json`, which locks the environment for everyone on the project.
+
+### How the Three Files Connect
+
+```
+Browser loads index.html
+    └── <script type="module"> loads main.js
+            ├── imports Phaser from node_modules
+            ├── imports GameScene from ./GameScene.js
+            ├── defines config {}
+            └── new Phaser.Game(config)
+                    └── starts the game loop → runs GameScene
+```
+
+`index.html` delegates everything to `main.js`. `main.js` delegates everything to `new Phaser.Game()`. From that point on, Phaser takes over and calls into your scene's `create()` and `update()` methods on every frame.
+
+---
+
+## GameScene.js — The Game Logic
+
+![GameScene mind map](images/chapter1/MindMap.png)
+
+`GameScene.js` is where the entire game lives. It is a single class that extends `Phaser.Scene` and implements three things: a constructor that registers the scene, a `create()` method that builds the world, and an `update()` method that runs every frame. Two small helper methods handle procedural texture generation.
+
+Here is the full file, followed by a walkthrough of each block:
+
+```javascript
+import * as Phaser from 'phaser';
+
+export default class GameScene extends Phaser.Scene {
+  constructor() {
+    super({ key: 'GameScene' });
+  }
+
+  create() {
+    const W = this.scale.width;
+    const H = this.scale.height;
+
+    this.genRect('ground',   W,   32, 0x4caf50);
+    this.genRect('platform', 160, 18, 0x8b6914);
+    this.genRect('plat_sm',  120, 18, 0x8b6914);
+    this.genRect('player',   32,  48, 0x5c9ded);
+    this.genCircle('coin',   10,      0xffd700);
+
+    const ground = this.physics.add.staticImage(W / 2, H - 16, 'ground');
+
+    this.platforms = this.physics.add.staticGroup();
+    this.platforms.create(200, 350, 'platform');
+    this.platforms.create(500, 250, 'platform');
+    this.platforms.create(350, 160, 'plat_sm');
+
+    this.player = this.physics.add.sprite(100, H - 80, 'player');
+    this.player.setCollideWorldBounds(true);
+
+    this.physics.add.collider(this.player, ground);
+    this.physics.add.collider(this.player, this.platforms);
+
+    this.coins = this.physics.add.staticGroup();
+    this.coins.create(150, H - 60, 'coin');
+    this.coins.create(480, H - 60, 'coin');
+    this.coins.create(200, 320,    'coin');
+    this.coins.create(500, 220,    'coin');
+    this.coins.create(350, 130,    'coin');
+
+    this.physics.add.overlap(this.player, this.coins, (_player, coin) => {
+      coin.destroy();
+      this.score++;
+      this.scoreText.setText('Score: ' + this.score);
+    });
+
+    this.score = 0;
+    this.scoreText = this.add.text(16, 16, 'Score: 0', {
+      fontSize: '20px', color: '#ffffff', fontFamily: 'monospace'
+    }).setDepth(1);
+
+    this.add.text(W / 2, 16, '← → to move   ↑ or Space to jump', {
+      fontSize: '13px', color: '#aaaacc', fontFamily: 'monospace'
+    }).setOrigin(0.5, 0).setDepth(1);
+
+    this.cursors = this.input.keyboard.createCursorKeys();
+    this.wasd = this.input.keyboard.addKeys({
+      left:  Phaser.Input.Keyboard.KeyCodes.A,
+      right: Phaser.Input.Keyboard.KeyCodes.D,
+      jump:  Phaser.Input.Keyboard.KeyCodes.W
+    });
+  }
+
+  update() {
+    const body    = this.player.body;
+    const onFloor = body.blocked.down;
+
+    const left  = this.cursors.left.isDown  || this.wasd.left.isDown;
+    const right = this.cursors.right.isDown || this.wasd.right.isDown;
+    const jump  = Phaser.Input.Keyboard.JustDown(this.cursors.up)
+               || Phaser.Input.Keyboard.JustDown(this.cursors.space)
+               || Phaser.Input.Keyboard.JustDown(this.wasd.jump);
+
+    if (left)       body.setVelocityX(-220);
+    else if (right) body.setVelocityX(220);
+    else            body.setVelocityX(0);
+
+    if (jump && onFloor) body.setVelocityY(-550);
+  }
+
+  genRect(key, w, h, color) {
+    const g = this.make.graphics({ add: false });
+    g.fillStyle(color);
+    g.fillRect(0, 0, w, h);
+    g.generateTexture(key, w, h);
+    g.destroy();
+  }
+
+  genCircle(key, radius, color) {
+    const size = radius * 2;
+    const g = this.make.graphics({ add: false });
+    g.fillStyle(color);
+    g.fillCircle(radius, radius, radius);
+    g.generateTexture(key, size, size);
+    g.destroy();
+  }
+}
+```
+
+![GameScene infographic](images/chapter1/GameScene_Infographic.png)
+
+### Class declaration and constructor
+
+```javascript
+export default class GameScene extends Phaser.Scene {
+  constructor() {
+    super({ key: 'GameScene' });
+  }
+```
+
+`GameScene` extends `Phaser.Scene`, which means it inherits all of Phaser's scene machinery — `this.physics`, `this.add`, `this.input`, etc. The constructor calls `super()` with a config object containing `key: 'GameScene'`. This key is how Phaser identifies the scene internally — it is the string you would use to start, stop, or switch to this scene from anywhere in your code (e.g. `this.scene.start('GameScene')`).
+
+### Canvas dimensions
+
+```javascript
+const W = this.scale.width;
+const H = this.scale.height;
+```
+
+`this.scale` is Phaser's Scale Manager. `.width` and `.height` return the current canvas dimensions (800 and 500, as set in `main.js`). Storing them in `W` and `H` avoids repeating `this.scale.width` throughout `create()` and makes it easy to position objects relative to the canvas size rather than hardcoding pixel values.
+
+### Generating textures procedurally
+
+```javascript
+this.genRect('ground',   W,   32, 0x4caf50);
+this.genRect('platform', 160, 18, 0x8b6914);
+this.genRect('plat_sm',  120, 18, 0x8b6914);
+this.genRect('player',   32,  48, 0x5c9ded);
+this.genCircle('coin',   10,      0xffd700);
+```
+
+These five calls create all the visual assets the game needs before any game object is placed. Each call draws a colored shape to an off-screen `Graphics` object, then calls `generateTexture()` to bake it into a named texture in Phaser's internal texture cache. Once registered, a texture key like `'player'` can be used anywhere — by sprites, images, or groups — without loading any external file.
+
+The colors are hexadecimal values: `0x4caf50` is a medium green (ground), `0x8b6914` is brown (platforms), `0x5c9ded` is blue (player), `0xffd700` is gold (coin).
+
+### Ground
+
+```javascript
+const ground = this.physics.add.staticImage(W / 2, H - 16, 'ground');
+```
+
+`staticImage` creates a physics-enabled image with a **static body** — it has a collider but never moves. The position `(W / 2, H - 16)` places it centered horizontally, 16 pixels from the bottom edge. Since the ground texture is 32 pixels tall and Phaser positions objects by their center, this puts the bottom edge of the ground exactly at the bottom of the canvas.
+
+### Platforms
+
+```javascript
+this.platforms = this.physics.add.staticGroup();
+this.platforms.create(200, 350, 'platform');
+this.platforms.create(500, 250, 'platform');
+this.platforms.create(350, 160, 'plat_sm');
+```
+
+A `staticGroup` is a container for static physics objects that are managed together. Adding a collider between the player and the group automatically checks against every member of the group — you don't need a separate collider for each platform. The three platforms form a staircase pattern: left at y=350, middle at y=250, top at y=160.
+
+### Player
+
+```javascript
+this.player = this.physics.add.sprite(100, H - 80, 'player');
+this.player.setCollideWorldBounds(true);
+```
+
+`add.sprite` creates a **dynamic** physics sprite — one whose body is affected by gravity and velocity each frame. The player starts near the bottom-left of the canvas. `setCollideWorldBounds(true)` prevents the player from leaving the canvas edges; without it the player could walk off the sides or fall through the floor of the world.
+
+### Colliders
+
+```javascript
+this.physics.add.collider(this.player, ground);
+this.physics.add.collider(this.player, this.platforms);
+```
+
+These two lines wire up solid physics collisions. Each frame, Phaser checks whether the player's body overlaps with the ground or any platform. If it does, it resolves the overlap by pushing the player back to the surface. This is what makes the player land and stand instead of passing through objects.
+
+### Coins and overlap
+
+```javascript
+this.coins = this.physics.add.staticGroup();
+this.coins.create(150, H - 60, 'coin');
+this.coins.create(480, H - 60, 'coin');
+this.coins.create(200, 320,    'coin');
+this.coins.create(500, 220,    'coin');
+this.coins.create(350, 130,    'coin');
+
+this.physics.add.overlap(this.player, this.coins, (_player, coin) => {
+  coin.destroy();
+  this.score++;
+  this.scoreText.setText('Score: ' + this.score);
+});
+```
+
+Five coins are placed: two near the ground and one above each platform. Unlike platforms, coins use `overlap` instead of `collider`. The player passes through coins rather than landing on them. When an overlap is detected, the callback fires — the coin is destroyed (removed from the scene), the score counter increments, and the score text is updated. The callback receives two arguments: the player and the specific coin that was touched. The player argument is prefixed with `_` to signal it is intentionally unused.
+
+### Score text
+
+```javascript
+this.score = 0;
+this.scoreText = this.add.text(16, 16, 'Score: 0', {
+  fontSize: '20px', color: '#ffffff', fontFamily: 'monospace'
+}).setDepth(1);
+```
+
+`this.add.text` places a text object at pixel position `(16, 16)` — top-left corner. The style object controls appearance. `setDepth(1)` ensures the text renders on top of all other game objects (which default to depth 0). `this.score` is a plain JavaScript number stored on the scene instance so the overlap callback can access and increment it.
+
+### Hint text
+
+```javascript
+this.add.text(W / 2, 16, '← → to move   ↑ or Space to jump', {
+  fontSize: '13px', color: '#aaaacc', fontFamily: 'monospace'
+}).setOrigin(0.5, 0).setDepth(1);
+```
+
+This is a static label — it is never updated, so there is no need to save a reference to it. `setOrigin(0.5, 0)` shifts the text's anchor point to its horizontal center, top edge. Combined with `x = W / 2`, this centers the text at the top of the screen. The default origin is `(0, 0)` (top-left corner), so without `setOrigin`, the text would start at the center and extend to the right.
+
+### Input setup
+
+```javascript
+this.cursors = this.input.keyboard.createCursorKeys();
+this.wasd = this.input.keyboard.addKeys({
+  left:  Phaser.Input.Keyboard.KeyCodes.A,
+  right: Phaser.Input.Keyboard.KeyCodes.D,
+  jump:  Phaser.Input.Keyboard.KeyCodes.W
+});
+```
+
+`createCursorKeys()` returns a pre-built object with keys for the four arrow keys plus Space and Shift. `addKeys()` maps arbitrary keys to named properties on a new object — here A, D, and W are mapped to `left`, `right`, and `jump`. Both objects are stored on the scene so `update()` can read them every frame. Setting up input in `create()` (not `update()`) is correct — you register the key bindings once, then poll their state repeatedly.
+
+### update() — Reading input state
+
+```javascript
+const body    = this.player.body;
+const onFloor = body.blocked.down;
+
+const left  = this.cursors.left.isDown  || this.wasd.left.isDown;
+const right = this.cursors.right.isDown || this.wasd.right.isDown;
+const jump  = Phaser.Input.Keyboard.JustDown(this.cursors.up)
+           || Phaser.Input.Keyboard.JustDown(this.cursors.space)
+           || Phaser.Input.Keyboard.JustDown(this.wasd.jump);
+```
+
+`update()` runs every frame. The first thing it does is read the current input state. `body.blocked.down` is `true` when the player's physics body is resting on a surface — this is used to prevent jumping in mid-air.
+
+`isDown` is `true` on every frame a key is held. `JustDown` is `true` only on the single frame the key transitions from up to down. Using `JustDown` for jumping is essential: without it, holding the jump key would apply upward velocity on every frame for as long as the key is held, launching the player off the screen.
+
+### update() — Movement and jumping
+
+```javascript
+if (left)       body.setVelocityX(-220);
+else if (right) body.setVelocityX(220);
+else            body.setVelocityX(0);
+
+if (jump && onFloor) body.setVelocityY(-550);
+```
+
+Movement is controlled by setting velocity directly each frame. This is the simplest possible movement model — there is no acceleration or deceleration. When no key is pressed, velocity is explicitly zeroed; without this the player would slide indefinitely since arcade physics has no built-in friction.
+
+The jump condition requires both a `JustDown` event AND `onFloor` being true. Setting `velocityY` to `-550` fires the player upward (negative Y is up in Phaser's coordinate system). Gravity defined in `main.js` (`gravity.y: 600`) then pulls the player back down over subsequent frames.
+
+### Helper methods — genRect and genCircle
+
+```javascript
+genRect(key, w, h, color) {
+  const g = this.make.graphics({ add: false });
+  g.fillStyle(color);
+  g.fillRect(0, 0, w, h);
+  g.generateTexture(key, w, h);
+  g.destroy();
+}
+
+genCircle(key, radius, color) {
+  const size = radius * 2;
+  const g = this.make.graphics({ add: false });
+  g.fillStyle(color);
+  g.fillCircle(radius, radius, radius);
+  g.generateTexture(key, size, size);
+  g.destroy();
+}
+```
+
+Both helpers follow the same pattern:
+
+1. `this.make.graphics({ add: false })` — creates a `Graphics` object without adding it to the scene's display list. It exists only in memory.
+2. `fillStyle(color)` — sets the fill color for subsequent draw calls.
+3. `fillRect` / `fillCircle` — draws the shape at position `(0, 0)` within the graphics object's local space.
+4. `generateTexture(key, w, h)` — rasterizes the graphics into a texture and registers it in Phaser's texture cache under the given key.
+5. `g.destroy()` — frees the temporary `Graphics` object from memory. The texture remains in the cache and is available for the rest of the game.
+
+`genCircle` draws the circle at `(radius, radius)` because `fillCircle` takes the center point as its first two arguments. With a canvas of size `radius * 2`, this places the circle exactly centered in the texture with no clipping.
