@@ -35,3 +35,14 @@ for (const ch of chapters) {
 }
 
 console.log('\nAll chapters built.');
+
+// ── Build demo (interactive parameter-tuning version) ──────────────────────
+const demoRoot = path.join(root, 'demo');
+const demoOut  = path.join(root, 'docs', 'demo');
+
+console.log('\nBuilding demo...');
+execSync(
+  `npx vite build "${demoRoot}" --base "/phaser/demo/" --outDir "${demoOut}" --emptyOutDir`,
+  { stdio: 'inherit', cwd: root }
+);
+console.log('Demo built.');

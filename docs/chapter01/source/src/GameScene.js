@@ -38,9 +38,9 @@ export default class GameScene extends Phaser.Scene {
     this.coins = this.physics.add.staticGroup();
     this.coins.create(150,  H - 60, 'coin');
     this.coins.create(480,  H - 60, 'coin');
-    this.coins.create(200,  320,    'coin');
-    this.coins.create(500,  220,    'coin');
-    this.coins.create(350,  130,    'coin');
+    this.coins.create(200,  320,    'coin');  // above left platform
+    this.coins.create(500,  220,    'coin');  // above middle platform
+    this.coins.create(350,  130,    'coin');  // above top platform
 
     this.physics.add.overlap(this.player, this.coins, (_player, coin) => {
       coin.destroy();
@@ -70,16 +70,6 @@ export default class GameScene extends Phaser.Scene {
       right: Phaser.Input.Keyboard.KeyCodes.D,
       jump:  Phaser.Input.Keyboard.KeyCodes.W
     });
-
-    // --- tunable parameters (adjustable via postMessage from the book page) ---
-    this.jumpVelocity = 550;
-    this.moveSpeed    = 220;
-    this.playerW      = 32;
-    this.playerH      = 48;
-    this.coinRadius   = 10;
-
-    this._boundOnParam = this._onParam.bind(this);
-    window.addEventListener('message', this._boundOnParam);
   }
 
   // ── update ────────────────────────────────────────────────────────────────
@@ -93,40 +83,11 @@ export default class GameScene extends Phaser.Scene {
                || Phaser.Input.Keyboard.JustDown(this.cursors.space)
                || Phaser.Input.Keyboard.JustDown(this.wasd.jump);
 
-    if (left)       body.setVelocityX(-this.moveSpeed);
-    else if (right) body.setVelocityX(this.moveSpeed);
+    if (left)       body.setVelocityX(-220);
+    else if (right) body.setVelocityX(220);
     else            body.setVelocityX(0);
 
-    if (jump && onFloor) body.setVelocityY(-this.jumpVelocity);
-  }
-
-  // ── parameter handler (called by postMessage from the book page) ──────────
-  _onParam({ data }) {
-    const { param, value } = data;
-    if (param === 'gravity') {
-      this.physics.world.gravity.y = value;
-    } else if (param === 'jumpVelocity') {
-      this.jumpVelocity = value;
-    } else if (param === 'moveSpeed') {
-      this.moveSpeed = value;
-    } else if (param === 'playerW' || param === 'playerH') {
-      if (param === 'playerW') this.playerW = value;
-      else this.playerH = value;
-      this.player.setDisplaySize(this.playerW, this.playerH);
-      this.player.body.setSize(this.playerW, this.playerH);
-    } else if (param === 'coinRadius') {
-      this.coinRadius = value;
-      const d = value * 2;
-      this.coins.getChildren().forEach(coin => {
-        coin.setDisplaySize(d, d);
-        coin.refreshBody();
-      });
-    }
-  }
-
-  // ── shutdown — remove listener to prevent duplicates on scene restart ─────
-  shutdown() {
-    window.removeEventListener('message', this._boundOnParam);
+    if (jump && onFloor) body.setVelocityY(-550);
   }
 
   // ── helpers ───────────────────────────────────────────────────────────────
