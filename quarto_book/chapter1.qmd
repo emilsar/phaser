@@ -218,7 +218,7 @@ Because we use Vite's dev server (`npm run dev`), there is no build step during 
 Vite serves your files directly from disk in dev mode — there is no `dist/` folder until you run `npm run build`. The `dist/` folder only exists for deployment.
 
 ::: {.callout-tip}
-## `npm run dev` vs `npm run build`
+## npm run dev vs npm run build
 
 | Command | What it does | When to use |
 |---------|-------------|-------------|
@@ -497,6 +497,125 @@ export default class GameScene extends Phaser.Scene {
 
 ![GameScene infographic](images/chapter1/GameScene_Infographic.png)
 
+### Play it
+
+Try the game before reading the walkthrough. The sliders below are wired directly to the variables in the source code — move one and watch the game respond instantly.
+
+```{=html}
+<div id="ch1-widget" style="overflow-x:auto; margin: 1rem 0 2rem;">
+
+  <!-- Game iframe -->
+  <iframe
+    id="ch1-frame"
+    src="https://emilsar.github.io/phaser/demo/"
+    width="800" height="520"
+    style="border:none; display:block;"
+    title="Chapter 1 — playable game demo"
+    allow="autoplay">
+  </iframe>
+
+  <!-- Parameter panel -->
+  <div id="ch1-panel" style="
+    width: 800px;
+    margin-top: 2px;
+    padding: 14px 20px 16px;
+    background: var(--bs-tertiary-bg, #f8f9fa);
+    border: 1px solid var(--bs-border-color, #dee2e6);
+    border-top: none;
+    font-family: 'Cascadia Code', 'Fira Code', 'Courier New', monospace;
+    font-size: 0.82rem;
+  ">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+      <span style="font-size:0.75rem; opacity:0.6; font-family:sans-serif;">
+        Live parameters — labels match variable names in the source code
+      </span>
+      <button id="ch1-reset-all" style="
+        font-size:0.75rem; font-family:sans-serif;
+        padding:3px 10px; cursor:pointer;
+        background:none;
+        border:1px solid var(--bs-border-color, #aaa);
+        color:var(--bs-body-color, #222);
+        border-radius:4px;
+      ">Reset all</button>
+    </div>
+
+    <div id="ch1-sliders"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const PARAMS = [
+    { param: 'gravity',      label: 'gravity.y',      min:   0, max: 2000, step:  10, def: 600 },
+    { param: 'jumpVelocity', label: 'jumpVelocity',   min: 100, max: 1200, step:  10, def: 550 },
+    { param: 'moveSpeed',    label: 'moveSpeed',      min:  50, max:  600, step:  10, def: 220 },
+    { param: 'playerW',      label: 'playerW',        min:  10, max:  100, step:   2, def:  32 },
+    { param: 'playerH',      label: 'playerH',        min:  10, max:  120, step:   2, def:  48 },
+    { param: 'coinRadius',   label: 'coinRadius',     min:   4, max:   40, step:   1, def:  10 },
+  ];
+
+  const frame  = document.getElementById('ch1-frame');
+  const container = document.getElementById('ch1-sliders');
+
+  function send(param, value) {
+    frame.contentWindow.postMessage({ param, value }, '*');
+  }
+
+  const inputs = {};
+
+  PARAMS.forEach(p => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:grid; grid-template-columns:130px 1fr 48px 28px; align-items:center; gap:10px; margin-bottom:7px;';
+
+    const lbl = document.createElement('span');
+    lbl.textContent = p.label;
+    lbl.style.cssText = 'color:var(--bs-link-color, #0d6efd);';
+
+    const slider = document.createElement('input');
+    slider.type  = 'range';
+    slider.min   = p.min;
+    slider.max   = p.max;
+    slider.step  = p.step;
+    slider.value = p.def;
+    slider.style.cssText = 'width:100%; cursor:pointer; accent-color:var(--bs-link-color, #0d6efd);';
+
+    const val = document.createElement('span');
+    val.textContent = p.def;
+    val.style.cssText = 'text-align:right; min-width:40px; color:var(--bs-body-color,#222);';
+
+    const reset = document.createElement('button');
+    reset.textContent = '↺';
+    reset.title = 'Reset to default';
+    reset.style.cssText = 'background:none; border:none; cursor:pointer; font-size:1rem; color:var(--bs-secondary-color,#666); padding:0; line-height:1;';
+
+    slider.addEventListener('input', () => {
+      const v = Number(slider.value);
+      val.textContent = v;
+      send(p.param, v);
+    });
+
+    reset.addEventListener('click', () => {
+      slider.value  = p.def;
+      val.textContent = p.def;
+      send(p.param, p.def);
+    });
+
+    inputs[p.param] = { slider, val, def: p.def };
+    row.append(lbl, slider, val, reset);
+    container.appendChild(row);
+  });
+
+  document.getElementById('ch1-reset-all').addEventListener('click', () => {
+    Object.values(inputs).forEach(({ slider, val, def }) => {
+      slider.value = def;
+      val.textContent = def;
+    });
+    PARAMS.forEach(p => send(p.param, p.def));
+  });
+})();
+</script>
+```
+
 ### Class declaration and constructor
 
 ```javascript
@@ -506,7 +625,90 @@ export default class GameScene extends Phaser.Scene {
   }
 ```
 
-`GameScene` extends `Phaser.Scene`, which means it inherits all of Phaser's scene machinery — `this.physics`, `this.add`, `this.input`, etc. The constructor calls `super()` with a config object containing `key: 'GameScene'`. This key is how Phaser identifies the scene internally — it is the string you would use to start, stop, or switch to this scene from anywhere in your code (e.g. `this.scene.start('GameScene')`).
+This single line packs in six distinct JavaScript concepts. Here is each word:
+
+**`export`** makes `GameScene` available outside this file. ES modules are isolated by default — nothing defined in `GameScene.js` is visible elsewhere unless explicitly exported. Without `export`, the `import GameScene from './GameScene.js'` line in `main.js` would fail with a reference error.
+
+**`default`** marks this as the file's primary export. A file can have many *named* exports but only one *default* export. The distinction changes the import syntax: a default export is imported without curly braces (`import GameScene from './GameScene.js'`), while a named export would require them (`import { GameScene } from './GameScene.js'`). Using `default` here signals to any reader of this file: "this class is the point of this file."
+
+**`class`** declares a JavaScript class — a named blueprint for creating objects. A class groups related data and behavior together under one name. Before ES6 (2015), the same thing was accomplished with constructor functions and prototype chains, which worked but were verbose and error-prone. The `class` keyword is cleaner syntax for the same mechanism.
+
+**`GameScene`** is the name of the class. By convention, class names use PascalCase (each word capitalized, no underscores). This name is what you use to instantiate the class with `new GameScene()`, and it is what Phaser uses in error messages when something goes wrong inside the scene.
+
+**`extends`** sets up **inheritance**: `GameScene` is declared as a *subclass* of `Phaser.Scene`. Inheritance means GameScene gets everything `Phaser.Scene` already knows how to do, without having to rewrite it. Think of it as a family relationship — `Phaser.Scene` is the parent; `GameScene` is the child. The child adds its own behavior on top of the parent's.
+
+**`Phaser.Scene`** is the parent class, defined inside the Phaser library. It contains the machinery every scene needs: the lifecycle system that calls `preload()`, `create()`, and `update()` at the right times; and the plugin system that attaches `this.physics`, `this.add`, `this.cameras`, `this.input`, and all the other tools you use inside a scene. By extending `Phaser.Scene`, you inherit all of that infrastructure instantly. If you tried to write a scene class that did *not* extend `Phaser.Scene`, none of those tools would exist on `this`.
+
+**The constructor** runs once when Phaser instantiates the class (which happens when `new Phaser.Game(config)` registers your scene list). It calls `super({ key: 'GameScene' })`, which passes a config object up to the parent class constructor. The `key` is the scene's internal name — the string you use to switch to it from anywhere else in your code:
+
+```javascript
+this.scene.start('GameScene');   // from another scene
+this.scene.restart();            // restart this scene
+this.scene.pause('GameScene');   // pause it
+```
+
+If you don't call `super()` in a subclass constructor, JavaScript throws a `ReferenceError` before the constructor body even runs. It is a hard requirement for any class that uses `extends`.
+
+### Why all methods must live inside the class
+
+`constructor()`, `create()`, `update()`, and the helpers `genRect` and `genCircle` must all be defined inside the class body — not outside it as standalone functions. There are two reasons.
+
+**Reason 1: `this` only refers to the scene instance inside a method.** Inside a class method, `this` refers to the specific instance of the class — the live scene object with all its Phaser tools attached. If you moved `create()` outside the class as a regular function, `this` would either be `undefined` (in strict mode) or the global `window` object. Every line that says `this.physics`, `this.add`, `this.input`, or `this.player` would fail.
+
+**Reason 2: Phaser looks for these methods by name on the instance.** When Phaser launches a scene, it effectively does:
+
+```javascript
+const scene = new GameScene();
+scene.create();        // called once when the scene starts
+scene.update(time, delta);  // called every frame
+```
+
+If `create` and `update` are not on the instance — meaning they are not defined as methods of the class — Phaser simply does not call them. The game would start but nothing would appear. Phaser does not raise an error for a missing `create()` or `update()`; it just skips calling them if they are not found.
+
+The same logic applies to `genRect` and `genCircle`: they use `this.make.graphics()`, which only works because they are class methods with access to the scene instance. As standalone functions, they would have no way to reach Phaser's scene API.
+
+### When you would have other classes
+
+Our game has only `GameScene`, but a more developed game typically has several classes. Some extend Phaser classes; others are plain JavaScript classes used as helper objects.
+
+**Additional scene classes** are the most common. Each major "screen" in the game becomes its own scene:
+
+```javascript
+class BootScene   extends Phaser.Scene { }  // shows a logo, loads minimal assets
+class MenuScene   extends Phaser.Scene { }  // title screen, play button
+class GameScene   extends Phaser.Scene { }  // the level itself
+class PauseScene  extends Phaser.Scene { }  // pause overlay, layered on top of GameScene
+class GameOver    extends Phaser.Scene { }  // death screen, score, retry button
+```
+
+**Custom game object classes** let you give enemies, bullets, or pickups their own self-contained logic:
+
+```javascript
+class Enemy extends Phaser.GameObjects.Sprite {
+  constructor(scene, x, y) {
+    super(scene, x, y, 'enemy');
+    this.health = 3;
+    this.speed  = 80;
+  }
+  update() {
+    // enemy-specific movement AI here
+  }
+}
+```
+
+Because `Enemy` extends `Phaser.GameObjects.Sprite`, it is a real Phaser sprite with physics, animations, and all the normal sprite properties — plus any custom properties and methods you add to it.
+
+**Plain helper classes** handle logic that has nothing to do with Phaser specifically — managing save data, tracking level progression, or controlling audio:
+
+```javascript
+class ScoreManager {
+  constructor() { this.score = 0; this.highScore = 0; }
+  add(points) { this.score += points; }
+  save() { localStorage.setItem('highScore', this.score); }
+}
+```
+
+This class does not extend anything — it is just a clean way to group related state and behavior. You would instantiate it in a scene's `create()` and store it as `this.scoreManager`.
 
 ### Canvas dimensions
 
@@ -527,7 +729,21 @@ this.genRect('player',   32,  48, 0x5c9ded);
 this.genCircle('coin',   10,      0xffd700);
 ```
 
-These five calls create all the visual assets the game needs before any game object is placed. Each call draws a colored shape to an off-screen `Graphics` object, then calls `generateTexture()` to bake it into a named texture in Phaser's internal texture cache. Once registered, a texture key like `'player'` can be used anywhere — by sprites, images, or groups — without loading any external file.
+To understand why these calls are necessary, you need to understand how Phaser draws anything at all.
+
+Phaser's sprite and image game objects don't draw shapes — they draw **textures**. A texture is a bitmap image (a grid of pixels) that lives in the GPU's memory and is identified by a string key. When you write `this.physics.add.sprite(100, H-80, 'player')`, the third argument is not a description of the shape — it is a key that Phaser looks up in its internal texture cache. If the key doesn't exist in the cache yet, you get a blank 32×32 white square as a placeholder (Phaser's built-in missing-texture indicator).
+
+Normally you populate the texture cache in `preload()` by loading image files:
+
+```javascript
+preload() {
+  this.load.image('player', 'assets/player.png');
+}
+```
+
+We have no image files. So instead, we create textures programmatically right at the start of `create()`, using our helper methods. Each `genRect` and `genCircle` call draws a colored shape into an off-screen Graphics object and then "bakes" it into a named texture entry in the cache via `generateTexture()`. By the time the first `this.physics.add.staticImage(...)` call runs, every key it needs — `'ground'`, `'platform'`, `'plat_sm'`, `'player'`, `'coin'` — already exists in the cache and is ready to use.
+
+This is why the five `genRect`/`genCircle` calls appear at the very top of `create()`, before any game object is created. Swap their order with the ground or player setup, and those objects would get the white placeholder texture instead.
 
 The colors are hexadecimal values: `0x4caf50` is a medium green (ground), `0x8b6914` is brown (platforms), `0x5c9ded` is blue (player), `0xffd700` is gold (coin).
 
@@ -673,12 +889,114 @@ genCircle(key, radius, color) {
 }
 ```
 
-Both helpers follow the same pattern:
+These are not methods Phaser knows about or calls — they are private utility methods you defined on the class to avoid repeating the same five-line pattern five times. Every time you need a new colored shape as a texture, you call one of them. The only reason they exist as separate methods (rather than being inlined into `create()`) is that the pattern repeats and giving it a name makes the code at the top of `create()` easier to read at a glance.
 
-1. `this.make.graphics({ add: false })` — creates a `Graphics` object without adding it to the scene's display list. It exists only in memory.
-2. `fillStyle(color)` — sets the fill color for subsequent draw calls.
-3. `fillRect` / `fillCircle` — draws the shape at position `(0, 0)` within the graphics object's local space.
-4. `generateTexture(key, w, h)` — rasterizes the graphics into a texture and registers it in Phaser's texture cache under the given key.
-5. `g.destroy()` — frees the temporary `Graphics` object from memory. The texture remains in the cache and is available for the rest of the game.
+Both helpers follow the same five-step pattern:
 
-`genCircle` draws the circle at `(radius, radius)` because `fillCircle` takes the center point as its first two arguments. With a canvas of size `radius * 2`, this places the circle exactly centered in the texture with no clipping.
+1. **`this.make.graphics({ add: false })`** — creates a temporary `Graphics` object, which is Phaser's imperative drawing API (like an HTML Canvas context). The `add: false` option prevents it from appearing in the scene's display list — it exists purely as a drawing tool in memory, invisible to the player.
+2. **`fillStyle(color)`** — sets the fill color for all subsequent draw calls on this Graphics object.
+3. **`fillRect` / `fillCircle`** — draws the shape at position `(0, 0)` within the Graphics object's local coordinate space.
+4. **`generateTexture(key, w, h)`** — this is the critical step. It rasterizes everything drawn on the Graphics object into a pixel buffer and registers it in Phaser's texture cache under `key`. After this line, any Phaser game object can use `key` as its texture string, and the GPU has a copy ready to render.
+5. **`g.destroy()`** — frees the temporary `Graphics` object from CPU memory. The texture it generated stays in the GPU cache for the lifetime of the game; only the drawing tool used to create it is discarded.
+
+`genCircle` draws the circle at center `(radius, radius)` because `fillCircle` takes center coordinates as its first two arguments, and the texture canvas is `radius * 2` pixels on each side. This places the circle exactly centered in the texture with no clipping at the edges.
+
+The connection back to `create()` is direct: when you see:
+
+```javascript
+this.genRect('player', 32, 48, 0x5c9ded);
+// ... later ...
+this.player = this.physics.add.sprite(100, H - 80, 'player');
+```
+
+The string `'player'` is the thread that connects them. `genRect` registers it in the texture cache; `add.sprite` retrieves it from the cache. Remove the `genRect` call and the sprite renders as a blank white rectangle.
+
+---
+
+## How the Browser Runs GameScene.js
+
+Understanding what the browser is doing *under the hood* while your game runs changes how you think about every line of code in `GameScene.js`.
+
+### JavaScript is single-threaded
+
+The browser's JavaScript engine (V8 in Chrome, SpiderMonkey in Firefox) runs on a single thread. It processes one task at a time. There is no parallel execution — if two things need to happen, one waits for the other to finish. This is the fundamental constraint that governs everything below.
+
+### The event loop and the task queue
+
+JavaScript in the browser is driven by an **event loop**. The loop continuously checks a queue of pending tasks and runs them one at a time. Tasks come from many sources: a timer firing, a network response arriving, a user clicking, or a frame being requested. The loop picks up the next task, runs it to completion, then picks up the next one.
+
+Your game code does not run continuously — it runs in discrete tasks, each scheduled by the browser.
+
+### requestAnimationFrame — how Phaser hooks in
+
+When `new Phaser.Game(config)` starts, Phaser calls `requestAnimationFrame(loop)`, which tells the browser: "call this `loop` function right before you paint the next frame to the screen." The browser calls it approximately 60 times per second, synchronized to the display's refresh rate (60 Hz on most monitors). Each call is one **tick** — one iteration of the game loop.
+
+After each tick completes, Phaser immediately schedules the next one with another `requestAnimationFrame` call. This creates the continuous loop:
+
+```
+rAF fires → tick runs → rAF fires again → tick runs → ...
+```
+
+Between ticks, the browser is free to handle other tasks: responding to a click, running a network callback, updating the DOM. Your game is not monopolizing the thread — it is sharing it politely, yielding between frames.
+
+### The order of operations inside one tick
+
+Within a single tick, Phaser runs a fixed sequence of steps. The order matters:
+
+```
+1. Input sampling     — keyboard/mouse state is read and recorded
+2. Physics step       — gravity applied, positions updated, collisions resolved
+3. Overlap callbacks  — any registered overlap callbacks fire (e.g. coin collection)
+4. Your update()      — your code in update() runs
+5. Render             — all game objects are drawn to the canvas
+```
+
+This ordering has practical consequences:
+
+- **Input is sampled before your code runs.** By the time `update()` reads `cursors.left.isDown`, the keyboard state already reflects what is physically pressed at the start of this frame. You are never reading a stale value from the previous frame.
+
+- **Overlap callbacks fire before `update()`.** If the player touches a coin and the callback runs `coin.destroy()`, by the time your `update()` code executes in the same frame, the coin is already gone from the scene. You never observe a half-destroyed state.
+
+- **Render happens last.** No matter what velocities or positions you set in `update()`, none of it becomes visible until the render step. All changes made during a single tick appear simultaneously in the next frame — the player never sees an intermediate state.
+
+### Priorities and what "listening" means
+
+In the context of your game, "listening" means **Phaser has registered a callback that it will invoke at the right moment in the tick sequence**. When you write:
+
+```javascript
+this.physics.add.overlap(this.player, this.coins, (_player, coin) => {
+  coin.destroy();
+  this.score++;
+  this.scoreText.setText('Score: ' + this.score);
+});
+```
+
+You are not asking Phaser to check overlaps immediately. You are registering a callback that Phaser stores internally and calls during the physics step of every subsequent tick — but only if an overlap is detected. Your callback code has no priority level of its own; its place in the sequence is determined by when in the tick Phaser chooses to invoke it (during the physics step, before your `update()`).
+
+The same is true of colliders:
+
+```javascript
+this.physics.add.collider(this.player, this.platforms);
+```
+
+This registers a collision handler that Phaser checks every tick. You do not poll it yourself — Phaser runs it automatically as part of the physics step.
+
+### create() runs outside the loop
+
+`create()` is special: it runs exactly once, synchronously, before the first tick of the game loop begins. This means:
+
+- No physics is running while `create()` executes
+- No frames are being rendered
+- The entire scene setup — textures, objects, colliders, input bindings — completes in a single uninterrupted task
+
+This is why it is safe to write sequential setup code in `create()` without worrying about race conditions. Everything runs in order, top to bottom, before the game loop ever starts.
+
+### Frame rate and delta
+
+Phaser passes `time` and `delta` as arguments to `update(time, delta)`. `delta` is the number of milliseconds since the last frame — normally around 16.7 ms at 60 fps, but it can be longer if the browser was busy with something else. Our current game ignores `delta`, which means movement speed is frame-rate dependent (slightly faster on a 144 Hz monitor than a 60 Hz one). A more robust approach multiplies velocities by `delta / 1000` to make speed measured in pixels per second, independent of frame rate.
+
+### What this means for your code
+
+The practical lesson: **everything in `update()` is code that runs 60 times per second, so keep it lean.** Creating new objects, allocating arrays, or doing heavy calculations inside `update()` will cause frame drops. Setup work belongs in `create()`. The update loop is for reading state and setting velocities — not for construction.
+
+The browser will not warn you if `update()` takes too long. It will simply drop frames silently, and the game will feel choppy. A frame that takes longer than ~16.7 ms to complete misses its render window and the player sees a stutter.

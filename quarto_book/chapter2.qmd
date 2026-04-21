@@ -1,0 +1,483 @@
+# Enemies, Winning, and Losing
+
+In Chapter 1 the world was peaceful: you wandered around, collected coins, and nothing ever stopped you. Chapter 2 gives the game **stakes** — an enemy that can kill the player, a clear win condition (collect every coin), and a way to restart after the game ends.
+
+Along the way, four new ideas enter the codebase:
+
+- **Tweens** — a way to animate a property smoothly over time without writing motion code in `update()`.
+- **Scene-level state** — a `gameOver` flag that changes how `update()` behaves.
+- **`this.scene.restart()`** — Phaser's built-in way to reset a scene from scratch.
+- **Overlay rendering** — drawing a dimming rectangle and a banner on top of the paused game.
+
+Everything from Chapter 1 still applies. The structure of `GameScene.js` is unchanged: a class with `constructor`, `create`, `update`, and helpers. We are adding one new method (`_endGame`) and extending the existing ones.
+
+---
+
+## Play it
+
+The live game is embedded below. Collect all five coins to win. Touch the red enemy patrolling the middle platform and it's game over. Press `R` at any time to restart.
+
+```{=html}
+<div style="overflow-x:auto; margin: 1rem 0 2rem;">
+  <iframe
+    src="https://emilsar.github.io/phaser/chapter02/"
+    width="800" height="520"
+    style="border:none; display:block;"
+    title="Chapter 2 — playable game demo"
+    allow="autoplay">
+  </iframe>
+</div>
+```
+
+---
+
+## The full file
+
+Here is the complete `GameScene.js` for Chapter 2. Everything added on top of Chapter 1 is discussed section by section below.
+
+```javascript
+import * as Phaser from 'phaser';
+
+export default class GameScene extends Phaser.Scene {
+  constructor() {
+    super({ key: 'GameScene' });
+  }
+
+  create() {
+    const W = this.scale.width;
+    const H = this.scale.height;
+
+    // Textures
+    this.genRect('ground',   W,   32, 0x4caf50);
+    this.genRect('platform', 160, 18, 0x8b6914);
+    this.genRect('plat_sm',  120, 18, 0x8b6914);
+    this.genRect('player',   32,  48, 0x5c9ded);
+    this.genRect('enemy',    28,  28, 0xff4444);
+    this.genCircle('coin',   10,      0xffd700);
+
+    // Ground
+    const ground = this.physics.add.staticImage(W / 2, H - 16, 'ground');
+
+    // Platforms
+    this.platforms = this.physics.add.staticGroup();
+    this.platforms.create(200, 350, 'platform');
+    this.platforms.create(500, 250, 'platform');
+    this.platforms.create(350, 160, 'plat_sm');
+
+    // Player
+    this.player = this.physics.add.sprite(100, H - 80, 'player');
+    this.player.setCollideWorldBounds(true);
+
+    this.physics.add.collider(this.player, ground);
+    this.physics.add.collider(this.player, this.platforms);
+
+    // Coins
+    this.coins = this.physics.add.staticGroup();
+    this.coins.create(150, H - 60, 'coin');
+    this.coins.create(480, H - 60, 'coin');
+    this.coins.create(200, 320,    'coin');
+    this.coins.create(500, 220,    'coin');
+    this.coins.create(350, 130,    'coin');
+    this.totalCoins = 5;
+
+    this.physics.add.overlap(this.player, this.coins, (_player, coin) => {
+      if (this.gameOver) return;
+      coin.destroy();
+      this.score++;
+      this.scoreText.setText('Score: ' + this.score);
+      if (this.score === this.totalCoins) {
+        this._endGame('You Win!', 0x2e7d32);
+      }
+    });
+
+    // Enemy — patrols on top of the middle platform
+    this.enemy = this.physics.add.image(440, 227, 'enemy');
+    this.enemy.body.setAllowGravity(false);
+    this.enemy.body.setImmovable(true);
+
+    this.tweens.add({
+      targets: this.enemy,
+      x: 560,
+      duration: 1400,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut'
+    });
+
+    this.physics.add.overlap(this.player, this.enemy, () => {
+      this._endGame('Game Over', 0xb71c1c);
+    });
+
+    // Score & hint
+    this.score = 0;
+    this.gameOver = false;
+    this.scoreText = this.add.text(16, 16, 'Score: 0', {
+      fontSize: '20px', color: '#ffffff', fontFamily: 'monospace'
+    }).setDepth(1);
+
+    this.add.text(W / 2, 16, '← → to move   ↑ or Space to jump   R to restart', {
+      fontSize: '13px', color: '#aaaacc', fontFamily: 'monospace'
+    }).setOrigin(0.5, 0).setDepth(1);
+
+    // Input
+    this.cursors = this.input.keyboard.createCursorKeys();
+    this.wasd = this.input.keyboard.addKeys({
+      left:  Phaser.Input.Keyboard.KeyCodes.A,
+      right: Phaser.Input.Keyboard.KeyCodes.D,
+      jump:  Phaser.Input.Keyboard.KeyCodes.W
+    });
+    this.rKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
+  }
+
+  update() {
+    if (Phaser.Input.Keyboard.JustDown(this.rKey)) {
+      this.scene.restart();
+      return;
+    }
+
+    if (this.gameOver) return;
+
+    const body    = this.player.body;
+    const onFloor = body.blocked.down;
+
+    const left  = this.cursors.left.isDown  || this.wasd.left.isDown;
+    const right = this.cursors.right.isDown || this.wasd.right.isDown;
+    const jump  = Phaser.Input.Keyboard.JustDown(this.cursors.up)
+               || Phaser.Input.Keyboard.JustDown(this.cursors.space)
+               || Phaser.Input.Keyboard.JustDown(this.wasd.jump);
+
+    if (left)       body.setVelocityX(-220);
+    else if (right) body.setVelocityX(220);
+    else            body.setVelocityX(0);
+
+    if (jump && onFloor) body.setVelocityY(-550);
+  }
+
+  _endGame(message, color) {
+    if (this.gameOver) return;
+    this.gameOver = true;
+
+    this.physics.pause();
+    this.tweens.killAll();
+
+    const W = this.scale.width;
+    const H = this.scale.height;
+
+    this.add.rectangle(W / 2, H / 2, W, H, 0x000000, 0.55).setDepth(2);
+
+    this.add.rectangle(W / 2, H / 2, 360, 90, color, 1).setDepth(3);
+    this.add.text(W / 2, H / 2 - 8, message, {
+      fontSize: '32px', color: '#ffffff', fontFamily: 'monospace', fontStyle: 'bold'
+    }).setOrigin(0.5).setDepth(4);
+    this.add.text(W / 2, H / 2 + 22, 'press R to restart', {
+      fontSize: '14px', color: '#eeeeee', fontFamily: 'monospace'
+    }).setOrigin(0.5).setDepth(4);
+  }
+
+  genRect(key, w, h, color) {
+    const g = this.make.graphics({ add: false });
+    g.fillStyle(color);
+    g.fillRect(0, 0, w, h);
+    g.generateTexture(key, w, h);
+    g.destroy();
+  }
+
+  genCircle(key, radius, color) {
+    const size = radius * 2;
+    const g = this.make.graphics({ add: false });
+    g.fillStyle(color);
+    g.fillCircle(radius, radius, radius);
+    g.generateTexture(key, size, size);
+    g.destroy();
+  }
+}
+```
+
+---
+
+## What changed from Chapter 1
+
+At a glance, the diff from Chapter 1 is:
+
+- A new **enemy texture** — a red 28×28 square.
+- A new **enemy sprite** that patrols via a tween.
+- A **tween** in place of manual movement in `update()`.
+- A **win condition** tracked by `this.totalCoins`.
+- A **lose condition** triggered by overlapping the enemy.
+- A **`this.gameOver`** flag that short-circuits `update()` and the coin callback when the game is over.
+- An **R key** bound in `create()` and checked at the top of `update()`.
+- A new **`_endGame`** method that pauses physics, kills tweens, and renders an overlay.
+- The hint text now mentions `R to restart`.
+
+Everything else — the ground, platforms, player, coins, colliders, score — is identical to Chapter 1. The rest of this chapter walks through each addition.
+
+---
+
+## The enemy
+
+### Texture
+
+```javascript
+this.genRect('enemy', 28, 28, 0xff4444);
+```
+
+Same pattern as every other texture in Chapter 1: a named 28×28 red square registered in the texture cache. `0xff4444` is a soft red — not pure `0xff0000`, which would be too harsh against the dark background.
+
+### Sprite body configuration
+
+```javascript
+this.enemy = this.physics.add.image(440, 227, 'enemy');
+this.enemy.body.setAllowGravity(false);
+this.enemy.body.setImmovable(true);
+```
+
+Two deliberate choices here.
+
+**`physics.add.image`** — not `physics.add.sprite`. `sprite` is used for objects that play animations; `image` is for static textures. The enemy never animates (the tween moves its position, not its texture), so `image` is the lighter-weight choice.
+
+**`setAllowGravity(false)`** — by default every dynamic physics body is pulled down by gravity each frame. If we left gravity on, the enemy would fall off the platform immediately. Turning gravity off makes the enemy behave like it is floating in place, which is what we want for a platform-bound patrol.
+
+**`setImmovable(true)`** — prevents the enemy from being pushed around by collisions. We are not using a collider between the enemy and the player (we use an overlap), so this isn't strictly required in the current code, but it's a useful default: it makes the enemy behave like a fixed hazard rather than something the player can bump into and nudge.
+
+The position `(440, 227)` places the enemy just above the middle platform. The platform sits at `y = 250` and is `18` pixels tall (so its top is at `y = 241`); the enemy is `28` pixels tall, so centering it at `y = 227` puts its bottom at exactly `241` — resting perfectly on the platform surface.
+
+### The tween
+
+```javascript
+this.tweens.add({
+  targets: this.enemy,
+  x: 560,
+  duration: 1400,
+  yoyo: true,
+  repeat: -1,
+  ease: 'Sine.easeInOut'
+});
+```
+
+A **tween** is Phaser's way of animating any numeric property of any game object over time. You specify the target(s), the property, the destination value, how long it should take, and an easing curve — Phaser does the rest.
+
+Each field:
+
+| Field | Value | Meaning |
+|---|---|---|
+| `targets` | `this.enemy` | Which object(s) to animate. Can be a single object or an array. |
+| `x: 560` | destination | The property and target value. The enemy starts at `x = 440` and the tween moves it to `x = 560`. |
+| `duration` | `1400` ms | How long one leg of the tween takes. |
+| `yoyo` | `true` | When the destination is reached, play the tween in reverse back to the start. |
+| `repeat` | `-1` | `-1` means loop forever. Any positive number is the repeat count. |
+| `ease` | `'Sine.easeInOut'` | The easing curve. `Sine.easeInOut` accelerates at the start and decelerates at the end, producing smooth back-and-forth motion rather than a mechanical bounce. |
+
+Without `yoyo`, the enemy would reach `x = 560` and snap back instantly to `x = 440` to restart. With `yoyo`, Phaser animates it smoothly back.
+
+Tweens are scheduled once and run autonomously on a separate internal clock. You do *not* write `this.enemy.x = ...` in `update()` — the tween system does that for you each frame. This is the difference between **declarative** motion (tween: "move from here to there over 1.4s") and **imperative** motion (update: "every frame, add 2 to my x position").
+
+### Overlap for the lose condition
+
+```javascript
+this.physics.add.overlap(this.player, this.enemy, () => {
+  this._endGame('Game Over', 0xb71c1c);
+});
+```
+
+Same pattern as the coin overlap from Chapter 1. When the player's body and the enemy's body overlap, Phaser calls the callback. Unlike coins, the enemy is not destroyed on contact — there is no `.destroy()`. It just ends the game.
+
+::: {.callout-note}
+## Why overlap, not collider?
+A **collider** would physically push the player away from the enemy, which feels wrong for a hazard. An **overlap** detects contact without any physical response, letting the `_endGame` call take over immediately. The player passes right through the enemy — because in the same frame we pause physics, so "passing through" is never observed.
+:::
+
+---
+
+## The win condition
+
+```javascript
+this.totalCoins = 5;
+
+this.physics.add.overlap(this.player, this.coins, (_player, coin) => {
+  if (this.gameOver) return;
+  coin.destroy();
+  this.score++;
+  this.scoreText.setText('Score: ' + this.score);
+  if (this.score === this.totalCoins) {
+    this._endGame('You Win!', 0x2e7d32);
+  }
+});
+```
+
+Three additions to the Chapter 1 coin callback:
+
+**`this.totalCoins = 5`** — storing the target score as scene-level state. Hardcoding `5` inside the callback would work, but naming it makes the intent clear and makes it easy to change later if you add more coins.
+
+**`if (this.gameOver) return;`** — a guard against double-firing. After `_endGame` pauses physics, most body movement stops — but the physics world still resolves any active overlaps on the frame the game ends. Without this guard, a player who touches an enemy while standing on a coin could trigger both the lose and win callbacks in sequence. The guard says: once the game is over, ignore any further coin pickups.
+
+**`if (this.score === this.totalCoins)`** — the actual win check. After incrementing the score and updating the text, check whether the player has collected everything. Using `===` (strict equality) is the safe default; Phaser scores are always integers, so there is no risk of a `NaN` or string comparison going wrong.
+
+---
+
+## The `gameOver` flag
+
+```javascript
+this.score = 0;
+this.gameOver = false;
+```
+
+Initialized at the bottom of `create()`, alongside `this.score`. Both are plain JavaScript properties on the scene instance. They exist for the lifetime of the scene — which is to say, until the scene is shut down or restarted.
+
+The flag has three jobs:
+
+1. **Prevent `_endGame` from running twice.** If the player somehow triggers both the win and lose conditions in the same frame, only the first one has any effect.
+2. **Suppress player input after the game ends.** Checked at the top of `update()`.
+3. **Stop coin pickups from continuing after the game ends.** Checked at the top of the coin overlap callback.
+
+This is a very common pattern in game code: a single boolean flag that expresses a state transition. Entering the "game over" state is as simple as setting the flag; every other piece of code that needs to behave differently just reads it.
+
+---
+
+## The R key and restart
+
+### Binding the key in `create()`
+
+```javascript
+this.rKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
+```
+
+`addKey` (singular) is the simpler cousin of `addKeys` (plural) from Chapter 1. It registers a single key and returns a `Key` object that exposes `.isDown` and works with `JustDown` just like the arrow keys and WASD.
+
+### Handling it in `update()`
+
+```javascript
+update() {
+  if (Phaser.Input.Keyboard.JustDown(this.rKey)) {
+    this.scene.restart();
+    return;
+  }
+
+  if (this.gameOver) return;
+
+  // ... rest of update ...
+}
+```
+
+Two important structural details.
+
+**The R check comes first, before the `gameOver` guard.** If R were checked after `if (this.gameOver) return`, then R would stop working the moment the game ended — which is exactly when you want it to work. Putting it first means R works any time: mid-game, after a win, after a loss.
+
+**`this.scene.restart()`** tears down the current scene completely and reinitializes it. Every game object is destroyed, every texture is regenerated, `create()` runs again from scratch, and the scene starts over at frame one. The player is back at the starting position, all coins are present, the enemy is patrolling, the score is zero, `gameOver` is `false`.
+
+**`return;` after restart is critical.** Once `restart()` has been called, the current `update()` call is still running — Phaser doesn't interrupt it mid-function. Without the `return`, the rest of `update()` would execute against a scene that is in the middle of being torn down, throwing `undefined` errors when it tries to read `this.player.body`. Returning immediately prevents that.
+
+### `JustDown` vs `isDown`
+
+The same reasoning as jumping in Chapter 1: `JustDown` fires exactly once when the key is first pressed. If we used `isDown` here, holding R for a few frames would trigger multiple restarts in rapid succession — each tearing down and rebuilding the scene — and the game would never stabilize.
+
+---
+
+## The `_endGame` method
+
+```javascript
+_endGame(message, color) {
+  if (this.gameOver) return;
+  this.gameOver = true;
+
+  this.physics.pause();
+  this.tweens.killAll();
+
+  const W = this.scale.width;
+  const H = this.scale.height;
+
+  this.add.rectangle(W / 2, H / 2, W, H, 0x000000, 0.55).setDepth(2);
+
+  this.add.rectangle(W / 2, H / 2, 360, 90, color, 1).setDepth(3);
+  this.add.text(W / 2, H / 2 - 8, message, {
+    fontSize: '32px', color: '#ffffff', fontFamily: 'monospace', fontStyle: 'bold'
+  }).setOrigin(0.5).setDepth(4);
+  this.add.text(W / 2, H / 2 + 22, 'press R to restart', {
+    fontSize: '14px', color: '#eeeeee', fontFamily: 'monospace'
+  }).setOrigin(0.5).setDepth(4);
+}
+```
+
+### The underscore prefix
+
+`_endGame` starts with an underscore by convention. In JavaScript there is no *enforced* private-method mechanism on classes (short of `#` private fields, which have stricter semantics). An underscore is a soft signal to readers: "this method is an internal helper, not part of the class's public interface. Phaser does not call it, and you should not call it from outside this class."
+
+### Re-entry guard
+
+```javascript
+if (this.gameOver) return;
+this.gameOver = true;
+```
+
+Sets the flag immediately, before doing any work. Any subsequent call to `_endGame` on the same scene instance will exit early. This pattern — check-the-flag-then-set-the-flag — is how you make a function idempotent (safe to call more than once).
+
+### Freezing the world
+
+```javascript
+this.physics.pause();
+this.tweens.killAll();
+```
+
+**`this.physics.pause()`** stops the physics simulation: no gravity, no collision resolution, no velocity integration. Every dynamic body freezes in place. The player stops falling, the enemy stops patrolling. Crucially, `update()` still runs — it's only the physics step in each tick that is paused. This is why the R key still works: `update()` still fires, it still checks the R key, it still calls `this.scene.restart()`.
+
+**`this.tweens.killAll()`** removes every active tween from the tween manager. Without this, `physics.pause()` would stop the physics engine from applying the tweened position — but the tween itself would keep writing `enemy.x = whatever` on every frame, fighting against the paused physics. `killAll` makes sure that doesn't happen.
+
+### The overlay
+
+```javascript
+this.add.rectangle(W / 2, H / 2, W, H, 0x000000, 0.55).setDepth(2);
+```
+
+`this.add.rectangle(x, y, width, height, color, alpha)` is the simplest Phaser game object for drawing a solid shape — you don't need a texture or a Graphics object. Here it creates a full-canvas black rectangle at 55% opacity, dimming everything beneath it.
+
+**Depth matters.** Phaser draws objects in order of their `depth` property (defaulting to `0`). Everything the player interacted with during the game — platforms, coins, the enemy — is at depth `0`. The score text is at depth `1`. The dimming overlay at depth `2` draws over all of that. The banner behind the game-over message is at depth `3`, and the text is at depth `4`, keeping it readable.
+
+### The banner and text
+
+```javascript
+this.add.rectangle(W / 2, H / 2, 360, 90, color, 1).setDepth(3);
+this.add.text(W / 2, H / 2 - 8, message, { ... }).setOrigin(0.5).setDepth(4);
+this.add.text(W / 2, H / 2 + 22, 'press R to restart', { ... }).setOrigin(0.5).setDepth(4);
+```
+
+A centered 360×90 rectangle in the end-game color (green for win, red for loss), then two text objects stacked on top of it: the big message eight pixels above center, and the restart hint 22 pixels below. Both use `setOrigin(0.5)` — the default origin is the top-left corner, which would misalign them; anchoring at the center lets us position by the logical midpoint.
+
+Notice all of this is done in one burst and never updated afterward. The overlay is a *one-shot* render — it appears once when the game ends and stays put until `scene.restart()` wipes the entire scene.
+
+---
+
+## What `update()` looks like now
+
+```javascript
+update() {
+  if (Phaser.Input.Keyboard.JustDown(this.rKey)) {
+    this.scene.restart();
+    return;
+  }
+
+  if (this.gameOver) return;
+
+  // ... normal input & movement ...
+}
+```
+
+Two guard clauses at the top, then the usual Chapter 1 logic. This is a common idiom: **guard clauses** handle the exceptional paths first, returning early, so the normal flow reads cleanly without being wrapped in nested `if`s.
+
+Reading top to bottom:
+
+1. If R was just pressed, restart and stop. Nothing else matters this frame.
+2. If the game is over (and R was *not* pressed), do nothing. Let the physics-paused world sit.
+3. Otherwise, play the game as usual — read input, set velocities, handle jumping.
+
+---
+
+## Summary
+
+Chapter 2 introduces the minimum machinery needed to turn a sandbox into a *game*: a hazard, a goal, and a reset button.
+
+- **Tweens** handle the enemy's motion declaratively — `targets / property / duration / ease` — rather than you having to write position updates in `update()` every frame.
+- **Scene-level state** — the `gameOver` boolean — lets different parts of the code coordinate their behavior through a single shared flag.
+- **Overlaps vs colliders** — the enemy uses `overlap` because a hazard should not physically bounce the player; it should simply register contact and let game logic take over.
+- **`scene.restart()`** is the simplest possible reset: tear down everything, rebuild from scratch, start over.
+- **Depth layering** — `setDepth(n)` on the overlay ensures the end-game UI draws on top of the frozen game state, without disturbing the objects below.
+
+In the next chapter we'll move beyond procedurally-generated rectangles and introduce real sprite art with **spritesheets and animations** — so the blue box becomes a running, jumping character and the red square becomes something that actually looks threatening.
