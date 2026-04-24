@@ -193,6 +193,23 @@ this.bgMusic = this.sound.add('music', { loop: true, volume: 0.5 });
 this.bgMusic.play();
 ```
 
+#### Quiz: Phaser Subsystems
+
+**Which of the following is handled by `this.input`, NOT by `this.physics`?**
+
+<div class="quiz-choices">
+<input type="radio" id="qSubsystems_a" name="qSubsystems" value="wrong1">
+<label for="qSubsystems_a">Resolving collisions between the player and platforms</label><br>
+<input type="radio" id="qSubsystems_b" name="qSubsystems" value="wrong2">
+<label for="qSubsystems_b">Applying gravity to dynamic bodies</label><br>
+<input type="radio" id="qSubsystems_c" name="qSubsystems" value="correct">
+<label for="qSubsystems_c">Reading which keyboard keys are currently pressed</label><br>
+<input type="radio" id="qSubsystems_d" name="qSubsystems" value="wrong3">
+<label for="qSubsystems_d">Detecting overlap between the player and coins</label><br>
+<button class="check-btn" onclick="checkQuiz('qSubsystems')">Check Answer</button>
+<div id="qSubsystems_feedback" class="quiz-feedback"></div>
+</div>
+
 ### How Phaser Is Structured as a Package
 
 When you run `npm install`, Phaser is downloaded into `node_modules/phaser/`. The library is one large bundle that includes all its subsystems. You import it in `main.js` as:
@@ -320,6 +337,23 @@ Phaser ships with two physics engines:
 5. Launches the first scene in the `scene` array — in this case, `GameScene`
 
 Without it, `config` is just an inert object in memory.
+
+#### Quiz: What `new Phaser.Game(config)` does
+
+**Before `new Phaser.Game(config)` runs, `config` is just a plain object sitting in memory. What does calling `new Phaser.Game(config)` actually cause to happen?**
+
+<div class="quiz-choices">
+<input type="radio" id="qNewGame_a" name="qNewGame" value="wrong1">
+<label for="qNewGame_a">It parses the config object and prints it to the console — nothing visible happens on screen.</label><br>
+<input type="radio" id="qNewGame_b" name="qNewGame" value="correct">
+<label for="qNewGame_b">It creates the `&lt;canvas&gt;`, initializes the renderer and physics engine, starts the game loop, and launches the first scene listed in `config.scene`.</label><br>
+<input type="radio" id="qNewGame_c" name="qNewGame" value="wrong2">
+<label for="qNewGame_c">It downloads Phaser from the network and installs it into `node_modules/`.</label><br>
+<input type="radio" id="qNewGame_d" name="qNewGame" value="wrong3">
+<label for="qNewGame_d">It registers the scenes but waits for an explicit `game.start()` call to begin rendering.</label><br>
+<button class="check-btn" onclick="checkQuiz('qNewGame')">Check Answer</button>
+<div id="qNewGame_feedback" class="quiz-feedback"></div>
+</div>
 
 ### package.json — Project Manifest
 
@@ -649,6 +683,23 @@ this.scene.pause('GameScene');   // pause it
 
 If you don't call `super()` in a subclass constructor, JavaScript throws a `ReferenceError` before the constructor body even runs. It is a hard requirement for any class that uses `extends`.
 
+#### Quiz: Why extend Phaser.Scene?
+
+**If you removed `extends Phaser.Scene` from the class declaration, leaving just `class GameScene { ... }`, what would go wrong?**
+
+<div class="quiz-choices">
+<input type="radio" id="qExtends_a" name="qExtends" value="wrong1">
+<label for="qExtends_a">Nothing — `extends Phaser.Scene` is purely a style choice.</label><br>
+<input type="radio" id="qExtends_b" name="qExtends" value="wrong2">
+<label for="qExtends_b">Phaser would refuse to load the game and crash on startup.</label><br>
+<input type="radio" id="qExtends_c" name="qExtends" value="correct">
+<label for="qExtends_c">`this.physics`, `this.add`, `this.input`, and the other scene tools would be `undefined`, because those are inherited from `Phaser.Scene`'s constructor — every line that uses them in `create()` would throw a TypeError.</label><br>
+<input type="radio" id="qExtends_d" name="qExtends" value="wrong3">
+<label for="qExtends_d">The game would run but in slow motion, since gravity defaults to zero without a scene parent.</label><br>
+<button class="check-btn" onclick="checkQuiz('qExtends')">Check Answer</button>
+<div id="qExtends_feedback" class="quiz-feedback"></div>
+</div>
+
 ### Why all methods must live inside the class
 
 `constructor()`, `create()`, `update()`, and the helpers `genRect` and `genCircle` must all be defined inside the class body — not outside it as standalone functions. There are two reasons.
@@ -666,6 +717,23 @@ scene.update(time, delta);  // called every frame
 If `create` and `update` are not on the instance — meaning they are not defined as methods of the class — Phaser simply does not call them. The game would start but nothing would appear. Phaser does not raise an error for a missing `create()` or `update()`; it just skips calling them if they are not found.
 
 The same logic applies to `genRect` and `genCircle`: they use `this.make.graphics()`, which only works because they are class methods with access to the scene instance. As standalone functions, they would have no way to reach Phaser's scene API.
+
+#### Quiz: Static vs dynamic bodies
+
+**The ground and platforms are created with `physics.add.staticImage` / `staticGroup`, but the player uses `physics.add.sprite` (dynamic). What is the functional consequence of choosing static versus dynamic?**
+
+<div class="quiz-choices">
+<input type="radio" id="qStaticDynamic_a" name="qStaticDynamic" value="wrong1">
+<label for="qStaticDynamic_a">Static bodies are invisible to the physics engine — they only exist for rendering.</label><br>
+<input type="radio" id="qStaticDynamic_b" name="qStaticDynamic" value="correct">
+<label for="qStaticDynamic_b">Static bodies are not affected by gravity, velocity, or collisions — they stay fixed in place. Dynamic bodies (like the player) have their position updated every frame based on velocity and gravity, and are pushed out of the way when collisions are resolved.</label><br>
+<input type="radio" id="qStaticDynamic_c" name="qStaticDynamic" value="wrong2">
+<label for="qStaticDynamic_c">Static bodies use less memory but cannot participate in colliders or overlaps.</label><br>
+<input type="radio" id="qStaticDynamic_d" name="qStaticDynamic" value="wrong3">
+<label for="qStaticDynamic_d">Dynamic bodies are rendered as circles; static bodies are rendered as rectangles.</label><br>
+<button class="check-btn" onclick="checkQuiz('qStaticDynamic')">Check Answer</button>
+<div id="qStaticDynamic_feedback" class="quiz-feedback"></div>
+</div>
 
 ### When you would have other classes
 
@@ -747,6 +815,23 @@ This is why the five `genRect`/`genCircle` calls appear at the very top of `crea
 
 The colors are hexadecimal values: `0x4caf50` is a medium green (ground), `0x8b6914` is brown (platforms), `0x5c9ded` is blue (player), `0xffd700` is gold (coin).
 
+#### Quiz: Texture cache ordering
+
+**Suppose you moved the line `this.genRect('player', 32, 48, 0x5c9ded)` to the very bottom of `create()`, AFTER `this.player = this.physics.add.sprite(100, H - 80, 'player')`. What happens when the game runs?**
+
+<div class="quiz-choices">
+<input type="radio" id="qTextureOrder_a" name="qTextureOrder" value="wrong1">
+<label for="qTextureOrder_a">A JavaScript error is thrown and the game refuses to start.</label><br>
+<input type="radio" id="qTextureOrder_b" name="qTextureOrder" value="correct">
+<label for="qTextureOrder_b">The player sprite renders as a blank 32×32 white square — Phaser looked up the key `'player'` in the texture cache, didn't find it yet, and used the built-in missing-texture placeholder.</label><br>
+<input type="radio" id="qTextureOrder_c" name="qTextureOrder" value="wrong2">
+<label for="qTextureOrder_c">Phaser delays sprite creation until every `genRect` call completes, so it works exactly the same.</label><br>
+<input type="radio" id="qTextureOrder_d" name="qTextureOrder" value="wrong3">
+<label for="qTextureOrder_d">The blue player appears, but jumping stops working because the physics body is not registered.</label><br>
+<button class="check-btn" onclick="checkQuiz('qTextureOrder')">Check Answer</button>
+<div id="qTextureOrder_feedback" class="quiz-feedback"></div>
+</div>
+
 ### Ground
 
 ```javascript
@@ -803,6 +888,23 @@ this.physics.add.overlap(this.player, this.coins, (_player, coin) => {
 
 Five coins are placed: two near the ground and one above each platform. Unlike platforms, coins use `overlap` instead of `collider`. The player passes through coins rather than landing on them. When an overlap is detected, the callback fires — the coin is destroyed (removed from the scene), the score counter increments, and the score text is updated. The callback receives two arguments: the player and the specific coin that was touched. The player argument is prefixed with `_` to signal it is intentionally unused.
 
+#### Quiz: Collider vs Overlap
+
+**Suppose we changed `this.physics.add.overlap(this.player, this.coins, ...)` to `this.physics.add.collider(this.player, this.coins, ...)` (keeping the same callback). The player's first encounter with a coin would look different — how?**
+
+<div class="quiz-choices">
+<input type="radio" id="qColliderOverlap_a" name="qColliderOverlap" value="wrong1">
+<label for="qColliderOverlap_a">No visible difference — `collider` and `overlap` behave identically, the callback fires either way.</label><br>
+<input type="radio" id="qColliderOverlap_b" name="qColliderOverlap" value="correct">
+<label for="qColliderOverlap_b">The player would physically collide with the coin and be pushed away, as if the coin were a tiny platform — before the callback's `coin.destroy()` removes it. Using `overlap` lets the player pass straight through without any physical reaction.</label><br>
+<input type="radio" id="qColliderOverlap_c" name="qColliderOverlap" value="wrong2">
+<label for="qColliderOverlap_c">The game would crash, because `collider` is only for two dynamic bodies and coins are in a static group.</label><br>
+<input type="radio" id="qColliderOverlap_d" name="qColliderOverlap" value="wrong3">
+<label for="qColliderOverlap_d">The callback would never fire — `collider` does not support callbacks.</label><br>
+<button class="check-btn" onclick="checkQuiz('qColliderOverlap')">Check Answer</button>
+<div id="qColliderOverlap_feedback" class="quiz-feedback"></div>
+</div>
+
 ### Score text
 
 ```javascript
@@ -853,6 +955,23 @@ const jump  = Phaser.Input.Keyboard.JustDown(this.cursors.up)
 `update()` runs every frame. The first thing it does is read the current input state. `body.blocked.down` is `true` when the player's physics body is resting on a surface — this is used to prevent jumping in mid-air.
 
 `isDown` is `true` on every frame a key is held. `JustDown` is `true` only on the single frame the key transitions from up to down. Using `JustDown` for jumping is essential: without it, holding the jump key would apply upward velocity on every frame for as long as the key is held, launching the player off the screen.
+
+#### Quiz: JustDown versus isDown
+
+**For moving left, the code uses `this.cursors.left.isDown`. For jumping, it uses `Phaser.Input.Keyboard.JustDown(this.cursors.up)`. Why the inconsistency?**
+
+<div class="quiz-choices">
+<input type="radio" id="qJustDown_a" name="qJustDown" value="wrong1">
+<label for="qJustDown_a">They are interchangeable — the author simply mixed styles for variety.</label><br>
+<input type="radio" id="qJustDown_b" name="qJustDown" value="wrong2">
+<label for="qJustDown_b">`JustDown` only works on arrow keys, while `isDown` works on all keys.</label><br>
+<input type="radio" id="qJustDown_c" name="qJustDown" value="correct">
+<label for="qJustDown_c">Movement is a continuous action — we want `isDown` to apply velocity every frame the key is held. Jumping is a one-shot action — `JustDown` fires on the single frame of the initial keypress, so holding the jump key doesn't apply upward velocity repeatedly and launch the player into orbit.</label><br>
+<input type="radio" id="qJustDown_d" name="qJustDown" value="wrong3">
+<label for="qJustDown_d">`JustDown` is faster than `isDown`, and we want jumping to feel more responsive.</label><br>
+<button class="check-btn" onclick="checkQuiz('qJustDown')">Check Answer</button>
+<div id="qJustDown_feedback" class="quiz-feedback"></div>
+</div>
 
 ### update() — Movement and jumping
 
@@ -959,6 +1078,23 @@ This ordering has practical consequences:
 
 - **Render happens last.** No matter what velocities or positions you set in `update()`, none of it becomes visible until the render step. All changes made during a single tick appear simultaneously in the next frame — the player never sees an intermediate state.
 
+#### Quiz: Order of operations per tick
+
+**Within a single tick of Phaser's game loop, what is the order in which these steps execute?**
+
+<div class="quiz-choices">
+<input type="radio" id="qTickOrder_a" name="qTickOrder" value="wrong1">
+<label for="qTickOrder_a">Render → Your `update()` → Physics step → Input sampling</label><br>
+<input type="radio" id="qTickOrder_b" name="qTickOrder" value="correct">
+<label for="qTickOrder_b">Input sampling → Physics step (including overlap callbacks) → Your `update()` → Render</label><br>
+<input type="radio" id="qTickOrder_c" name="qTickOrder" value="wrong2">
+<label for="qTickOrder_c">Your `update()` → Input sampling → Physics step → Render</label><br>
+<input type="radio" id="qTickOrder_d" name="qTickOrder" value="wrong3">
+<label for="qTickOrder_d">Physics step → Render → Input sampling → Your `update()`</label><br>
+<button class="check-btn" onclick="checkQuiz('qTickOrder')">Check Answer</button>
+<div id="qTickOrder_feedback" class="quiz-feedback"></div>
+</div>
+
 ### Priorities and what "listening" means
 
 In the context of your game, "listening" means **Phaser has registered a callback that it will invoke at the right moment in the tick sequence**. When you write:
@@ -1000,3 +1136,70 @@ Phaser passes `time` and `delta` as arguments to `update(time, delta)`. `delta` 
 The practical lesson: **everything in `update()` is code that runs 60 times per second, so keep it lean.** Creating new objects, allocating arrays, or doing heavy calculations inside `update()` will cause frame drops. Setup work belongs in `create()`. The update loop is for reading state and setting velocities — not for construction.
 
 The browser will not warn you if `update()` takes too long. It will simply drop frames silently, and the game will feel choppy. A frame that takes longer than ~16.7 ms to complete misses its render window and the player sees a stutter.
+
+```{=html}
+<script>
+window.CHAPTER_TITLE = 'Chapter 1 — Getting Started';
+window.CHAPTER_QUIZZES = [
+  { id: 'qSubsystems',      name: 'Phaser Subsystems',          anchor: 'quiz-phaser-subsystems' },
+  { id: 'qNewGame',         name: 'new Phaser.Game(config)',    anchor: 'quiz-what-new-phaser.gameconfig-does' },
+  { id: 'qExtends',         name: 'Why extend Phaser.Scene?',   anchor: 'quiz-why-extend-phaser.scene' },
+  { id: 'qStaticDynamic',   name: 'Static vs dynamic bodies',   anchor: 'quiz-static-vs-dynamic-bodies' },
+  { id: 'qTextureOrder',    name: 'Texture cache ordering',     anchor: 'quiz-texture-cache-ordering' },
+  { id: 'qColliderOverlap', name: 'Collider vs Overlap',        anchor: 'quiz-collider-vs-overlap' },
+  { id: 'qJustDown',        name: 'JustDown vs isDown',         anchor: 'quiz-justdown-versus-isdown' },
+  { id: 'qTickOrder',       name: 'Order of operations / tick', anchor: 'quiz-order-of-operations-per-tick' }
+];
+
+window.QUIZ_DATA = {
+  qSubsystems: {
+    correct: 'Keyboard input lives on <code>this.input.keyboard</code>, not <code>this.physics</code>. Physics owns collisions, gravity, and overlap; input owns keyboard and mouse state. Each subsystem has a single clear responsibility.',
+    wrong1: 'Collisions <em>are</em> handled by physics — that is <code>this.physics.add.collider(...)</code>. Not the right answer here.',
+    wrong2: 'Gravity <em>is</em> a physics concern, configured via <code>config.physics.arcade.gravity.y</code>. Not the right answer.',
+    wrong3: 'Overlap detection <em>is</em> handled by physics — <code>this.physics.add.overlap(...)</code>. Not the right answer.'
+  },
+  qNewGame: {
+    correct: 'Calling <code>new Phaser.Game(config)</code> is what kicks everything off: it creates the canvas, initializes the renderer and physics engine, starts the game loop with <code>requestAnimationFrame</code>, and launches the first scene. Without this line, nothing runs.',
+    wrong1: 'The config is not merely parsed — it is <em>acted on</em>. Phaser uses the config to build the canvas, physics engine, renderer, and scene manager.',
+    wrong2: 'Phaser is already installed at this point (via <code>npm install</code>). <code>new Phaser.Game(config)</code> only uses the already-loaded library.',
+    wrong3: 'No explicit start call is needed. The game loop begins automatically once the Game object is constructed.'
+  },
+  qExtends: {
+    correct: 'Everything a scene offers — <code>this.physics</code>, <code>this.add</code>, <code>this.input</code>, <code>this.cameras</code>, <code>this.tweens</code> — is installed onto <code>this</code> by <code>Phaser.Scene</code>\'s constructor. Without <code>extends Phaser.Scene</code>, those helpers never get attached and every line using them would throw <code>Cannot read properties of undefined</code>.',
+    wrong1: 'It is the opposite of a style choice. <code>Phaser.Scene</code> is the parent class providing all of the scene machinery; dropping <code>extends</code> removes that machinery entirely.',
+    wrong2: 'Phaser does not crash at startup. The game boots — it just fails the instant any scene code tries to use <code>this.physics</code>, <code>this.add</code>, etc.',
+    wrong3: 'Gravity is configured in <code>main.js</code>\'s config, not by the scene\'s parent class. The real problem is that the scene has no physics plugin attached.'
+  },
+  qStaticDynamic: {
+    correct: 'Static bodies are fixed, never simulated. Dynamic bodies are integrated every frame: gravity pulls them, velocity moves them, and colliders push them back out of overlapping static geometry. That is exactly the player/ground relationship: the player falls, the ground holds.',
+    wrong1: 'Static bodies do participate in physics — they just don\'t move. They collide with dynamic bodies and stop them.',
+    wrong2: 'Static bodies fully participate in both colliders and overlaps. They just don\'t have velocity or gravity applied.',
+    wrong3: 'The shape of a body\'s collision box is independent of static vs dynamic; Phaser uses axis-aligned rectangles or circles for either.'
+  },
+  qTextureOrder: {
+    correct: 'Phaser looks up the string <code>\'player\'</code> in its texture cache at the moment <code>add.sprite</code> runs. If the key isn\'t there yet, Phaser substitutes a white placeholder. The <code>genRect</code> line at the bottom <em>does</em> eventually register the texture, but by then the sprite has already been created with the placeholder.',
+    wrong1: 'Phaser doesn\'t raise an error — it silently uses a placeholder. That makes the bug harder to catch.',
+    wrong2: 'Phaser does not delay sprite creation. Each API call in <code>create()</code> runs synchronously, in the order you write it.',
+    wrong3: 'The physics body <em>is</em> registered correctly — the texture lookup happens independently. What fails is the rendering side, not the physics side.'
+  },
+  qColliderOverlap: {
+    correct: 'That is exactly the reason coins use <code>overlap</code>. Collider resolves overlap by pushing bodies apart; overlap merely detects contact and fires the callback without any physical response. For pickups, you want frictionless pass-through, then the callback decides what happens next.',
+    wrong1: 'They are very different. Collider physically separates overlapping bodies; overlap only detects the contact. Swap one for the other and the feel of the game changes.',
+    wrong2: 'Colliders work fine with static groups. The player-to-platforms collider is exactly that pattern. Not the real difference.',
+    wrong3: 'Both <code>collider</code> and <code>overlap</code> accept an optional callback. Firing is not the distinguishing factor.'
+  },
+  qJustDown: {
+    correct: 'Precisely. <code>isDown</code> is edge-<em>insensitive</em>: true every frame the key is held. <code>JustDown</code> is edge-<em>sensitive</em>: true only on the single frame the key first goes down. Continuous movement uses the first; discrete one-shot actions like jumping use the second.',
+    wrong1: 'The two are very different in behavior. Swapping them would break the game — either movement would stop responding to held keys, or jumping would launch the player into orbit.',
+    wrong2: 'Both work on any key — arrow keys, WASD, the space bar, any <code>Phaser.Input.Keyboard.KeyCodes</code> entry. The distinction is temporal, not key-specific.',
+    wrong3: 'They have effectively identical performance. The choice is semantic: do you want "is held" or "was just pressed"?'
+  },
+  qTickOrder: {
+    correct: 'Input is sampled first so your <code>update()</code> sees fresh state. Physics runs next — integration plus collision/overlap callbacks — so by the time <code>update()</code> runs, the world has already reacted to the previous frame\'s input. Your <code>update()</code> then sets new velocities, and render converts it all to pixels last.',
+    wrong1: 'Render must happen last — it is the step that draws the frame to the screen. Running it first would draw stale state.',
+    wrong2: 'Input must be sampled before your <code>update()</code> runs, or <code>cursors.left.isDown</code> would reflect last frame\'s state.',
+    wrong3: 'Physics cannot come before input — if it did, the physics step would simulate forward using stale input. That is not how Phaser is architected.'
+  }
+};
+</script>
+```

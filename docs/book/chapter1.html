@@ -663,6 +663,16 @@ GameOverScene  → shown when the player dies</code></pre>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">bgMusic</span> <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">sound</span><span class="op">.</span><span class="fu">add</span>(<span class="st">'music'</span><span class="op">,</span> { <span class="dt">loop</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span> <span class="dt">volume</span><span class="op">:</span> <span class="fl">0.5</span> })<span class="op">;</span></span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">bgMusic</span><span class="op">.</span><span class="fu">play</span>()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
+<section id="quiz-phaser-subsystems" class="level4">
+<h4 class="anchored" data-anchor-id="quiz-phaser-subsystems">Quiz: Phaser Subsystems</h4>
+<p><strong>Which of the following is handled by <code>this.input</code>, NOT by <code>this.physics</code>?</strong></p>
+<div class="quiz-choices">
+<input type="radio" id="qSubsystems_a" name="qSubsystems" value="wrong1"> <label for="qSubsystems_a">Resolving collisions between the player and platforms</label><br> <input type="radio" id="qSubsystems_b" name="qSubsystems" value="wrong2"> <label for="qSubsystems_b">Applying gravity to dynamic bodies</label><br> <input type="radio" id="qSubsystems_c" name="qSubsystems" value="correct"> <label for="qSubsystems_c">Reading which keyboard keys are currently pressed</label><br> <input type="radio" id="qSubsystems_d" name="qSubsystems" value="wrong3"> <label for="qSubsystems_d">Detecting overlap between the player and coins</label><br> <button class="check-btn" onclick="checkQuiz('qSubsystems')">Check Answer</button>
+<div id="qSubsystems_feedback" class="quiz-feedback">
+
+</div>
+</div>
+</section>
 </section>
 <section id="how-phaser-is-structured-as-a-package" class="level3" data-number="1.1.4">
 <h3 data-number="1.1.4" class="anchored" data-anchor-id="how-phaser-is-structured-as-a-package"><span class="header-section-number">1.1.4</span> How Phaser Is Structured as a Package</h3>
@@ -849,6 +859,16 @@ Note
 <li>Launches the first scene in the <code>scene</code> array — in this case, <code>GameScene</code></li>
 </ol>
 <p>Without it, <code>config</code> is just an inert object in memory.</p>
+<section id="quiz-what-new-phaser.gameconfig-does" class="level4">
+<h4 class="anchored" data-anchor-id="quiz-what-new-phaser.gameconfig-does">Quiz: What <code>new Phaser.Game(config)</code> does</h4>
+<p><strong>Before <code>new Phaser.Game(config)</code> runs, <code>config</code> is just a plain object sitting in memory. What does calling <code>new Phaser.Game(config)</code> actually cause to happen?</strong></p>
+<div class="quiz-choices">
+<input type="radio" id="qNewGame_a" name="qNewGame" value="wrong1"> <label for="qNewGame_a">It parses the config object and prints it to the console — nothing visible happens on screen.</label><br> <input type="radio" id="qNewGame_b" name="qNewGame" value="correct"> <label for="qNewGame_b">It creates the <code>&amp;lt;canvas&amp;gt;</code>, initializes the renderer and physics engine, starts the game loop, and launches the first scene listed in <code>config.scene</code>.</label><br> <input type="radio" id="qNewGame_c" name="qNewGame" value="wrong2"> <label for="qNewGame_c">It downloads Phaser from the network and installs it into <code>node_modules/</code>.</label><br> <input type="radio" id="qNewGame_d" name="qNewGame" value="wrong3"> <label for="qNewGame_d">It registers the scenes but waits for an explicit <code>game.start()</code> call to begin rendering.</label><br> <button class="check-btn" onclick="checkQuiz('qNewGame')">Check Answer</button>
+<div id="qNewGame_feedback" class="quiz-feedback">
+
+</div>
+</div>
+</section>
 </section>
 <section id="package.json-project-manifest" class="level3" data-number="1.3.3">
 <h3 data-number="1.3.3" class="anchored" data-anchor-id="package.json-project-manifest"><span class="header-section-number">1.3.3</span> package.json — Project Manifest</h3>
@@ -1189,6 +1209,16 @@ Note
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">scene</span><span class="op">.</span><span class="fu">restart</span>()<span class="op">;</span>            <span class="co">// restart this scene</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">scene</span><span class="op">.</span><span class="fu">pause</span>(<span class="st">'GameScene'</span>)<span class="op">;</span>   <span class="co">// pause it</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>If you don’t call <code>super()</code> in a subclass constructor, JavaScript throws a <code>ReferenceError</code> before the constructor body even runs. It is a hard requirement for any class that uses <code>extends</code>.</p>
+<section id="quiz-why-extend-phaser.scene" class="level4">
+<h4 class="anchored" data-anchor-id="quiz-why-extend-phaser.scene">Quiz: Why extend Phaser.Scene?</h4>
+<p><strong>If you removed <code>extends Phaser.Scene</code> from the class declaration, leaving just <code>class GameScene { ... }</code>, what would go wrong?</strong></p>
+<div class="quiz-choices">
+<input type="radio" id="qExtends_a" name="qExtends" value="wrong1"> <label for="qExtends_a">Nothing — <code>extends Phaser.Scene</code> is purely a style choice.</label><br> <input type="radio" id="qExtends_b" name="qExtends" value="wrong2"> <label for="qExtends_b">Phaser would refuse to load the game and crash on startup.</label><br> <input type="radio" id="qExtends_c" name="qExtends" value="correct"> <label for="qExtends_c"><code>this.physics</code>, <code>this.add</code>, <code>this.input</code>, and the other scene tools would be <code>undefined</code>, because those are inherited from <code>Phaser.Scene</code>’s constructor — every line that uses them in <code>create()</code> would throw a TypeError.</label><br> <input type="radio" id="qExtends_d" name="qExtends" value="wrong3"> <label for="qExtends_d">The game would run but in slow motion, since gravity defaults to zero without a scene parent.</label><br> <button class="check-btn" onclick="checkQuiz('qExtends')">Check Answer</button>
+<div id="qExtends_feedback" class="quiz-feedback">
+
+</div>
+</div>
+</section>
 </section>
 <section id="why-all-methods-must-live-inside-the-class" class="level3" data-number="1.4.3">
 <h3 data-number="1.4.3" class="anchored" data-anchor-id="why-all-methods-must-live-inside-the-class"><span class="header-section-number">1.4.3</span> Why all methods must live inside the class</h3>
@@ -1200,6 +1230,16 @@ Note
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>scene<span class="op">.</span><span class="fu">update</span>(time<span class="op">,</span> delta)<span class="op">;</span>  <span class="co">// called every frame</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>If <code>create</code> and <code>update</code> are not on the instance — meaning they are not defined as methods of the class — Phaser simply does not call them. The game would start but nothing would appear. Phaser does not raise an error for a missing <code>create()</code> or <code>update()</code>; it just skips calling them if they are not found.</p>
 <p>The same logic applies to <code>genRect</code> and <code>genCircle</code>: they use <code>this.make.graphics()</code>, which only works because they are class methods with access to the scene instance. As standalone functions, they would have no way to reach Phaser’s scene API.</p>
+<section id="quiz-static-vs-dynamic-bodies" class="level4">
+<h4 class="anchored" data-anchor-id="quiz-static-vs-dynamic-bodies">Quiz: Static vs dynamic bodies</h4>
+<p><strong>The ground and platforms are created with <code>physics.add.staticImage</code> / <code>staticGroup</code>, but the player uses <code>physics.add.sprite</code> (dynamic). What is the functional consequence of choosing static versus dynamic?</strong></p>
+<div class="quiz-choices">
+<input type="radio" id="qStaticDynamic_a" name="qStaticDynamic" value="wrong1"> <label for="qStaticDynamic_a">Static bodies are invisible to the physics engine — they only exist for rendering.</label><br> <input type="radio" id="qStaticDynamic_b" name="qStaticDynamic" value="correct"> <label for="qStaticDynamic_b">Static bodies are not affected by gravity, velocity, or collisions — they stay fixed in place. Dynamic bodies (like the player) have their position updated every frame based on velocity and gravity, and are pushed out of the way when collisions are resolved.</label><br> <input type="radio" id="qStaticDynamic_c" name="qStaticDynamic" value="wrong2"> <label for="qStaticDynamic_c">Static bodies use less memory but cannot participate in colliders or overlaps.</label><br> <input type="radio" id="qStaticDynamic_d" name="qStaticDynamic" value="wrong3"> <label for="qStaticDynamic_d">Dynamic bodies are rendered as circles; static bodies are rendered as rectangles.</label><br> <button class="check-btn" onclick="checkQuiz('qStaticDynamic')">Check Answer</button>
+<div id="qStaticDynamic_feedback" class="quiz-feedback">
+
+</div>
+</div>
+</section>
 </section>
 <section id="when-you-would-have-other-classes" class="level3" data-number="1.4.4">
 <h3 data-number="1.4.4" class="anchored" data-anchor-id="when-you-would-have-other-classes"><span class="header-section-number">1.4.4</span> When you would have other classes</h3>
@@ -1252,6 +1292,16 @@ Note
 <p>We have no image files. So instead, we create textures programmatically right at the start of <code>create()</code>, using our helper methods. Each <code>genRect</code> and <code>genCircle</code> call draws a colored shape into an off-screen Graphics object and then “bakes” it into a named texture entry in the cache via <code>generateTexture()</code>. By the time the first <code>this.physics.add.staticImage(...)</code> call runs, every key it needs — <code>'ground'</code>, <code>'platform'</code>, <code>'plat_sm'</code>, <code>'player'</code>, <code>'coin'</code> — already exists in the cache and is ready to use.</p>
 <p>This is why the five <code>genRect</code>/<code>genCircle</code> calls appear at the very top of <code>create()</code>, before any game object is created. Swap their order with the ground or player setup, and those objects would get the white placeholder texture instead.</p>
 <p>The colors are hexadecimal values: <code>0x4caf50</code> is a medium green (ground), <code>0x8b6914</code> is brown (platforms), <code>0x5c9ded</code> is blue (player), <code>0xffd700</code> is gold (coin).</p>
+<section id="quiz-texture-cache-ordering" class="level4">
+<h4 class="anchored" data-anchor-id="quiz-texture-cache-ordering">Quiz: Texture cache ordering</h4>
+<p><strong>Suppose you moved the line <code>this.genRect('player', 32, 48, 0x5c9ded)</code> to the very bottom of <code>create()</code>, AFTER <code>this.player = this.physics.add.sprite(100, H - 80, 'player')</code>. What happens when the game runs?</strong></p>
+<div class="quiz-choices">
+<input type="radio" id="qTextureOrder_a" name="qTextureOrder" value="wrong1"> <label for="qTextureOrder_a">A JavaScript error is thrown and the game refuses to start.</label><br> <input type="radio" id="qTextureOrder_b" name="qTextureOrder" value="correct"> <label for="qTextureOrder_b">The player sprite renders as a blank 32×32 white square — Phaser looked up the key <code>'player'</code> in the texture cache, didn’t find it yet, and used the built-in missing-texture placeholder.</label><br> <input type="radio" id="qTextureOrder_c" name="qTextureOrder" value="wrong2"> <label for="qTextureOrder_c">Phaser delays sprite creation until every <code>genRect</code> call completes, so it works exactly the same.</label><br> <input type="radio" id="qTextureOrder_d" name="qTextureOrder" value="wrong3"> <label for="qTextureOrder_d">The blue player appears, but jumping stops working because the physics body is not registered.</label><br> <button class="check-btn" onclick="checkQuiz('qTextureOrder')">Check Answer</button>
+<div id="qTextureOrder_feedback" class="quiz-feedback">
+
+</div>
+</div>
+</section>
 </section>
 <section id="ground" class="level3" data-number="1.4.7">
 <h3 data-number="1.4.7" class="anchored" data-anchor-id="ground"><span class="header-section-number">1.4.7</span> Ground</h3>
@@ -1293,6 +1343,16 @@ Note
 <span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>  <span class="kw">this</span><span class="op">.</span><span class="at">scoreText</span><span class="op">.</span><span class="fu">setText</span>(<span class="st">'Score: '</span> <span class="op">+</span> <span class="kw">this</span><span class="op">.</span><span class="at">score</span>)<span class="op">;</span></span>
 <span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Five coins are placed: two near the ground and one above each platform. Unlike platforms, coins use <code>overlap</code> instead of <code>collider</code>. The player passes through coins rather than landing on them. When an overlap is detected, the callback fires — the coin is destroyed (removed from the scene), the score counter increments, and the score text is updated. The callback receives two arguments: the player and the specific coin that was touched. The player argument is prefixed with <code>_</code> to signal it is intentionally unused.</p>
+<section id="quiz-collider-vs-overlap" class="level4">
+<h4 class="anchored" data-anchor-id="quiz-collider-vs-overlap">Quiz: Collider vs Overlap</h4>
+<p><strong>Suppose we changed <code>this.physics.add.overlap(this.player, this.coins, ...)</code> to <code>this.physics.add.collider(this.player, this.coins, ...)</code> (keeping the same callback). The player’s first encounter with a coin would look different — how?</strong></p>
+<div class="quiz-choices">
+<input type="radio" id="qColliderOverlap_a" name="qColliderOverlap" value="wrong1"> <label for="qColliderOverlap_a">No visible difference — <code>collider</code> and <code>overlap</code> behave identically, the callback fires either way.</label><br> <input type="radio" id="qColliderOverlap_b" name="qColliderOverlap" value="correct"> <label for="qColliderOverlap_b">The player would physically collide with the coin and be pushed away, as if the coin were a tiny platform — before the callback’s <code>coin.destroy()</code> removes it. Using <code>overlap</code> lets the player pass straight through without any physical reaction.</label><br> <input type="radio" id="qColliderOverlap_c" name="qColliderOverlap" value="wrong2"> <label for="qColliderOverlap_c">The game would crash, because <code>collider</code> is only for two dynamic bodies and coins are in a static group.</label><br> <input type="radio" id="qColliderOverlap_d" name="qColliderOverlap" value="wrong3"> <label for="qColliderOverlap_d">The callback would never fire — <code>collider</code> does not support callbacks.</label><br> <button class="check-btn" onclick="checkQuiz('qColliderOverlap')">Check Answer</button>
+<div id="qColliderOverlap_feedback" class="quiz-feedback">
+
+</div>
+</div>
+</section>
 </section>
 <section id="score-text" class="level3" data-number="1.4.12">
 <h3 data-number="1.4.12" class="anchored" data-anchor-id="score-text"><span class="header-section-number">1.4.12</span> Score text</h3>
@@ -1331,6 +1391,16 @@ Note
 <span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>           <span class="op">||</span> Phaser<span class="op">.</span><span class="at">Input</span><span class="op">.</span><span class="at">Keyboard</span><span class="op">.</span><span class="fu">JustDown</span>(<span class="kw">this</span><span class="op">.</span><span class="at">wasd</span><span class="op">.</span><span class="at">jump</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>update()</code> runs every frame. The first thing it does is read the current input state. <code>body.blocked.down</code> is <code>true</code> when the player’s physics body is resting on a surface — this is used to prevent jumping in mid-air.</p>
 <p><code>isDown</code> is <code>true</code> on every frame a key is held. <code>JustDown</code> is <code>true</code> only on the single frame the key transitions from up to down. Using <code>JustDown</code> for jumping is essential: without it, holding the jump key would apply upward velocity on every frame for as long as the key is held, launching the player off the screen.</p>
+<section id="quiz-justdown-versus-isdown" class="level4">
+<h4 class="anchored" data-anchor-id="quiz-justdown-versus-isdown">Quiz: JustDown versus isDown</h4>
+<p><strong>For moving left, the code uses <code>this.cursors.left.isDown</code>. For jumping, it uses <code>Phaser.Input.Keyboard.JustDown(this.cursors.up)</code>. Why the inconsistency?</strong></p>
+<div class="quiz-choices">
+<input type="radio" id="qJustDown_a" name="qJustDown" value="wrong1"> <label for="qJustDown_a">They are interchangeable — the author simply mixed styles for variety.</label><br> <input type="radio" id="qJustDown_b" name="qJustDown" value="wrong2"> <label for="qJustDown_b"><code>JustDown</code> only works on arrow keys, while <code>isDown</code> works on all keys.</label><br> <input type="radio" id="qJustDown_c" name="qJustDown" value="correct"> <label for="qJustDown_c">Movement is a continuous action — we want <code>isDown</code> to apply velocity every frame the key is held. Jumping is a one-shot action — <code>JustDown</code> fires on the single frame of the initial keypress, so holding the jump key doesn’t apply upward velocity repeatedly and launch the player into orbit.</label><br> <input type="radio" id="qJustDown_d" name="qJustDown" value="wrong3"> <label for="qJustDown_d"><code>JustDown</code> is faster than <code>isDown</code>, and we want jumping to feel more responsive.</label><br> <button class="check-btn" onclick="checkQuiz('qJustDown')">Check Answer</button>
+<div id="qJustDown_feedback" class="quiz-feedback">
+
+</div>
+</div>
+</section>
 </section>
 <section id="update-movement-and-jumping" class="level3" data-number="1.4.16">
 <h3 data-number="1.4.16" class="anchored" data-anchor-id="update-movement-and-jumping"><span class="header-section-number">1.4.16</span> update() — Movement and jumping</h3>
@@ -1411,6 +1481,16 @@ Note
 <li><p><strong>Overlap callbacks fire before <code>update()</code>.</strong> If the player touches a coin and the callback runs <code>coin.destroy()</code>, by the time your <code>update()</code> code executes in the same frame, the coin is already gone from the scene. You never observe a half-destroyed state.</p></li>
 <li><p><strong>Render happens last.</strong> No matter what velocities or positions you set in <code>update()</code>, none of it becomes visible until the render step. All changes made during a single tick appear simultaneously in the next frame — the player never sees an intermediate state.</p></li>
 </ul>
+<section id="quiz-order-of-operations-per-tick" class="level4">
+<h4 class="anchored" data-anchor-id="quiz-order-of-operations-per-tick">Quiz: Order of operations per tick</h4>
+<p><strong>Within a single tick of Phaser’s game loop, what is the order in which these steps execute?</strong></p>
+<div class="quiz-choices">
+<input type="radio" id="qTickOrder_a" name="qTickOrder" value="wrong1"> <label for="qTickOrder_a">Render → Your <code>update()</code> → Physics step → Input sampling</label><br> <input type="radio" id="qTickOrder_b" name="qTickOrder" value="correct"> <label for="qTickOrder_b">Input sampling → Physics step (including overlap callbacks) → Your <code>update()</code> → Render</label><br> <input type="radio" id="qTickOrder_c" name="qTickOrder" value="wrong2"> <label for="qTickOrder_c">Your <code>update()</code> → Input sampling → Physics step → Render</label><br> <input type="radio" id="qTickOrder_d" name="qTickOrder" value="wrong3"> <label for="qTickOrder_d">Physics step → Render → Input sampling → Your <code>update()</code></label><br> <button class="check-btn" onclick="checkQuiz('qTickOrder')">Check Answer</button>
+<div id="qTickOrder_feedback" class="quiz-feedback">
+
+</div>
+</div>
+</section>
 </section>
 <section id="priorities-and-what-listening-means" class="level3" data-number="1.5.5">
 <h3 data-number="1.5.5" class="anchored" data-anchor-id="priorities-and-what-listening-means"><span class="header-section-number">1.5.5</span> Priorities and what “listening” means</h3>
@@ -1443,12 +1523,292 @@ Note
 <h3 data-number="1.5.8" class="anchored" data-anchor-id="what-this-means-for-your-code"><span class="header-section-number">1.5.8</span> What this means for your code</h3>
 <p>The practical lesson: <strong>everything in <code>update()</code> is code that runs 60 times per second, so keep it lean.</strong> Creating new objects, allocating arrays, or doing heavy calculations inside <code>update()</code> will cause frame drops. Setup work belongs in <code>create()</code>. The update loop is for reading state and setting velocities — not for construction.</p>
 <p>The browser will not warn you if <code>update()</code> takes too long. It will simply drop frames silently, and the game will feel choppy. A frame that takes longer than ~16.7 ms to complete misses its render window and the player sees a stutter.</p>
+<script>
+window.CHAPTER_TITLE = 'Chapter 1 — Getting Started';
+window.CHAPTER_QUIZZES = [
+  { id: 'qSubsystems',      name: 'Phaser Subsystems',          anchor: 'quiz-phaser-subsystems' },
+  { id: 'qNewGame',         name: 'new Phaser.Game(config)',    anchor: 'quiz-what-new-phaser.gameconfig-does' },
+  { id: 'qExtends',         name: 'Why extend Phaser.Scene?',   anchor: 'quiz-why-extend-phaser.scene' },
+  { id: 'qStaticDynamic',   name: 'Static vs dynamic bodies',   anchor: 'quiz-static-vs-dynamic-bodies' },
+  { id: 'qTextureOrder',    name: 'Texture cache ordering',     anchor: 'quiz-texture-cache-ordering' },
+  { id: 'qColliderOverlap', name: 'Collider vs Overlap',        anchor: 'quiz-collider-vs-overlap' },
+  { id: 'qJustDown',        name: 'JustDown vs isDown',         anchor: 'quiz-justdown-versus-isdown' },
+  { id: 'qTickOrder',       name: 'Order of operations / tick', anchor: 'quiz-order-of-operations-per-tick' }
+];
+
+window.QUIZ_DATA = {
+  qSubsystems: {
+    correct: 'Keyboard input lives on <code>this.input.keyboard</code>, not <code>this.physics</code>. Physics owns collisions, gravity, and overlap; input owns keyboard and mouse state. Each subsystem has a single clear responsibility.',
+    wrong1: 'Collisions <em>are</em> handled by physics — that is <code>this.physics.add.collider(...)</code>. Not the right answer here.',
+    wrong2: 'Gravity <em>is</em> a physics concern, configured via <code>config.physics.arcade.gravity.y</code>. Not the right answer.',
+    wrong3: 'Overlap detection <em>is</em> handled by physics — <code>this.physics.add.overlap(...)</code>. Not the right answer.'
+  },
+  qNewGame: {
+    correct: 'Calling <code>new Phaser.Game(config)</code> is what kicks everything off: it creates the canvas, initializes the renderer and physics engine, starts the game loop with <code>requestAnimationFrame</code>, and launches the first scene. Without this line, nothing runs.',
+    wrong1: 'The config is not merely parsed — it is <em>acted on</em>. Phaser uses the config to build the canvas, physics engine, renderer, and scene manager.',
+    wrong2: 'Phaser is already installed at this point (via <code>npm install</code>). <code>new Phaser.Game(config)</code> only uses the already-loaded library.',
+    wrong3: 'No explicit start call is needed. The game loop begins automatically once the Game object is constructed.'
+  },
+  qExtends: {
+    correct: 'Everything a scene offers — <code>this.physics</code>, <code>this.add</code>, <code>this.input</code>, <code>this.cameras</code>, <code>this.tweens</code> — is installed onto <code>this</code> by <code>Phaser.Scene</code>\'s constructor. Without <code>extends Phaser.Scene</code>, those helpers never get attached and every line using them would throw <code>Cannot read properties of undefined</code>.',
+    wrong1: 'It is the opposite of a style choice. <code>Phaser.Scene</code> is the parent class providing all of the scene machinery; dropping <code>extends</code> removes that machinery entirely.',
+    wrong2: 'Phaser does not crash at startup. The game boots — it just fails the instant any scene code tries to use <code>this.physics</code>, <code>this.add</code>, etc.',
+    wrong3: 'Gravity is configured in <code>main.js</code>\'s config, not by the scene\'s parent class. The real problem is that the scene has no physics plugin attached.'
+  },
+  qStaticDynamic: {
+    correct: 'Static bodies are fixed, never simulated. Dynamic bodies are integrated every frame: gravity pulls them, velocity moves them, and colliders push them back out of overlapping static geometry. That is exactly the player/ground relationship: the player falls, the ground holds.',
+    wrong1: 'Static bodies do participate in physics — they just don\'t move. They collide with dynamic bodies and stop them.',
+    wrong2: 'Static bodies fully participate in both colliders and overlaps. They just don\'t have velocity or gravity applied.',
+    wrong3: 'The shape of a body\'s collision box is independent of static vs dynamic; Phaser uses axis-aligned rectangles or circles for either.'
+  },
+  qTextureOrder: {
+    correct: 'Phaser looks up the string <code>\'player\'</code> in its texture cache at the moment <code>add.sprite</code> runs. If the key isn\'t there yet, Phaser substitutes a white placeholder. The <code>genRect</code> line at the bottom <em>does</em> eventually register the texture, but by then the sprite has already been created with the placeholder.',
+    wrong1: 'Phaser doesn\'t raise an error — it silently uses a placeholder. That makes the bug harder to catch.',
+    wrong2: 'Phaser does not delay sprite creation. Each API call in <code>create()</code> runs synchronously, in the order you write it.',
+    wrong3: 'The physics body <em>is</em> registered correctly — the texture lookup happens independently. What fails is the rendering side, not the physics side.'
+  },
+  qColliderOverlap: {
+    correct: 'That is exactly the reason coins use <code>overlap</code>. Collider resolves overlap by pushing bodies apart; overlap merely detects contact and fires the callback without any physical response. For pickups, you want frictionless pass-through, then the callback decides what happens next.',
+    wrong1: 'They are very different. Collider physically separates overlapping bodies; overlap only detects the contact. Swap one for the other and the feel of the game changes.',
+    wrong2: 'Colliders work fine with static groups. The player-to-platforms collider is exactly that pattern. Not the real difference.',
+    wrong3: 'Both <code>collider</code> and <code>overlap</code> accept an optional callback. Firing is not the distinguishing factor.'
+  },
+  qJustDown: {
+    correct: 'Precisely. <code>isDown</code> is edge-<em>insensitive</em>: true every frame the key is held. <code>JustDown</code> is edge-<em>sensitive</em>: true only on the single frame the key first goes down. Continuous movement uses the first; discrete one-shot actions like jumping use the second.',
+    wrong1: 'The two are very different in behavior. Swapping them would break the game — either movement would stop responding to held keys, or jumping would launch the player into orbit.',
+    wrong2: 'Both work on any key — arrow keys, WASD, the space bar, any <code>Phaser.Input.Keyboard.KeyCodes</code> entry. The distinction is temporal, not key-specific.',
+    wrong3: 'They have effectively identical performance. The choice is semantic: do you want "is held" or "was just pressed"?'
+  },
+  qTickOrder: {
+    correct: 'Input is sampled first so your <code>update()</code> sees fresh state. Physics runs next — integration plus collision/overlap callbacks — so by the time <code>update()</code> runs, the world has already reacted to the previous frame\'s input. Your <code>update()</code> then sets new velocities, and render converts it all to pixels last.',
+    wrong1: 'Render must happen last — it is the step that draws the frame to the screen. Running it first would draw stale state.',
+    wrong2: 'Input must be sampled before your <code>update()</code> runs, or <code>cursors.left.isDown</code> would reflect last frame\'s state.',
+    wrong3: 'Physics cannot come before input — if it did, the physics step would simulate forward using stale input. That is not how Phaser is architected.'
+  }
+};
+</script>
 
 
 </section>
 </section>
 
 </main> <!-- /main -->
+<style>
+/* ── Quiz feedback ─────────────────────────────────────────────────── */
+.quiz-feedback {
+  display: none;
+  padding: 10px 12px;
+  margin-top: 10px;
+  border-left: 4px solid;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.quiz-feedback.correct   { background: #d4edda; border-left-color: #28a745; color: #155724; }
+.quiz-feedback.incorrect { background: #f8d7da; border-left-color: #dc3545; color: #721c24; }
+.quiz-feedback.warning   { background: #fff3cd; border-left-color: #ffc107; color: #856404; }
+body.quarto-dark .quiz-feedback.correct   { background: rgba(40,167,69,0.18);  color: #a8d4a8; }
+body.quarto-dark .quiz-feedback.incorrect { background: rgba(220,53,69,0.18);  color: #e8a8a8; }
+body.quarto-dark .quiz-feedback.warning   { background: rgba(255,193,7,0.14);  color: #e8d0a0; }
+.quiz-feedback code { background: rgba(0,0,0,0.08); padding: 1px 4px; border-radius: 3px; }
+body.quarto-dark .quiz-feedback code { background: rgba(0,0,0,0.35); color: inherit; }
+
+.quiz-choices label { padding: 2px 0; margin-left: 4px; cursor: pointer; }
+.quiz-choices input[type="radio"] { margin-right: 4px; cursor: pointer; }
+.check-btn {
+  margin-top: 6px; padding: 5px 14px;
+  background: #2780e3; color: #fff;
+  border: none; border-radius: 4px; cursor: pointer; font-size: 0.85rem;
+}
+.check-btn:hover { background: #1e6fcb; }
+body.quarto-dark .check-btn { background: #00bc8c; color: #1a1a1a; }
+body.quarto-dark .check-btn:hover { background: #02a37c; }
+
+/* ── Floating progress widget ───────────────────────────────────────── */
+.phaser-progress {
+  position: fixed; bottom: 20px; right: 20px; z-index: 1000;
+  font-family: system-ui, -apple-system, sans-serif; font-size: 0.85rem;
+  background: var(--bs-body-bg, #fff);
+  border: 1px solid var(--bs-border-color, #dee2e6);
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  max-width: 340px; min-width: 220px; overflow: hidden;
+}
+body.quarto-dark .phaser-progress {
+  background: #2a2d38; border-color: #3e4150;
+  box-shadow: 0 2px 14px rgba(0,0,0,0.55);
+}
+.phaser-progress-toggle {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; padding: 10px 14px;
+  background: none; border: none; width: 100%;
+  text-align: left; color: var(--bs-body-color, #212529);
+  cursor: pointer; font-size: 0.85rem;
+}
+body.quarto-dark .phaser-progress-toggle { color: #dee2e6; }
+.phaser-progress-toggle:hover           { background: rgba(0,0,0,0.03); }
+body.quarto-dark .phaser-progress-toggle:hover { background: rgba(255,255,255,0.05); }
+.phaser-progress-count { font-weight: 600; }
+.phaser-progress-body {
+  border-top: 1px solid var(--bs-border-color, #dee2e6);
+  padding: 12px 14px;
+}
+body.quarto-dark .phaser-progress-body { border-top-color: #3e4150; }
+.phaser-progress-title {
+  font-weight: 600; font-size: 0.78rem; text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 8px; color: var(--bs-secondary-color, #6c757d);
+}
+.phaser-progress-bar {
+  height: 6px; background: var(--bs-secondary-bg, #e9ecef);
+  border-radius: 3px; margin-bottom: 10px; overflow: hidden;
+}
+body.quarto-dark .phaser-progress-bar { background: #3e4150; }
+.phaser-progress-bar-inner { height: 100%; background: #2780e3; transition: width 0.3s; }
+body.quarto-dark .phaser-progress-bar-inner { background: #00bc8c; }
+.phaser-progress-list {
+  max-height: 320px; overflow-y: auto; margin-bottom: 10px;
+}
+.progress-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 4px 0; font-size: 0.82rem;
+}
+.progress-item-icon { flex-shrink: 0; width: 14px; text-align: center; font-weight: 600; }
+.progress-item-icon.correct    { color: #28a745; }
+.progress-item-icon.incorrect  { color: #dc3545; }
+.progress-item-icon.unanswered { color: #aaa; }
+.progress-item-name a {
+  color: inherit; text-decoration: none;
+  border-bottom: 1px dotted currentColor;
+}
+.progress-item-name a:hover { border-bottom-style: solid; }
+.progress-reset {
+  display: block; width: 100%; padding: 4px 8px; font-size: 0.75rem;
+  background: none; color: var(--bs-secondary-color, #6c757d);
+  border: 1px solid var(--bs-border-color, #dee2e6);
+  border-radius: 4px; cursor: pointer;
+}
+body.quarto-dark .progress-reset { color: #aaa; border-color: #3e4150; }
+.progress-reset:hover          { background: rgba(0,0,0,0.04); color: var(--bs-body-color, #212529); }
+body.quarto-dark .progress-reset:hover { background: rgba(255,255,255,0.05); color: #dee2e6; }
+
+@media (max-width: 600px) {
+  .phaser-progress { bottom: 8px; right: 8px; left: 8px; max-width: none; }
+}
+</style>
+
+<script>
+(function () {
+  if (!window.CHAPTER_QUIZZES || window.CHAPTER_QUIZZES.length === 0) return;
+
+  var PREFIX = 'phaser_quiz_';
+
+  function getStatus(id) { return localStorage.getItem(PREFIX + id) || null; }
+  function setStatus(id, s) { localStorage.setItem(PREFIX + id, s); }
+  function clearAll() {
+    window.CHAPTER_QUIZZES.forEach(function (q) { localStorage.removeItem(PREFIX + q.id); });
+  }
+
+  window.recordAnswer = function (id, correct) {
+    setStatus(id, correct ? 'correct' : 'wrong');
+    renderWidget();
+  };
+
+  window.checkQuiz = function (id) {
+    var data = (window.QUIZ_DATA || {})[id] || {};
+    var selected = document.querySelector('input[name="' + id + '"]:checked');
+    var feedback = document.getElementById(id + '_feedback');
+    if (!feedback) return;
+
+    if (!selected) {
+      feedback.className = 'quiz-feedback warning';
+      feedback.style.display = 'block';
+      feedback.innerHTML = '⚠️ <strong>Please select an answer first.</strong>';
+      return;
+    }
+
+    var isCorrect = selected.value === 'correct';
+    window.recordAnswer(id, isCorrect);
+
+    var msg = data[selected.value] || '';
+    var header = isCorrect
+      ? '<strong>✅ Correct!</strong><br/><br/>'
+      : '<strong>❌ Not quite.</strong><br/><br/>';
+    feedback.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'incorrect');
+    feedback.style.display = 'block';
+    feedback.innerHTML = header + msg;
+  };
+
+  function buildWidget() {
+    var div = document.createElement('div');
+    div.className = 'phaser-progress';
+    div.id = 'phaser-progress';
+    div.innerHTML = ''
+      + '<button class="phaser-progress-toggle" onclick="togglePhaserProgress()">'
+      +   '<span>Progress: <span class="phaser-progress-count" id="phaser-progress-count">0 / 0</span></span>'
+      +   '<span id="phaser-progress-chevron">▾</span>'
+      + '</button>'
+      + '<div class="phaser-progress-body" id="phaser-progress-body" style="display:none;">'
+      +   '<div class="phaser-progress-title" id="phaser-progress-title"></div>'
+      +   '<div class="phaser-progress-bar"><div class="phaser-progress-bar-inner" id="phaser-progress-bar-inner"></div></div>'
+      +   '<div class="phaser-progress-list" id="phaser-progress-list"></div>'
+      +   '<button class="progress-reset" onclick="resetPhaserProgress()">Reset progress</button>'
+      + '</div>';
+    document.body.appendChild(div);
+  }
+
+  window.togglePhaserProgress = function () {
+    var body = document.getElementById('phaser-progress-body');
+    var chev = document.getElementById('phaser-progress-chevron');
+    var opening = body.style.display === 'none';
+    body.style.display = opening ? 'block' : 'none';
+    chev.textContent  = opening ? '▴' : '▾';
+  };
+
+  window.resetPhaserProgress = function () {
+    if (!confirm('Reset all quiz progress on this page?')) return;
+    clearAll();
+    window.CHAPTER_QUIZZES.forEach(function (q) {
+      var fb = document.getElementById(q.id + '_feedback');
+      if (fb) { fb.style.display = 'none'; fb.innerHTML = ''; }
+      document.querySelectorAll('input[name="' + q.id + '"]').forEach(function (r) { r.checked = false; });
+    });
+    renderWidget();
+  };
+
+  function renderWidget() {
+    var quizzes = window.CHAPTER_QUIZZES;
+    var title = window.CHAPTER_TITLE || '';
+    var answered = 0, correct = 0, html = '';
+    quizzes.forEach(function (q) {
+      var s = getStatus(q.id);
+      if (s) answered++;
+      if (s === 'correct') correct++;
+      var iconClass = 'unanswered', icon = '–';
+      if (s === 'correct')  { iconClass = 'correct';   icon = '✓'; }
+      if (s === 'wrong')    { iconClass = 'incorrect'; icon = '✗'; }
+      var name = q.anchor
+        ? '<a href="#' + q.anchor + '">' + q.name + '</a>'
+        : q.name;
+      html += '<div class="progress-item">'
+           +  '<span class="progress-item-icon ' + iconClass + '">' + icon + '</span>'
+           +  '<span class="progress-item-name">' + name + '</span>'
+           + '</div>';
+    });
+    var total = quizzes.length;
+    var pct = total ? Math.round(correct / total * 100) : 0;
+
+    document.getElementById('phaser-progress-count').textContent = correct + ' / ' + total;
+    document.getElementById('phaser-progress-bar-inner').style.width = pct + '%';
+    document.getElementById('phaser-progress-title').textContent = title;
+    document.getElementById('phaser-progress-list').innerHTML = html;
+  }
+
+  function init() { buildWidget(); renderWidget(); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     // Ensure there is a toggle, if there isn't float one in the top right

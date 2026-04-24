@@ -67,6 +67,23 @@ const onFloor = body.blocked.down;
 // blocked.down is true when the player is resting on a surface
 ```
 
+#### Quiz: Hex color literals
+
+**The game uses `0xff4444` for the enemy's red color. What decimal number does `0xff4444` equal — and why does that matter?**
+
+<div class="quiz-choices">
+<input type="radio" id="qHex_a" name="qHex" value="wrong1">
+<label for="qHex_a">16,724,036, but it doesn't matter — the `0x` prefix tells JavaScript to treat it as a string color name.</label><br>
+<input type="radio" id="qHex_b" name="qHex" value="correct">
+<label for="qHex_b">16,728,132 — a regular integer. Phaser accepts it because it encodes the red/green/blue bytes as `0xRRGGBB` (ff / 44 / 44), which is the same bit layout CSS uses when you write `#ff4444`.</label><br>
+<input type="radio" id="qHex_c" name="qHex" value="wrong2">
+<label for="qHex_c">It is not a number — `0x` values are JavaScript strings, and Phaser parses them internally.</label><br>
+<input type="radio" id="qHex_d" name="qHex" value="wrong3">
+<label for="qHex_d">65,535 — the `0xff4444` notation is truncated to two bytes.</label><br>
+<button class="check-btn" onclick="checkQuiz('qHex')">Check Answer</button>
+<div id="qHex_feedback" class="quiz-feedback"></div>
+</div>
+
 ---
 
 ## A.2 Variables: `const` and `let`
@@ -100,6 +117,23 @@ In the game, almost everything is `const`. The only values that need reassignmen
 ## Rule of thumb
 Default to `const`. Switch to `let` only when you know you will reassign the variable. Using `const` everywhere it fits makes it easy to spot, at a glance, which variables are mutation points.
 :::
+
+#### Quiz: What `const` actually guarantees
+
+**Given `const player = this.physics.add.sprite(100, 420, 'player');`, which of the following statements will throw a `TypeError`?**
+
+<div class="quiz-choices">
+<input type="radio" id="qConst_a" name="qConst" value="wrong1">
+<label for="qConst_a">`player.setCollideWorldBounds(true);`</label><br>
+<input type="radio" id="qConst_b" name="qConst" value="wrong2">
+<label for="qConst_b">`player.x = 200;`</label><br>
+<input type="radio" id="qConst_c" name="qConst" value="correct">
+<label for="qConst_c">`player = this.physics.add.sprite(0, 0, 'enemy');`</label><br>
+<input type="radio" id="qConst_d" name="qConst" value="wrong3">
+<label for="qConst_d">`player.body.setVelocityX(-220);`</label><br>
+<button class="check-btn" onclick="checkQuiz('qConst')">Check Answer</button>
+<div id="qConst_feedback" class="quiz-feedback"></div>
+</div>
 
 ---
 
@@ -146,6 +180,35 @@ config.physics.arcade.gravity.y   // 600
 ### Objects vs classes
 
 An object literal is just data — it has no associated behavior. The `config` object is a plain container. Classes (covered in [A.6]) are blueprints that bundle data *and* methods together, and they produce objects with a specific prototype. The distinction: a `config` object is a bag of values; a `GameScene` instance is a live, behavior-rich object.
+
+#### Quiz: Nested property access
+
+**Given the `config` object from `main.js`:**
+
+```javascript
+const config = {
+  width: 800,
+  physics: {
+    default: 'arcade',
+    arcade: { gravity: { y: 600 }, debug: false }
+  }
+};
+```
+
+**What does `config.physics.arcade.gravity.y` evaluate to?**
+
+<div class="quiz-choices">
+<input type="radio" id="qNestedObj_a" name="qNestedObj" value="wrong1">
+<label for="qNestedObj_a">`undefined` — you can't chain dots across multiple nested objects.</label><br>
+<input type="radio" id="qNestedObj_b" name="qNestedObj" value="correct">
+<label for="qNestedObj_b">`600`</label><br>
+<input type="radio" id="qNestedObj_c" name="qNestedObj" value="wrong2">
+<label for="qNestedObj_c">`{ y: 600 }` — the dots stop at the innermost object, they don't unwrap primitive values.</label><br>
+<input type="radio" id="qNestedObj_d" name="qNestedObj" value="wrong3">
+<label for="qNestedObj_d">A `ReferenceError`, because `gravity` isn't declared as a variable.</label><br>
+<button class="check-btn" onclick="checkQuiz('qNestedObj')">Check Answer</button>
+<div id="qNestedObj_feedback" class="quiz-feedback"></div>
+</div>
 
 ---
 
@@ -268,6 +331,23 @@ this.physics.add.overlap(this.player, this.coins, function(_player, coin) {
 When Phaser calls a regular `function` callback, `this` inside that function is no longer the scene — it's whatever Phaser's internal code sets it to (usually `undefined` in strict mode). The arrow function avoids this completely by locking `this` to the value it had when `create()` was running.
 
 **This is the most common source of bugs for developers moving into class-based JavaScript.** Arrow functions in callbacks are the idiomatic solution.
+
+#### Quiz: Arrow function `this`
+
+**What is the single most important behavioral difference between a traditional `function(...) { ... }` and an arrow `(...) => { ... }` that makes arrow functions the right choice for the overlap callback in `create()`?**
+
+<div class="quiz-choices">
+<input type="radio" id="qArrow_a" name="qArrow" value="wrong1">
+<label for="qArrow_a">Arrow functions can access closure variables, while traditional functions cannot.</label><br>
+<input type="radio" id="qArrow_b" name="qArrow" value="wrong2">
+<label for="qArrow_b">Arrow functions are measurably faster at runtime, which matters for callbacks that fire every frame.</label><br>
+<input type="radio" id="qArrow_c" name="qArrow" value="correct">
+<label for="qArrow_c">Arrow functions do not have their own `this` — they inherit it from the enclosing scope at definition time. Written inside `create()`, the arrow function's `this` is locked to the scene instance, so `this.score` inside the callback still refers to the scene even though Phaser invokes the callback later from a different context.</label><br>
+<input type="radio" id="qArrow_d" name="qArrow" value="wrong3">
+<label for="qArrow_d">Arrow functions can be passed to Phaser APIs; traditional functions cannot.</label><br>
+<button class="check-btn" onclick="checkQuiz('qArrow')">Check Answer</button>
+<div id="qArrow_feedback" class="quiz-feedback"></div>
+</div>
 
 ---
 
@@ -409,6 +489,31 @@ constructor() {
 ```
 
 JavaScript enforces this because the parent constructor needs to run first to set up the object foundation. `super({ key: 'GameScene' })` passes the scene's name up to `Phaser.Scene`'s constructor, which registers it internally.
+
+#### Quiz: Classes and `super()`
+
+**In the `GameScene` constructor below, you decide to remove the `super()` call to clean things up:**
+
+```javascript
+constructor() {
+  // super({ key: 'GameScene' });   ← removed
+}
+```
+
+**What happens when Phaser tries to instantiate `GameScene`?**
+
+<div class="quiz-choices">
+<input type="radio" id="qSuper_a" name="qSuper" value="wrong1">
+<label for="qSuper_a">Nothing special — `super()` is optional inside class constructors.</label><br>
+<input type="radio" id="qSuper_b" name="qSuper" value="wrong2">
+<label for="qSuper_b">The scene still runs, but it has no name so other scenes can't reference it by key.</label><br>
+<input type="radio" id="qSuper_c" name="qSuper" value="correct">
+<label for="qSuper_c">JavaScript throws a `ReferenceError` — in a subclass, you must call `super()` before you can access `this`, and the engine enforces this before the constructor body finishes. Phaser never even gets to `create()`.</label><br>
+<input type="radio" id="qSuper_d" name="qSuper" value="wrong3">
+<label for="qSuper_d">Only `create()` breaks; `update()` still runs as long as no scene code uses `this.physics`.</label><br>
+<button class="check-btn" onclick="checkQuiz('qSuper')">Check Answer</button>
+<div id="qSuper_feedback" class="quiz-feedback"></div>
+</div>
 
 ### How Phaser uses your methods
 
@@ -559,6 +664,32 @@ this.physics.add.overlap(a, b, () => {
 
 The rule: **use arrow functions for any callback written inside a class method.** Arrow functions don't have their own `this`; they inherit it from the enclosing scope at the moment they are written. That scope is `create()`, where `this` is the scene instance — exactly what you want.
 
+#### Quiz: When `this` goes wrong
+
+**Consider this fragment from `create()`. What actually happens when the player overlaps a coin?**
+
+```javascript
+// `const self = this;` is NOT used; no arrow function either.
+this.physics.add.overlap(this.player, this.coins, function (_player, coin) {
+  coin.destroy();
+  this.score++;
+  this.scoreText.setText('Score: ' + this.score);
+});
+```
+
+<div class="quiz-choices">
+<input type="radio" id="qThisLost_a" name="qThisLost" value="wrong1">
+<label for="qThisLost_a">It works identically — there's no functional difference between `function` and `=>` for callbacks.</label><br>
+<input type="radio" id="qThisLost_b" name="qThisLost" value="correct">
+<label for="qThisLost_b">The coin is destroyed (because `coin` is a parameter, not `this`), but then `this.score++` throws a `TypeError` — inside a regular `function` callback, `this` is not the scene (usually `undefined` in strict mode), so `this.score` can't be read.</label><br>
+<input type="radio" id="qThisLost_c" name="qThisLost" value="wrong2">
+<label for="qThisLost_c">The overlap callback never fires because Phaser only accepts arrow functions.</label><br>
+<input type="radio" id="qThisLost_d" name="qThisLost" value="wrong3">
+<label for="qThisLost_d">The score text updates correctly, but the coin fails to destroy because `coin` inside a `function` is `undefined`.</label><br>
+<button class="check-btn" onclick="checkQuiz('qThisLost')">Check Answer</button>
+<div id="qThisLost_feedback" class="quiz-feedback"></div>
+</div>
+
 ---
 
 ## A.8 ES Modules: `import` and `export`
@@ -612,6 +743,23 @@ The second form — `import * as Phaser` — is a **namespace import**. After it
 ```
 
 This attribute tells the browser to treat `main.js` as an ES module, enabling `import` statements. Without it, the browser would throw a `SyntaxError` on the very first `import` line.
+
+#### Quiz: Namespace imports
+
+**In `main.js`, the line `import * as Phaser from 'phaser';` sets up which of the following?**
+
+<div class="quiz-choices">
+<input type="radio" id="qImportStar_a" name="qImportStar" value="wrong1">
+<label for="qImportStar_a">It imports only the default export from `phaser` and binds it to the name `Phaser`.</label><br>
+<input type="radio" id="qImportStar_b" name="qImportStar" value="correct">
+<label for="qImportStar_b">It imports every named export from `phaser` and groups them under a single namespace object called `Phaser`. Afterwards, `Phaser.Scene`, `Phaser.AUTO`, `Phaser.Input.Keyboard.KeyCodes` etc. all resolve through that namespace.</label><br>
+<input type="radio" id="qImportStar_c" name="qImportStar" value="wrong2">
+<label for="qImportStar_c">The `*` is a wildcard that tells Vite to re-download the Phaser library on every page load.</label><br>
+<input type="radio" id="qImportStar_d" name="qImportStar" value="wrong3">
+<label for="qImportStar_d">It adds everything in `phaser` to the browser's global `window` object, so you can use `Scene`, `AUTO`, etc. anywhere.</label><br>
+<button class="check-btn" onclick="checkQuiz('qImportStar')">Check Answer</button>
+<div id="qImportStar_feedback" class="quiz-feedback"></div>
+</div>
 
 ---
 
@@ -719,6 +867,23 @@ this.score += 5;     // equivalent to: this.score = this.score + 5
 
 `++` appears every time a coin is collected. `+=` is useful when the increment isn't exactly 1.
 
+#### Quiz: Guard clauses and strict equality
+
+**In Chapter 2, the coin overlap callback starts with `if (this.gameOver) return;` and the win check uses `this.score === this.totalCoins`. Which statement correctly describes these two patterns?**
+
+<div class="quiz-choices">
+<input type="radio" id="qGuardEq_a" name="qGuardEq" value="wrong1">
+<label for="qGuardEq_a">The `if (this.gameOver) return;` is a loop break; the `===` is identical in behavior to `==` for numbers.</label><br>
+<input type="radio" id="qGuardEq_b" name="qGuardEq" value="correct">
+<label for="qGuardEq_b">`if (this.gameOver) return;` is a guard clause — an early exit that keeps the "normal" path of the callback un-nested. `===` is strict equality (no type coercion); using it consistently is the safe default because `==` can produce surprising results like `0 == false` being `true`.</label><br>
+<input type="radio" id="qGuardEq_c" name="qGuardEq" value="wrong2">
+<label for="qGuardEq_c">`return;` inside an arrow function has no effect; it only works in traditional `function` declarations.</label><br>
+<input type="radio" id="qGuardEq_d" name="qGuardEq" value="wrong3">
+<label for="qGuardEq_d">`===` compares object identity, which is why it's used to check if two scores are the same — numbers are objects in JavaScript.</label><br>
+<button class="check-btn" onclick="checkQuiz('qGuardEq')">Check Answer</button>
+<div id="qGuardEq_feedback" class="quiz-feedback"></div>
+</div>
+
 ---
 
 ## A.10 Callbacks
@@ -777,6 +942,23 @@ _endGame(message, color) {
 ```
 
 Both are examples of making a function **idempotent** — safe to call more than once, always producing the same result. The physics engine may fire overlap callbacks multiple times in rapid succession (including on the same frame that the game ends). Guards like these prevent double-triggering.
+
+#### Quiz: When does a registered callback actually run?
+
+**When `create()` executes `this.physics.add.overlap(a, b, myCallback)`, when does Phaser actually call `myCallback`?**
+
+<div class="quiz-choices">
+<input type="radio" id="qCallbackWhen_a" name="qCallbackWhen" value="wrong1">
+<label for="qCallbackWhen_a">Once, immediately, the moment `physics.add.overlap` is called — Phaser runs the callback up-front and stores the result.</label><br>
+<input type="radio" id="qCallbackWhen_b" name="qCallbackWhen" value="correct">
+<label for="qCallbackWhen_b">Every frame during Phaser's physics step, but only if `a` and `b` are actually overlapping on that frame. Phaser stores the function and invokes it at the right moment in each tick. Your code never calls it directly.</label><br>
+<input type="radio" id="qCallbackWhen_c" name="qCallbackWhen" value="wrong2">
+<label for="qCallbackWhen_c">Every frame no matter what — once the callback is registered, it runs 60 times per second regardless of any overlap.</label><br>
+<input type="radio" id="qCallbackWhen_d" name="qCallbackWhen" value="wrong3">
+<label for="qCallbackWhen_d">Only when the user presses a key — overlaps are resolved in response to input events.</label><br>
+<button class="check-btn" onclick="checkQuiz('qCallbackWhen')">Check Answer</button>
+<div id="qCallbackWhen_feedback" class="quiz-feedback"></div>
+</div>
 
 ---
 
@@ -852,3 +1034,77 @@ export default class GameScene         // [A.6] class, [A.8] default export
 ```
 
 Every line of game code uses one or more of the concepts above. As you read Chapter 1 and Chapter 2, come back here whenever the JavaScript itself — not the Phaser API — is the part that needs unpacking.
+
+```{=html}
+<script>
+window.CHAPTER_TITLE = 'Appendix A — JavaScript Primer';
+window.CHAPTER_QUIZZES = [
+  { id: 'qHex',           name: 'Hex color literals',          anchor: 'quiz-hex-color-literals' },
+  { id: 'qConst',         name: 'What const guarantees',       anchor: 'quiz-what-const-actually-guarantees' },
+  { id: 'qNestedObj',     name: 'Nested property access',      anchor: 'quiz-nested-property-access' },
+  { id: 'qArrow',         name: 'Arrow function this',         anchor: 'quiz-arrow-function-this' },
+  { id: 'qSuper',         name: 'Classes and super()',         anchor: 'quiz-classes-and-super' },
+  { id: 'qThisLost',      name: 'When this goes wrong',        anchor: 'quiz-when-this-goes-wrong' },
+  { id: 'qImportStar',    name: 'Namespace imports',           anchor: 'quiz-namespace-imports' },
+  { id: 'qGuardEq',       name: 'Guard clauses / strict ==',   anchor: 'quiz-guard-clauses-and-strict-equality' },
+  { id: 'qCallbackWhen',  name: 'When callbacks actually run', anchor: 'quiz-when-does-a-registered-callback-actually-run' }
+];
+
+window.QUIZ_DATA = {
+  qHex: {
+    correct: 'Hex literals like <code>0xff4444</code> are just integers written in base 16. They\'re handy because every two hex digits = one byte, so <code>0xRRGGBB</code> encodes a 24-bit RGB color directly. CSS uses the same layout with the <code>#</code> prefix.',
+    wrong1: 'It <em>is</em> a number — <code>typeof 0xff4444 === "number"</code>. And the RGB interpretation matters: Phaser relies on <code>0xRRGGBB</code> byte layout.',
+    wrong2: '<code>0x</code>-prefixed tokens in JavaScript are integer literals, not strings. <code>typeof 0xff4444</code> is <code>"number"</code>.',
+    wrong3: 'Nothing is truncated. <code>0xff4444</code> is exactly <code>ff&middot;16⁴ + 44&middot;16² + 44</code> = 16,728,132.'
+  },
+  qConst: {
+    correct: '<code>const</code> prevents <em>reassigning the binding</em>, not mutating the value. You can still change the object\'s properties (<code>player.x = 200</code>) or call methods on it — but you cannot make the name <code>player</code> point to a different object.',
+    wrong1: 'Calling a method is fine. The sprite\'s internals may mutate, but the <code>player</code> binding still points to the same object.',
+    wrong2: 'Assigning to a property of a <code>const</code> object is allowed. <code>const</code> locks the binding, not the contents.',
+    wrong3: 'Calling <code>body.setVelocityX</code> mutates internal physics state, which <code>const</code> does not forbid. The binding is unchanged.'
+  },
+  qNestedObj: {
+    correct: 'Dot access chains through however many nested objects you need. <code>config.physics.arcade.gravity.y</code> walks into four levels and lands on the primitive value <code>600</code>.',
+    wrong1: 'Chaining dots through nested objects is perfectly legal JavaScript. This is the primary way you read deeply nested data.',
+    wrong2: 'The final dot takes you to <code>y</code>, which is a primitive number, not the enclosing object. You\'d need to stop the chain earlier to get the <code>{ y: 600 }</code> object.',
+    wrong3: 'No <code>ReferenceError</code> — <code>gravity</code> isn\'t a standalone variable; it\'s a property you reach via the dot chain from <code>config</code>.'
+  },
+  qArrow: {
+    correct: 'Arrow functions don\'t bind their own <code>this</code>. They capture <code>this</code> lexically from the enclosing scope at definition time. Written inside <code>create()</code>, the <code>this</code> they see is the scene instance — so <code>this.score</code>, <code>this.player</code>, etc. work correctly even when Phaser calls the callback much later, from a different context, during the physics step.',
+    wrong1: 'Both forms have access to closure variables. Closure is separate from how <code>this</code> is bound.',
+    wrong2: 'There is no meaningful performance difference. The choice is about <code>this</code>-binding semantics.',
+    wrong3: 'Phaser accepts both. The difference is behavioral — regular functions would see the wrong <code>this</code> when Phaser invokes them.'
+  },
+  qSuper: {
+    correct: 'Any class that uses <code>extends</code> must call <code>super()</code> before the constructor returns (and before using <code>this</code>). The JavaScript engine enforces this at the spec level. Without it, Phaser\'s <code>new GameScene()</code> call throws before <code>create()</code> is ever reached.',
+    wrong1: '<code>super()</code> is required in subclasses. Omitting it produces a <code>ReferenceError</code> — the engine enforces it directly.',
+    wrong2: 'Without <code>super()</code> the scene doesn\'t even construct. The "name" concern is downstream — the crash comes first.',
+    wrong3: 'Both <code>create()</code> and <code>update()</code> are methods on the instance. If construction fails, nothing on the instance exists to be called.'
+  },
+  qThisLost: {
+    correct: 'The callback receives <code>coin</code> as a parameter, so <code>coin.destroy()</code> works fine. But <code>this</code> inside a regular <code>function</code> is whatever the caller sets — Phaser\'s internals typically leave it as <code>undefined</code> in strict mode. So the very next line, <code>this.score++</code>, throws "<code>Cannot read properties of undefined</code>". This is the single most common beginner bug when moving from standalone scripts to class-based code.',
+    wrong1: 'They\'re very different. The arrow form inherits <code>this</code> from <code>create()</code>; the <code>function</code> form gets whatever <code>this</code> Phaser passes — usually <code>undefined</code>.',
+    wrong2: 'Phaser accepts any callable; the issue is the binding of <code>this</code> inside the callback, not whether it fires.',
+    wrong3: '<code>coin</code> is a parameter, so it\'s defined by how the callback is called. It is the <code>this</code> references that fail.'
+  },
+  qImportStar: {
+    correct: '<code>import * as X from \'pkg\'</code> is a <em>namespace import</em> — it binds every named export of the package under the name <code>X</code>. It does not touch globals and is not a "wildcard" in the file-glob sense. It just lets you write <code>Phaser.Scene</code>, <code>Phaser.AUTO</code>, etc.',
+    wrong1: 'That would be <code>import Phaser from \'phaser\'</code> (no star, no braces). <code>import *</code> imports all <em>named</em> exports, grouped under the binding name.',
+    wrong2: 'No — <code>import</code> is purely a build/runtime wiring directive. Vite resolves it once; nothing is re-downloaded.',
+    wrong3: 'ES modules do not touch the global <code>window</code> object. Everything is scoped to the importing module\'s local namespace.'
+  },
+  qGuardEq: {
+    correct: 'Guard clauses (<code>if (cond) return;</code>) handle exceptional paths early so the main logic reads flatly. <code>===</code> avoids the landmines in <code>==</code> like <code>\'\' == false</code> being <code>true</code>. Using <code>===</code> as a reflex is the safest habit.',
+    wrong1: '<code>if (this.gameOver) return;</code> isn\'t a loop break — it\'s an early exit from the function. And <code>===</code> <em>is</em> different from <code>==</code> in general; they happen to agree for two numbers, but the habit is to use <code>===</code> anyway.',
+    wrong2: '<code>return</code> works identically in arrow functions and traditional functions. Both return from the enclosing callable.',
+    wrong3: 'JavaScript numbers are primitives, not objects. <code>===</code> compares primitive values directly; there is no "object identity" involved for two <code>number</code> values.'
+  },
+  qCallbackWhen: {
+    correct: 'This is the heart of the callback pattern. <code>physics.add.overlap</code> just <em>registers</em> the function. Phaser stores it and runs it during the physics step of every subsequent tick — and only when an actual overlap is present. Your code is declarative ("when these overlap, do this"); Phaser manages the timing.',
+    wrong1: 'Phaser doesn\'t call the callback at registration time — that would be useless, since no overlap can exist before any physics has run.',
+    wrong2: 'Per-frame unconditional invocation would fire the coin-destroying callback every frame regardless of contact. Overlap is conditional on actual contact.',
+    wrong3: 'Overlap callbacks are driven by the physics step, not the input step. Keys don\'t trigger physics events directly.'
+  }
+};
+</script>
+```

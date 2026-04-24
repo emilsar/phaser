@@ -36,3 +36,4 @@ format:
     number-depth: 3
     highlight-style: github
     css: styles.css
+    include-after-body: progress.html
