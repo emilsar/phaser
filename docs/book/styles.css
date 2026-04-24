@@ -11,12 +11,13 @@ body.quarto-dark h6 {
 }
 
 /* Dark mode inline code — comprehensive fix.
-   Darkly sets --bs-code-color: white. The p/li/td contexts have an explicit
-   dark-grey background rule in the theme CSS, but headings, TOC sidebar
-   entries, and callouts do not — leaving white text on a light/white
-   background. :not(pre)>code targets inline spans only, leaving
-   syntax-highlighted code blocks untouched. */
-body.quarto-dark :not(pre) > code {
-  color: #c7d0d9;
-  background-color: rgba(0, 0, 0, 0.3);
+   Darkly's base `code` rule hardcodes background-color: #f8f9fa (near-white),
+   which doesn't swap with the theme. Only p/li/td contexts have dark-bg
+   overrides in the theme — headings, labels, TOC entries, summary, etc.
+   keep the near-white bg. Use an opaque dark bg here (not semi-transparent)
+   so no parent color can bleed through. `:not(pre) code` (descendant, not
+   direct-child) catches cases like <h2><span><code>…</code></span></h2>. */
+body.quarto-dark :not(pre) code {
+  color: #dee2e6;
+  background-color: #343a40;
 }
