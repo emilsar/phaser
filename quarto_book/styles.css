@@ -10,11 +10,13 @@ body.quarto-dark h6 {
   color: #dee2e6;
 }
 
-/* Dark mode callout fix.
-   Callout blocks (note, tip, warning, etc.) get a light-tinted background in
-   darkly. Inline code inside them inherits white color from the theme, which
-   becomes invisible against that lighter background. */
-body.quarto-dark .callout code {
+/* Dark mode inline code — comprehensive fix.
+   Darkly sets --bs-code-color: white. The p/li/td contexts have an explicit
+   dark-grey background rule in the theme CSS, but headings, TOC sidebar
+   entries, and callouts do not — leaving white text on a light/white
+   background. :not(pre)>code targets inline spans only, leaving
+   syntax-highlighted code blocks untouched. */
+body.quarto-dark :not(pre) > code {
   color: #c7d0d9;
-  background-color: rgba(0, 0, 0, 0.25);
+  background-color: rgba(0, 0, 0, 0.3);
 }
