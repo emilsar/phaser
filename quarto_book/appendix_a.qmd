@@ -1,0 +1,854 @@
+# Appendix A: JavaScript Primer {.unnumbered}
+
+The game in this book is written entirely in JavaScript. If you've programmed before — in Python, Java, C++, or another language — most of the concepts will feel familiar. If JavaScript is your first language, this appendix walks through everything the game actually uses, in the order you'll need it.
+
+Every concept here connects directly to code from Chapter 1 or Chapter 2. Think of it as a reference: read it before you start, or come back to a specific section when something in the source code isn't clicking.
+
+---
+
+## A.1 Values and Types
+
+JavaScript works with several kinds of values. The game uses three of them constantly.
+
+### Numbers
+
+JavaScript has a single number type — it handles both integers and decimals.
+
+```javascript
+800          // canvas width
+-220         // velocity (negative = moving left)
+0.55         // overlay opacity (a decimal between 0 and 1)
+```
+
+One number syntax that appears throughout the game is **hexadecimal** — base-16 notation for colors. In JavaScript, hexadecimal literals are written with a `0x` prefix:
+
+```javascript
+0x4caf50     // medium green (ground)
+0xff4444     // soft red (enemy)
+0xffd700     // gold (coin)
+```
+
+These represent the same colors as `#4caf50` in CSS — just written differently. The `0x` prefix tells JavaScript to interpret the digits in base 16, where `a`=10, `b`=11, `c`=12, `d`=13, `e`=14, `f`=15. So `0xff` = 255, the maximum value per color channel.
+
+### Strings
+
+A string is a sequence of characters, written between single quotes, double quotes, or backticks. The game uses single quotes throughout.
+
+```javascript
+'Score: 0'          // text to display
+'#ffffff'           // CSS-style color string (for Phaser text objects)
+'monospace'         // font family name
+'GameScene'         // scene key
+```
+
+The game builds strings by **concatenation** — joining them with `+`:
+
+```javascript
+this.scoreText.setText('Score: ' + this.score);
+// If this.score is 3, this produces the string 'Score: 3'
+```
+
+When you add a string and a number with `+`, JavaScript converts the number to a string and joins them. `'Score: ' + 3` gives `'Score: 3'`, not an error.
+
+### Booleans
+
+A boolean is simply `true` or `false`. Booleans appear wherever the game needs to track a yes/no state:
+
+```javascript
+this.gameOver = false;    // game is running
+debug: false              // physics debug mode off
+yoyo: true                // tween reverses when it reaches its target
+```
+
+Boolean values also appear as the result of comparisons and conditions:
+
+```javascript
+const onFloor = body.blocked.down;
+// blocked.down is true when the player is resting on a surface
+```
+
+---
+
+## A.2 Variables: `const` and `let`
+
+JavaScript declares variables with `const` or `let`. (There is a third keyword, `var`, which you'll see in older code — avoid it in new code; it has confusing scoping behavior.)
+
+```javascript
+const W = this.scale.width;   // W cannot be reassigned
+let count = 0;                // count can be reassigned later
+```
+
+**`const`** means the binding cannot be reassigned after its initial value. It does *not* mean the value is frozen — you can still call methods on it and change its properties.
+
+```javascript
+const player = this.physics.add.sprite(100, 420, 'player');
+player.setCollideWorldBounds(true);   // fine — calling a method, not reassigning
+player = somethingElse;              // TypeError — reassignment is not allowed
+```
+
+**`let`** allows reassignment:
+
+```javascript
+let score = 0;
+score++;         // score is now 1 — this works
+score = 10;      // also fine
+```
+
+In the game, almost everything is `const`. The only values that need reassignment are counters and flags — and those live on `this` rather than as local variables, so they don't use `let` directly either.
+
+::: {.callout-tip}
+## Rule of thumb
+Default to `const`. Switch to `let` only when you know you will reassign the variable. Using `const` everywhere it fits makes it easy to spot, at a glance, which variables are mutation points.
+:::
+
+---
+
+## A.3 Objects
+
+An **object** is an unordered collection of key-value pairs called **properties**. It is one of JavaScript's most fundamental structures — and one of the most-used in the game.
+
+### Object literals
+
+You create an object by writing its contents between `{}`. Each entry is `key: value`, and entries are separated by commas.
+
+```javascript
+const config = {
+  type: Phaser.AUTO,
+  width: 800,
+  height: 500,
+  backgroundColor: '#040434',
+  physics: {
+    default: 'arcade',
+    arcade: { gravity: { y: 600 }, debug: false }
+  },
+  scene: [GameScene]
+};
+```
+
+This is the configuration object passed to `new Phaser.Game(config)` in `main.js`. Phaser reads it to know the canvas size, which physics engine to use, how strong gravity should be, and which scenes to register.
+
+### Accessing properties
+
+Use dot notation to reach a property:
+
+```javascript
+config.width               // 800
+config.physics             // { default: 'arcade', arcade: { ... } }
+config.physics.default     // 'arcade'
+```
+
+Chain dots to reach nested properties:
+
+```javascript
+config.physics.arcade.gravity.y   // 600
+```
+
+### Objects vs classes
+
+An object literal is just data — it has no associated behavior. The `config` object is a plain container. Classes (covered in [A.6]) are blueprints that bundle data *and* methods together, and they produce objects with a specific prototype. The distinction: a `config` object is a bag of values; a `GameScene` instance is a live, behavior-rich object.
+
+---
+
+## A.4 Arrays
+
+An **array** is an ordered list of values, written with `[]`.
+
+The game uses arrays in one key place:
+
+```javascript
+scene: [GameScene]
+```
+
+This tells Phaser which scene classes to register. The first element starts automatically. A multi-scene game might look like:
+
+```javascript
+scene: [BootScene, MenuScene, GameScene, GameOverScene]
+```
+
+Array elements are accessed by zero-based index:
+
+```javascript
+const scenes = [BootScene, MenuScene, GameScene];
+scenes[0]   // BootScene
+scenes[2]   // GameScene
+```
+
+Arrays also appear inside Phaser's tween API:
+
+```javascript
+this.tweens.add({
+  targets: this.enemy,   // could also be: targets: [enemy1, enemy2]
+  ...
+});
+```
+
+---
+
+## A.5 Functions
+
+A **function** is a reusable block of code. You define it once and call it whenever you need it.
+
+```javascript
+function add(a, b) {
+  return a + b;
+}
+
+add(3, 4);   // 7
+```
+
+### Parameters and return values
+
+Functions receive inputs as **parameters** (the names listed in the definition) and can send back an output with `return`.
+
+```javascript
+function describe(key, w, h) {
+  return key + ' is ' + w + '×' + h;
+}
+
+describe('ground', 800, 32);   // 'ground is 800×32'
+```
+
+If a function has no `return` statement, it implicitly returns `undefined`.
+
+### Arrow functions
+
+ES6 (2015) introduced a shorter function syntax using `=>`:
+
+```javascript
+// Traditional function expression
+const add = function(a, b) { return a + b; };
+
+// Arrow function — same behavior, shorter syntax
+const add = (a, b) => { return a + b; };
+
+// Even shorter when the body is a single expression (implicit return)
+const add = (a, b) => a + b;
+```
+
+Arrow functions appear in the game wherever a short callback is needed inline:
+
+```javascript
+this.physics.add.overlap(this.player, this.coins, (_player, coin) => {
+  coin.destroy();
+  this.score++;
+  this.scoreText.setText('Score: ' + this.score);
+});
+```
+
+The function `(_player, coin) => { ... }` is written inline and passed directly to `overlap`. It is never given a name — it doesn't need one because it is used in only this one place.
+
+::: {.callout-note}
+## The underscore parameter prefix
+`_player` uses a leading underscore to signal that the first argument is intentionally not used. The overlap callback always receives two arguments (the two overlapping objects). Here only `coin` is needed; `_player` is ignored. The underscore is a convention, not syntax — JavaScript doesn't enforce it, but readers (and linters) understand it to mean "I know this parameter exists; I'm deliberately leaving it unused."
+:::
+
+### Arrow functions and `this`
+
+Arrow functions have one critical behavioral difference from regular functions: they do **not** create their own `this`. Instead, they **capture `this` from the surrounding scope** — the enclosing method they are written inside.
+
+This matters in the overlap callback:
+
+```javascript
+// Inside create() — a class method where `this` is the scene instance
+this.physics.add.overlap(this.player, this.coins, (_player, coin) => {
+  coin.destroy();
+  this.score++;           // `this` here is the scene — correct
+  this.scoreText.setText('Score: ' + this.score);
+});
+```
+
+If the same code used a regular `function` keyword instead:
+
+```javascript
+this.physics.add.overlap(this.player, this.coins, function(_player, coin) {
+  this.score++;   // `this` is wrong here — not the scene
+});
+```
+
+When Phaser calls a regular `function` callback, `this` inside that function is no longer the scene — it's whatever Phaser's internal code sets it to (usually `undefined` in strict mode). The arrow function avoids this completely by locking `this` to the value it had when `create()` was running.
+
+**This is the most common source of bugs for developers moving into class-based JavaScript.** Arrow functions in callbacks are the idiomatic solution.
+
+---
+
+## A.6 Classes and Object-Oriented Programming
+
+This is the most important concept in the book. The entire game lives inside a class. Understanding classes unlocks everything else.
+
+### The problem classes solve
+
+Imagine writing the game without classes. You'd have a loose collection of variables:
+
+```javascript
+let playerX = 100;
+let playerY = 420;
+let playerScore = 0;
+let enemyX = 440;
+let enemyY = 227;
+```
+
+And a collection of functions that operate on them:
+
+```javascript
+function movePlayerLeft()  { playerX -= 220; }
+function movePlayerRight() { playerX += 220; }
+function killEnemy()       { enemyX = -9999; }
+```
+
+This works for a tiny program. But the moment you want two players or five enemies, it falls apart — there's no structure to say which variables belong to which object. How do you give each enemy its own x position? How do you copy state? How do you prevent a function for one enemy from accidentally touching another's data?
+
+**Classes solve this by bundling related data and behavior into a single unit.** Each **instance** of the class is its own self-contained object with its own copy of the data.
+
+### Class syntax
+
+```javascript
+class GameScene extends Phaser.Scene {
+  constructor() {
+    super({ key: 'GameScene' });
+  }
+
+  create()  { ... }
+  update()  { ... }
+  genRect(key, w, h, color) { ... }
+}
+```
+
+| Keyword | Role |
+|---------|------|
+| `class` | Declares the class |
+| `GameScene` | The class name — PascalCase by convention |
+| `extends Phaser.Scene` | Inherits everything from `Phaser.Scene` |
+| `constructor()` | Runs once when the class is instantiated with `new` |
+| `super()` | Calls the parent class constructor |
+| Method definitions | Functions that belong to every instance |
+
+### `new` — creating an instance
+
+A class is a **blueprint**, not an object. To create an actual object from the blueprint, you use the `new` keyword:
+
+```javascript
+new Phaser.Game(config);
+```
+
+This creates a new `Phaser.Game` instance. What `new` does internally:
+
+1. Creates a fresh empty object
+2. Links it to `Phaser.Game`'s prototype
+3. Runs the `Phaser.Game` constructor with the arguments you provided
+4. Returns the new object
+
+You usually store the result in a variable. For `Phaser.Game`, you typically don't — starting the game is a one-time side effect, and you don't need to reference the game object afterward.
+
+Phaser does the same thing with your `GameScene`:
+
+```javascript
+const scene = new GameScene();   // Phaser does this internally
+```
+
+Each `new` call creates an independent instance with its own data.
+
+### Instance properties and `this`
+
+Inside a class method, **`this`** refers to the specific instance the method was called on. When `create()` runs and you write:
+
+```javascript
+this.player = this.physics.add.sprite(100, H - 80, 'player');
+this.score  = 0;
+this.gameOver = false;
+```
+
+You are attaching properties to *this particular* scene instance. They persist for the lifetime of the instance. That's why `this.score` set in `create()` is still readable in `update()` 60 frames later — it lives on the instance, not inside any single method call.
+
+If you had two separate `GameScene` instances, each would have its own `this.player`, its own `this.score`, its own `this.gameOver`, completely independent of the other.
+
+### Methods
+
+Methods are functions defined inside a class body. They have automatic access to `this`:
+
+```javascript
+class GameScene extends Phaser.Scene {
+  genRect(key, w, h, color) {
+    const g = this.make.graphics({ add: false });  // `this` works here
+    g.fillStyle(color);
+    g.fillRect(0, 0, w, h);
+    g.generateTexture(key, w, h);
+    g.destroy();
+  }
+}
+```
+
+You call it from another method as `this.genRect('ground', W, 32, 0x4caf50)`, and `this` is automatically the scene instance.
+
+Notice there is no `function` keyword inside a class body — method definitions use the shorthand syntax:
+
+```javascript
+methodName(param1, param2) {
+  // body
+}
+```
+
+### Inheritance: `extends` and `super`
+
+**Inheritance** lets one class build on another. In the game:
+
+```javascript
+export default class GameScene extends Phaser.Scene {
+```
+
+`GameScene` is a **subclass** of `Phaser.Scene`. It inherits everything `Phaser.Scene` already has: the lifecycle system, `this.physics`, `this.add`, `this.input`, `this.cameras`, `this.tweens`, and all the rest. Without `extends Phaser.Scene`, none of those would exist on `this`, and every line that uses them would throw a `TypeError`.
+
+Think of it as specialization: `Phaser.Scene` is a general-purpose scene engine. `GameScene` is a specific kind of scene — one that knows how to build this particular game level.
+
+**`super()`** calls the parent class constructor. In a subclass, you must call `super()` before accessing `this`. If you forget:
+
+```javascript
+constructor() {
+  this.score = 0;                // ReferenceError: Must call super constructor first
+  super({ key: 'GameScene' });
+}
+```
+
+JavaScript enforces this because the parent constructor needs to run first to set up the object foundation. `super({ key: 'GameScene' })` passes the scene's name up to `Phaser.Scene`'s constructor, which registers it internally.
+
+### How Phaser uses your methods
+
+When Phaser launches a scene, it effectively does this:
+
+```javascript
+const scene = new GameScene();
+
+scene.create();              // called once when the scene starts
+scene.update(time, delta);   // called every frame
+```
+
+If you define `create()` in your class, Phaser calls it. If you don't, Phaser skips it silently — no error. The same for `update()` and `preload()`. This is why those three method names are significant: Phaser looks for them by name on your scene instance.
+
+Methods you define with any other name — like `genRect` or `_endGame` — Phaser never calls on its own. You call them yourself from within `create()` or `update()`.
+
+### When you'd have more classes
+
+Our game has only `GameScene`, but a more developed game typically has several classes. Some extend Phaser classes; others are plain JavaScript objects.
+
+**Additional scene classes** are the most common:
+
+```javascript
+class BootScene   extends Phaser.Scene { }  // shows a logo while assets load
+class MenuScene   extends Phaser.Scene { }  // title screen, play button
+class GameScene   extends Phaser.Scene { }  // the level
+class GameOver    extends Phaser.Scene { }  // death screen, score, retry button
+```
+
+**Custom game object classes** let enemies, projectiles, and pickups carry their own logic:
+
+```javascript
+class Enemy extends Phaser.GameObjects.Sprite {
+  constructor(scene, x, y) {
+    super(scene, x, y, 'enemy');
+    this.health = 3;
+    this.speed  = 80;
+  }
+  takeDamage() {
+    this.health--;
+    if (this.health <= 0) this.destroy();
+  }
+}
+```
+
+Because `Enemy` extends a Phaser sprite class, it is a real Phaser sprite — with physics, animations, and all normal sprite properties — plus whatever custom behavior you add.
+
+**Plain helper classes** handle logic with no Phaser dependency:
+
+```javascript
+class ScoreManager {
+  constructor() { this.score = 0; this.highScore = 0; }
+  add(points) { this.score += points; }
+  save() { localStorage.setItem('highScore', this.score); }
+}
+```
+
+No `extends`, no Phaser. Just a clean bundle of related state and behavior. You'd instantiate it in `create()` and store it as `this.scoreManager`.
+
+### The underscore convention: "private" methods
+
+```javascript
+_endGame(message, color) { ... }
+```
+
+The leading underscore is a naming convention, not a language rule. It signals: "this is an internal implementation detail — don't call it from outside this class." It's a message to other programmers (and your future self).
+
+JavaScript does have truly private methods using `#`:
+
+```javascript
+#endGame(message, color) { ... }
+this.#endGame('You Win!', 0x2e7d32);   // works inside the class
+// scene.#endGame(...)                  // SyntaxError if called from outside
+```
+
+Private `#` methods are enforced by the engine. The underscore convention is softer and more common in Phaser codebases — both communicate the same intent.
+
+---
+
+## A.7 `this` in Depth
+
+`this` is one of JavaScript's most frequently misunderstood features. It appears constantly in the game code, and understanding it clearly removes a whole class of potential bugs.
+
+### The core rule for class methods
+
+Inside a class method, `this` is the instance the method was called on:
+
+```javascript
+class GameScene extends Phaser.Scene {
+  create() {
+    this.score = 0;   // `this` = the GameScene instance
+  }
+  update() {
+    this.score++;     // same `this` — the same instance, still alive
+  }
+}
+```
+
+When Phaser calls `scene.create()`, JavaScript sets `this` to `scene` for the duration of that call. Same for every subsequent `update()` call.
+
+### Properties set in one method are available in all others
+
+Because all methods share the same `this`, a property written in `create()`:
+
+```javascript
+this.player = this.physics.add.sprite(100, H - 80, 'player');
+```
+
+...is readable in `update()`:
+
+```javascript
+const body = this.player.body;   // same property, same instance
+```
+
+And in helper methods:
+
+```javascript
+_endGame(message, color) {
+  this.physics.pause();   // `this` is still the scene instance
+}
+```
+
+This is the glue that holds the whole class together. Without `this`, each method would be isolated with no way to share state.
+
+### When `this` goes wrong
+
+The problem arises when a function is called in a context where `this` isn't set to what you expect. The most common case is passing a method as a callback:
+
+```javascript
+// WRONG: passing a method as a callback
+const fn = this.someMethod;   // detaches `this`
+fn();                         // `this` inside someMethod is now undefined
+```
+
+And specifically with regular `function` callbacks passed to Phaser:
+
+```javascript
+// WRONG: regular function loses `this`
+this.physics.add.overlap(a, b, function() {
+  this.score++;   // TypeError: Cannot read properties of undefined
+});
+
+// CORRECT: arrow function captures `this` from the enclosing scope
+this.physics.add.overlap(a, b, () => {
+  this.score++;   // works — `this` is the scene
+});
+```
+
+The rule: **use arrow functions for any callback written inside a class method.** Arrow functions don't have their own `this`; they inherit it from the enclosing scope at the moment they are written. That scope is `create()`, where `this` is the scene instance — exactly what you want.
+
+---
+
+## A.8 ES Modules: `import` and `export`
+
+Modern JavaScript is organized into **modules** — files that are isolated by default. Nothing defined in one file is visible to another unless explicitly shared.
+
+### `export`
+
+To make something available to other files, you export it:
+
+```javascript
+// GameScene.js
+export default class GameScene extends Phaser.Scene { ... }
+```
+
+`export default` marks `GameScene` as the primary export of this file. A file can have only one default export. You can also have named exports (multiple per file):
+
+```javascript
+export const VERSION = '2.0';           // named export
+export function helper() { ... }        // named export
+export default class GameScene { ... }  // default export
+```
+
+### `import`
+
+To use something from another file:
+
+```javascript
+// main.js
+import * as Phaser from 'phaser';
+import GameScene from './GameScene.js';
+```
+
+| Import form | What it does |
+|-------------|-------------|
+| `import GameScene from './GameScene.js'` | Imports the **default** export and names it `GameScene` |
+| `import * as Phaser from 'phaser'` | Imports **all exports** as a namespace object called `Phaser` |
+| `import { Scene, AUTO } from 'phaser'` | Imports specific named exports |
+
+The second form — `import * as Phaser` — is a **namespace import**. After it, you access everything through `Phaser.Scene`, `Phaser.AUTO`, `Phaser.Input.Keyboard.KeyCodes.A`, etc. The Phaser library exports dozens of named things; the namespace import brings them all in under one name without polluting the global scope.
+
+### Module file paths
+
+- `'phaser'` — a package name. Vite looks it up in `node_modules/phaser/`.
+- `'./GameScene.js'` — a **relative path**. `./` means "same directory as this file."
+
+### `type="module"` in HTML
+
+```html
+<script type="module" src="/src/main.js"></script>
+```
+
+This attribute tells the browser to treat `main.js` as an ES module, enabling `import` statements. Without it, the browser would throw a `SyntaxError` on the very first `import` line.
+
+---
+
+## A.9 Control Flow
+
+### `if`, `else if`, `else`
+
+```javascript
+if (left)       body.setVelocityX(-220);
+else if (right) body.setVelocityX(220);
+else            body.setVelocityX(0);
+```
+
+Reading this: if the player is pressing left, set negative x velocity; if pressing right instead, set positive x velocity; otherwise (no direction key held), zero the velocity to stop movement.
+
+When the branch body is a single statement, curly braces `{}` are optional. When it's more than one line, they are required.
+
+### Guard clauses
+
+A **guard clause** is an early `return` that handles a special case at the top of a function, before the main logic runs:
+
+```javascript
+update() {
+  if (Phaser.Input.Keyboard.JustDown(this.rKey)) {
+    this.scene.restart();
+    return;            // exit immediately — nothing else matters this frame
+  }
+
+  if (this.gameOver) return;   // game is over — skip all normal logic
+
+  // Normal logic runs only when neither guard has triggered
+  const body    = this.player.body;
+  const onFloor = body.blocked.down;
+  // ...
+}
+```
+
+Guard clauses are the idiomatic alternative to deeply nested `if` blocks. Without them, the same logic would look like:
+
+```javascript
+update() {
+  if (!Phaser.Input.Keyboard.JustDown(this.rKey)) {
+    if (!this.gameOver) {
+      // normal logic buried two levels deep
+    }
+  }
+}
+```
+
+Guards keep the normal path readable by disposing of the exceptional cases first.
+
+### Logical operators
+
+**`||` (OR):** True if *at least one* operand is truthy.
+
+```javascript
+const left = this.cursors.left.isDown || this.wasd.left.isDown;
+```
+
+The player moves left if the left arrow key OR the A key is held — either one is enough.
+
+**`&&` (AND):** True only when *both* operands are truthy.
+
+```javascript
+if (jump && onFloor) body.setVelocityY(-550);
+```
+
+Jump only if the jump key was just pressed AND the player is currently on the ground.
+
+**Short-circuit evaluation:** JavaScript stops evaluating an `||` expression as soon as it finds a truthy value, and stops evaluating `&&` as soon as it finds a falsy one. If `this.cursors.left.isDown` is `true`, JavaScript never evaluates `this.wasd.left.isDown` — it already has its answer.
+
+### Strict equality: `===`
+
+JavaScript has two equality operators:
+
+| Operator | Behavior |
+|----------|----------|
+| `==` | **Loose equality** — converts types before comparing. `'5' == 5` is `true`. |
+| `===` | **Strict equality** — no type conversion. `'5' === 5` is `false`. |
+
+Always use `===`. Loose equality produces counterintuitive results:
+
+```javascript
+''   == false     // true (!)
+0    == false     // true (!)
+null == undefined // true (!)
+```
+
+The game uses `===` for the win check:
+
+```javascript
+if (this.score === this.totalCoins) {
+  this._endGame('You Win!', 0x2e7d32);
+}
+```
+
+Both values are numbers, so `==` would happen to work here too. Use `===` anyway — it's the safe default.
+
+### Increment and compound assignment
+
+```javascript
+this.score++;        // equivalent to: this.score = this.score + 1
+this.score += 5;     // equivalent to: this.score = this.score + 5
+```
+
+`++` appears every time a coin is collected. `+=` is useful when the increment isn't exactly 1.
+
+---
+
+## A.10 Callbacks
+
+A **callback** is a function passed as an argument to another function, to be called later.
+
+This pattern appears everywhere in Phaser:
+
+```javascript
+// You write:
+this.physics.add.overlap(this.player, this.coins, (_player, coin) => {
+  coin.destroy();
+  this.score++;
+  this.scoreText.setText('Score: ' + this.score);
+});
+
+// Phaser stores the callback internally.
+// Every frame, during the physics step, Phaser checks for overlaps.
+// When it finds one, it calls your function with the overlapping objects:
+yourCallback(playerObject, coinObject);
+```
+
+You are not calling the callback directly. You are handing it to Phaser, and Phaser calls it for you at the right moment — with the right arguments — from deep inside its physics step.
+
+This is the same pattern across all Phaser event APIs:
+
+| Phaser API call | When your callback fires |
+|-----------------|--------------------------|
+| `physics.add.overlap(a, b, fn)` | Every frame an overlap is detected between `a` and `b` |
+| `physics.add.collider(a, b, fn)` | Every frame a collision is resolved between `a` and `b` |
+| `tweens.add({ onComplete: fn })` | When a tween finishes playing |
+| `input.keyboard.on('keydown', fn)` | When any key is pressed |
+
+You declare the relationship ("when these overlap, do this") and Phaser manages the timing entirely.
+
+### Idempotent guards in callbacks
+
+In Chapter 2, the coin callback has an extra guard:
+
+```javascript
+this.physics.add.overlap(this.player, this.coins, (_player, coin) => {
+  if (this.gameOver) return;   // ← early exit if game already ended
+  coin.destroy();
+  // ...
+});
+```
+
+And `_endGame` has one too:
+
+```javascript
+_endGame(message, color) {
+  if (this.gameOver) return;   // ← early exit if already called
+  this.gameOver = true;
+  // ...
+}
+```
+
+Both are examples of making a function **idempotent** — safe to call more than once, always producing the same result. The physics engine may fire overlap callbacks multiple times in rapid succession (including on the same frame that the game ends). Guards like these prevent double-triggering.
+
+---
+
+## Putting it all together
+
+Here is a condensed version of `GameScene.js` with annotations linking every line back to a section in this appendix:
+
+```javascript
+import * as Phaser from 'phaser';      // [A.8] namespace import
+
+export default class GameScene         // [A.6] class, [A.8] default export
+  extends Phaser.Scene {               // [A.6] inheritance
+
+  constructor() {
+    super({ key: 'GameScene' });        // [A.6] super() — required, [A.3] object literal
+  }
+
+  create() {
+    const W = this.scale.width;         // [A.2] const, [A.6] this
+    const H = this.scale.height;        // [A.1] numbers
+
+    this.score    = 0;                  // [A.1] number, [A.6] instance property
+    this.gameOver = false;              // [A.1] boolean, [A.6] instance property
+
+    // ... textures, ground, platforms ...
+
+    this.player = this.physics.add.sprite(100, H - 80, 'player');
+
+    this.physics.add.overlap(          // [A.10] callback registration
+      this.player, this.coins,
+      (_player, coin) => {             // [A.5] arrow function, [A.7] captures `this`
+        if (this.gameOver) return;     // [A.9] guard clause
+        coin.destroy();
+        this.score++;                  // [A.9] ++
+        if (this.score === this.totalCoins) {   // [A.9] ===
+          this._endGame('You Win!', 0x2e7d32);  // [A.6] method call, [A.1] hex color
+        }
+      }
+    );
+  }
+
+  update() {
+    if (this.gameOver) return;           // [A.9] guard clause
+
+    const left = this.cursors.left.isDown || this.wasd.left.isDown;  // [A.9] ||
+    const jump = Phaser.Input.Keyboard.JustDown(this.cursors.up)
+              || Phaser.Input.Keyboard.JustDown(this.cursors.space);
+
+    if (left)       this.player.body.setVelocityX(-220); // [A.9] if/else
+    else if (right) this.player.body.setVelocityX(220);
+    else            this.player.body.setVelocityX(0);
+
+    if (jump && this.player.body.blocked.down)   // [A.9] &&
+      this.player.body.setVelocityY(-550);
+  }
+
+  _endGame(message, color) {            // [A.6] underscore = private by convention
+    if (this.gameOver) return;          // [A.10] idempotent guard
+    this.gameOver = true;
+    this.physics.pause();
+    this.tweens.killAll();
+    // ... overlay rendering ...
+  }
+
+  genRect(key, w, h, color) {           // [A.5] method with parameters
+    const g = this.make.graphics({ add: false });  // [A.3] object literal
+    g.fillStyle(color);
+    g.fillRect(0, 0, w, h);
+    g.generateTexture(key, w, h);
+    g.destroy();
+  }
+}
+```
+
+Every line of game code uses one or more of the concepts above. As you read Chapter 1 and Chapter 2, come back here whenever the JavaScript itself — not the Phaser API — is the part that needs unpacking.

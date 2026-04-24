@@ -14,6 +14,9 @@ book:
     - chapter1.qmd
     - chapter2.qmd
 
+  appendices:
+    - appendix_a.qmd
+
   sidebar:
     style: "floating"
     search: true

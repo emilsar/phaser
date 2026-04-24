@@ -1,0 +1,1882 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>1&nbsp; Getting Started with Phaser – Building Games with Phaser</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./chapter2.html" rel="next">
+<link href="./index.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-597958c53c93a607afca12fd375c57ed.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-7ac2f9da8c2617a4fdd15004b4601015.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-597958c53c93a607afca12fd375c57ed.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-3319fbb98f460c45a53faaed12a75962.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-b90361f16a3f98a5213818fd12da5acb.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-3319fbb98f460c45a53faaed12a75962.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./chapter1.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Getting Started with Phaser</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Building Games with Phaser</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter1.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Getting Started with Phaser</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Enemies, Winning, and Losing</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./appendix_a.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Appendix A: JavaScript Primer</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#the-phaser-library" id="toc-the-phaser-library" class="nav-link active" data-scroll-target="#the-phaser-library"><span class="header-section-number">1.1</span> The Phaser Library</a>
+  <ul class="collapse">
+  <li><a href="#what-phaser-is" id="toc-what-phaser-is" class="nav-link" data-scroll-target="#what-phaser-is"><span class="header-section-number">1.1.1</span> What Phaser Is</a></li>
+  <li><a href="#what-kinds-of-games-you-can-build" id="toc-what-kinds-of-games-you-can-build" class="nav-link" data-scroll-target="#what-kinds-of-games-you-can-build"><span class="header-section-number">1.1.2</span> What Kinds of Games You Can Build</a></li>
+  <li><a href="#phasers-major-subsystems" id="toc-phasers-major-subsystems" class="nav-link" data-scroll-target="#phasers-major-subsystems"><span class="header-section-number">1.1.3</span> Phaser’s Major Subsystems</a></li>
+  <li><a href="#how-phaser-is-structured-as-a-package" id="toc-how-phaser-is-structured-as-a-package" class="nav-link" data-scroll-target="#how-phaser-is-structured-as-a-package"><span class="header-section-number">1.1.4</span> How Phaser Is Structured as a Package</a></li>
+  </ul></li>
+  <li><a href="#the-local-development-workflow" id="toc-the-local-development-workflow" class="nav-link" data-scroll-target="#the-local-development-workflow"><span class="header-section-number">1.2</span> The Local Development Workflow</a></li>
+  <li><a href="#project-structure-and-bootstrapping-phaser" id="toc-project-structure-and-bootstrapping-phaser" class="nav-link" data-scroll-target="#project-structure-and-bootstrapping-phaser"><span class="header-section-number">1.3</span> Project Structure and Bootstrapping Phaser</a>
+  <ul class="collapse">
+  <li><a href="#index.html-the-shell" id="toc-index.html-the-shell" class="nav-link" data-scroll-target="#index.html-the-shell"><span class="header-section-number">1.3.1</span> index.html — The Shell</a></li>
+  <li><a href="#main.js-configuring-and-starting-phaser" id="toc-main.js-configuring-and-starting-phaser" class="nav-link" data-scroll-target="#main.js-configuring-and-starting-phaser"><span class="header-section-number">1.3.2</span> main.js — Configuring and Starting Phaser</a></li>
+  <li><a href="#package.json-project-manifest" id="toc-package.json-project-manifest" class="nav-link" data-scroll-target="#package.json-project-manifest"><span class="header-section-number">1.3.3</span> package.json — Project Manifest</a></li>
+  <li><a href="#how-the-three-files-connect" id="toc-how-the-three-files-connect" class="nav-link" data-scroll-target="#how-the-three-files-connect"><span class="header-section-number">1.3.4</span> How the Three Files Connect</a></li>
+  </ul></li>
+  <li><a href="#gamescene.js-the-game-logic" id="toc-gamescene.js-the-game-logic" class="nav-link" data-scroll-target="#gamescene.js-the-game-logic"><span class="header-section-number">1.4</span> GameScene.js — The Game Logic</a>
+  <ul class="collapse">
+  <li><a href="#play-it" id="toc-play-it" class="nav-link" data-scroll-target="#play-it"><span class="header-section-number">1.4.1</span> Play it</a></li>
+  <li><a href="#class-declaration-and-constructor" id="toc-class-declaration-and-constructor" class="nav-link" data-scroll-target="#class-declaration-and-constructor"><span class="header-section-number">1.4.2</span> Class declaration and constructor</a></li>
+  <li><a href="#why-all-methods-must-live-inside-the-class" id="toc-why-all-methods-must-live-inside-the-class" class="nav-link" data-scroll-target="#why-all-methods-must-live-inside-the-class"><span class="header-section-number">1.4.3</span> Why all methods must live inside the class</a></li>
+  <li><a href="#when-you-would-have-other-classes" id="toc-when-you-would-have-other-classes" class="nav-link" data-scroll-target="#when-you-would-have-other-classes"><span class="header-section-number">1.4.4</span> When you would have other classes</a></li>
+  <li><a href="#canvas-dimensions" id="toc-canvas-dimensions" class="nav-link" data-scroll-target="#canvas-dimensions"><span class="header-section-number">1.4.5</span> Canvas dimensions</a></li>
+  <li><a href="#generating-textures-procedurally" id="toc-generating-textures-procedurally" class="nav-link" data-scroll-target="#generating-textures-procedurally"><span class="header-section-number">1.4.6</span> Generating textures procedurally</a></li>
+  <li><a href="#ground" id="toc-ground" class="nav-link" data-scroll-target="#ground"><span class="header-section-number">1.4.7</span> Ground</a></li>
+  <li><a href="#platforms" id="toc-platforms" class="nav-link" data-scroll-target="#platforms"><span class="header-section-number">1.4.8</span> Platforms</a></li>
+  <li><a href="#player" id="toc-player" class="nav-link" data-scroll-target="#player"><span class="header-section-number">1.4.9</span> Player</a></li>
+  <li><a href="#colliders" id="toc-colliders" class="nav-link" data-scroll-target="#colliders"><span class="header-section-number">1.4.10</span> Colliders</a></li>
+  <li><a href="#coins-and-overlap" id="toc-coins-and-overlap" class="nav-link" data-scroll-target="#coins-and-overlap"><span class="header-section-number">1.4.11</span> Coins and overlap</a></li>
+  <li><a href="#score-text" id="toc-score-text" class="nav-link" data-scroll-target="#score-text"><span class="header-section-number">1.4.12</span> Score text</a></li>
+  <li><a href="#hint-text" id="toc-hint-text" class="nav-link" data-scroll-target="#hint-text"><span class="header-section-number">1.4.13</span> Hint text</a></li>
+  <li><a href="#input-setup" id="toc-input-setup" class="nav-link" data-scroll-target="#input-setup"><span class="header-section-number">1.4.14</span> Input setup</a></li>
+  <li><a href="#update-reading-input-state" id="toc-update-reading-input-state" class="nav-link" data-scroll-target="#update-reading-input-state"><span class="header-section-number">1.4.15</span> update() — Reading input state</a></li>
+  <li><a href="#update-movement-and-jumping" id="toc-update-movement-and-jumping" class="nav-link" data-scroll-target="#update-movement-and-jumping"><span class="header-section-number">1.4.16</span> update() — Movement and jumping</a></li>
+  <li><a href="#helper-methods-genrect-and-gencircle" id="toc-helper-methods-genrect-and-gencircle" class="nav-link" data-scroll-target="#helper-methods-genrect-and-gencircle"><span class="header-section-number">1.4.17</span> Helper methods — genRect and genCircle</a></li>
+  </ul></li>
+  <li><a href="#how-the-browser-runs-gamescene.js" id="toc-how-the-browser-runs-gamescene.js" class="nav-link" data-scroll-target="#how-the-browser-runs-gamescene.js"><span class="header-section-number">1.5</span> How the Browser Runs GameScene.js</a>
+  <ul class="collapse">
+  <li><a href="#javascript-is-single-threaded" id="toc-javascript-is-single-threaded" class="nav-link" data-scroll-target="#javascript-is-single-threaded"><span class="header-section-number">1.5.1</span> JavaScript is single-threaded</a></li>
+  <li><a href="#the-event-loop-and-the-task-queue" id="toc-the-event-loop-and-the-task-queue" class="nav-link" data-scroll-target="#the-event-loop-and-the-task-queue"><span class="header-section-number">1.5.2</span> The event loop and the task queue</a></li>
+  <li><a href="#requestanimationframe-how-phaser-hooks-in" id="toc-requestanimationframe-how-phaser-hooks-in" class="nav-link" data-scroll-target="#requestanimationframe-how-phaser-hooks-in"><span class="header-section-number">1.5.3</span> requestAnimationFrame — how Phaser hooks in</a></li>
+  <li><a href="#the-order-of-operations-inside-one-tick" id="toc-the-order-of-operations-inside-one-tick" class="nav-link" data-scroll-target="#the-order-of-operations-inside-one-tick"><span class="header-section-number">1.5.4</span> The order of operations inside one tick</a></li>
+  <li><a href="#priorities-and-what-listening-means" id="toc-priorities-and-what-listening-means" class="nav-link" data-scroll-target="#priorities-and-what-listening-means"><span class="header-section-number">1.5.5</span> Priorities and what “listening” means</a></li>
+  <li><a href="#create-runs-outside-the-loop" id="toc-create-runs-outside-the-loop" class="nav-link" data-scroll-target="#create-runs-outside-the-loop"><span class="header-section-number">1.5.6</span> create() runs outside the loop</a></li>
+  <li><a href="#frame-rate-and-delta" id="toc-frame-rate-and-delta" class="nav-link" data-scroll-target="#frame-rate-and-delta"><span class="header-section-number">1.5.7</span> Frame rate and delta</a></li>
+  <li><a href="#what-this-means-for-your-code" id="toc-what-this-means-for-your-code" class="nav-link" data-scroll-target="#what-this-means-for-your-code"><span class="header-section-number">1.5.8</span> What this means for your code</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Getting Started with Phaser</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/chapter1/Game_Screen.png" class="img-fluid figure-img"></p>
+<figcaption>The running game</figcaption>
+</figure>
+</div>
+<hr>
+<section id="the-phaser-library" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="the-phaser-library"><span class="header-section-number">1.1</span> The Phaser Library</h2>
+<section id="what-phaser-is" class="level3" data-number="1.1.1">
+<h3 data-number="1.1.1" class="anchored" data-anchor-id="what-phaser-is"><span class="header-section-number">1.1.1</span> What Phaser Is</h3>
+<p>Phaser is an open-source HTML5 game framework for building 2D games that run in the browser. It handles everything a game needs below the level of your own logic: rendering, physics, input, audio, asset loading, animation, cameras, tilemaps, and the game loop itself. You write the game rules; Phaser handles the machinery.</p>
+<p>Phaser renders to an HTML <code>&lt;canvas&gt;</code> element using either <strong>WebGL</strong> (GPU-accelerated, default when available) or <strong>Canvas 2D</strong> (CPU-based fallback). On modern hardware, WebGL enables thousands of sprites at 60 fps with effects like lighting, shaders, and post-processing that would be impossible in Canvas 2D.</p>
+</section>
+<section id="what-kinds-of-games-you-can-build" class="level3" data-number="1.1.2">
+<h3 data-number="1.1.2" class="anchored" data-anchor-id="what-kinds-of-games-you-can-build"><span class="header-section-number">1.1.2</span> What Kinds of Games You Can Build</h3>
+<p>Phaser is a general-purpose 2D game framework. It has been used to build:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 43%">
+<col style="width: 56%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Genre</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Platformers</strong></td>
+<td>Side-scrolling jumpers, Metroidvanias</td>
+</tr>
+<tr class="even">
+<td><strong>Top-down games</strong></td>
+<td>RPGs, twin-stick shooters, Zelda-style adventures</td>
+</tr>
+<tr class="odd">
+<td><strong>Puzzle games</strong></td>
+<td>Match-3, block puzzles, physics puzzlers</td>
+</tr>
+<tr class="even">
+<td><strong>Shoot-em-ups</strong></td>
+<td>Vertical and horizontal bullet-hell games</td>
+</tr>
+<tr class="odd">
+<td><strong>Idle / clicker games</strong></td>
+<td>Resource management, incremental games</td>
+</tr>
+<tr class="even">
+<td><strong>Card games</strong></td>
+<td>Turn-based games with drag-and-drop mechanics</td>
+</tr>
+<tr class="odd">
+<td><strong>Tilemapped worlds</strong></td>
+<td>Large scrolling maps built from reusable tile grids</td>
+</tr>
+<tr class="even">
+<td><strong>Visual novels</strong></td>
+<td>Dialogue trees, cutscenes, branching narratives</td>
+</tr>
+</tbody>
+</table>
+<p>What Phaser is <em>not</em> suited for: 3D games (use Three.js or Babylon.js), very large MMOs, or applications that are more app than game. It is purpose-built for 2D interactive experiences delivered in the browser.</p>
+</section>
+<section id="phasers-major-subsystems" class="level3" data-number="1.1.3">
+<h3 data-number="1.1.3" class="anchored" data-anchor-id="phasers-major-subsystems"><span class="header-section-number">1.1.3</span> Phaser’s Major Subsystems</h3>
+<p>Phaser is organized into subsystems — each one responsible for a different aspect of the game. You access them through the scene as <code>this.&lt;system&gt;</code>. Here are the ones most relevant to a platformer:</p>
+<section id="the-scene-system" class="level4">
+<h4 class="anchored" data-anchor-id="the-scene-system">The Scene System</h4>
+<p>A <strong>Scene</strong> is the fundamental unit of organization in Phaser. Every screen in your game — the title screen, the game level, the pause menu, the game-over screen — is a separate scene.</p>
+<p>Each scene has three lifecycle methods you override:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">preload</span>()  <span class="co">// load assets (images, audio, tilemaps) before the scene runs</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">create</span>()   <span class="co">// set up game objects once when the scene starts</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">update</span>()   <span class="co">// called every frame (~60 times/second) — game logic goes here</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Our game currently has one scene (<code>GameScene</code>). In a larger game you might have:</p>
+<pre><code>BootScene      → loads a loading bar graphic
+PreloadScene   → loads all game assets while showing the loading bar
+MenuScene      → title screen with Play button
+GameScene      → the actual level
+PauseScene     → overlay rendered on top of GameScene
+GameOverScene  → shown when the player dies</code></pre>
+<p>Scenes can run simultaneously (e.g.&nbsp;a HUD scene layered over the game scene), be paused, resumed, put to sleep, or shut down entirely. The scene manager (<code>this.scene</code>) controls all of this.</p>
+</section>
+<section id="physics-arcade" class="level4">
+<h4 class="anchored" data-anchor-id="physics-arcade">Physics — Arcade</h4>
+<p><code>this.physics</code> is the arcade physics system. It gives game objects a <strong>body</strong> — a rectangle or circle that participates in the physics simulation each frame.</p>
+<p>There are two kinds of physics bodies:</p>
+<ul>
+<li><strong>Dynamic</strong> — affected by gravity, velocity, and collisions. The player is dynamic.</li>
+<li><strong>Static</strong> — fixed in place, immovable. Platforms and the ground are static.</li>
+</ul>
+<p>Key arcade physics concepts used in the platformer:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Create a dynamic physics sprite</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">player</span> <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">sprite</span>(x<span class="op">,</span> y<span class="op">,</span> <span class="st">'key'</span>)<span class="op">;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Create a static group (platforms)</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">platforms</span> <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">staticGroup</span>()<span class="op">;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">// Prevent the player from leaving the canvas</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">player</span><span class="op">.</span><span class="fu">setCollideWorldBounds</span>(<span class="kw">true</span>)<span class="op">;</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">// Make player land on platforms</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">collider</span>(<span class="kw">this</span><span class="op">.</span><span class="at">player</span><span class="op">,</span> <span class="kw">this</span><span class="op">.</span><span class="at">platforms</span>)<span class="op">;</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">// Detect when player touches a coin (no solid collision — just detection)</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">overlap</span>(<span class="kw">this</span><span class="op">.</span><span class="at">player</span><span class="op">,</span> <span class="kw">this</span><span class="op">.</span><span class="at">coins</span><span class="op">,</span> callback)<span class="op">;</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">// Read velocity and blocked state in update()</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">player</span><span class="op">.</span><span class="at">body</span><span class="op">.</span><span class="fu">setVelocityX</span>(<span class="op">-</span><span class="dv">220</span>)<span class="op">;</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">player</span><span class="op">.</span><span class="at">body</span><span class="op">.</span><span class="fu">setVelocityY</span>(<span class="op">-</span><span class="dv">550</span>)<span class="op">;</span>  <span class="co">// jump</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">player</span><span class="op">.</span><span class="at">body</span><span class="op">.</span><span class="at">blocked</span><span class="op">.</span><span class="at">down</span><span class="op">;</span>        <span class="co">// true when standing on something</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The difference between <strong>collider</strong> and <strong>overlap</strong> is important:</p>
+<ul>
+<li><code>collider</code> — objects physically push each other apart (player lands on a platform)</li>
+<li><code>overlap</code> — detects contact without any physical response (player touches a coin)</li>
+</ul>
+</section>
+<section id="game-objects" class="level4">
+<h4 class="anchored" data-anchor-id="game-objects">Game Objects</h4>
+<p>Everything visible in the scene is a <strong>game object</strong>. The main types:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 44%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Created via</th>
+<th>Use case</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Sprite</code></td>
+<td><code>this.physics.add.sprite()</code></td>
+<td>Animated characters, enemies</td>
+</tr>
+<tr class="even">
+<td><code>Image</code></td>
+<td><code>this.physics.add.staticImage()</code></td>
+<td>Non-animated objects (ground)</td>
+</tr>
+<tr class="odd">
+<td><code>Text</code></td>
+<td><code>this.add.text()</code></td>
+<td>Score display, labels, UI</td>
+</tr>
+<tr class="even">
+<td><code>Graphics</code></td>
+<td><code>this.make.graphics()</code></td>
+<td>Drawing shapes procedurally</td>
+</tr>
+<tr class="odd">
+<td><code>Group</code></td>
+<td><code>this.physics.add.staticGroup()</code></td>
+<td>Managing collections of objects</td>
+</tr>
+<tr class="even">
+<td><code>TilemapLayer</code></td>
+<td><code>map.createLayer()</code></td>
+<td>Tile-based level geometry</td>
+</tr>
+</tbody>
+</table>
+<p>In our game, all textures are generated procedurally via <code>this.make.graphics()</code> so no image files are needed. This is the <code>genRect()</code> and <code>genCircle()</code> helper approach in <code>GameScene.js</code>.</p>
+</section>
+<section id="input" class="level4">
+<h4 class="anchored" data-anchor-id="input">Input</h4>
+<p><code>this.input</code> manages all input devices. For a platformer, keyboard input is the main concern:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Arrow keys + Space (built-in shortcut)</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">cursors</span> <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">input</span><span class="op">.</span><span class="at">keyboard</span><span class="op">.</span><span class="fu">createCursorKeys</span>()<span class="op">;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Custom keys (WASD)</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">wasd</span> <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">input</span><span class="op">.</span><span class="at">keyboard</span><span class="op">.</span><span class="fu">addKeys</span>({</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">left</span><span class="op">:</span>  Phaser<span class="op">.</span><span class="at">Input</span><span class="op">.</span><span class="at">Keyboard</span><span class="op">.</span><span class="at">KeyCodes</span><span class="op">.</span><span class="at">A</span><span class="op">,</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">right</span><span class="op">:</span> Phaser<span class="op">.</span><span class="at">Input</span><span class="op">.</span><span class="at">Keyboard</span><span class="op">.</span><span class="at">KeyCodes</span><span class="op">.</span><span class="at">D</span><span class="op">,</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">jump</span><span class="op">:</span>  Phaser<span class="op">.</span><span class="at">Input</span><span class="op">.</span><span class="at">Keyboard</span><span class="op">.</span><span class="at">KeyCodes</span><span class="op">.</span><span class="at">W</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Two ways to read a key:</p>
+<ul>
+<li><strong><code>key.isDown</code></strong> — <code>true</code> on every frame the key is held. Use for continuous actions like moving left/right.</li>
+<li><strong><code>Phaser.Input.Keyboard.JustDown(key)</code></strong> — <code>true</code> only on the single frame the key is first pressed. Use for one-shot actions like jumping (prevents holding the jump key from triggering multiple jumps).</li>
+</ul>
+</section>
+<section id="the-camera" class="level4">
+<h4 class="anchored" data-anchor-id="the-camera">The Camera</h4>
+<p><code>this.cameras.main</code> is the default camera. For a small fixed-screen game like ours, the camera never moves. But in a scrolling platformer, you bind it to follow the player:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">cameras</span><span class="op">.</span><span class="at">main</span><span class="op">.</span><span class="fu">startFollow</span>(<span class="kw">this</span><span class="op">.</span><span class="at">player</span>)<span class="op">;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">cameras</span><span class="op">.</span><span class="at">main</span><span class="op">.</span><span class="fu">setBounds</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> worldWidth<span class="op">,</span> worldHeight)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The camera crops and offsets what is drawn each frame, allowing a world much larger than the canvas.</p>
+</section>
+<section id="asset-loading" class="level4">
+<h4 class="anchored" data-anchor-id="asset-loading">Asset Loading</h4>
+<p><code>preload()</code> is where you load external assets before the scene runs. Phaser queues all load calls and shows a built-in loading bar, then fires <code>create()</code> only after everything is ready:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">preload</span>() {</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">this</span><span class="op">.</span><span class="at">load</span><span class="op">.</span><span class="fu">image</span>(<span class="st">'sky'</span><span class="op">,</span> <span class="st">'assets/sky.png'</span>)<span class="op">;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">this</span><span class="op">.</span><span class="at">load</span><span class="op">.</span><span class="fu">spritesheet</span>(<span class="st">'player'</span><span class="op">,</span> <span class="st">'assets/dude.png'</span><span class="op">,</span> {</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">frameWidth</span><span class="op">:</span> <span class="dv">32</span><span class="op">,</span> <span class="dt">frameHeight</span><span class="op">:</span> <span class="dv">48</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">this</span><span class="op">.</span><span class="at">load</span><span class="op">.</span><span class="fu">audio</span>(<span class="st">'jump'</span><span class="op">,</span> <span class="st">'assets/jump.mp3'</span>)<span class="op">;</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">this</span><span class="op">.</span><span class="at">load</span><span class="op">.</span><span class="fu">tilemapTiledJSON</span>(<span class="st">'map'</span><span class="op">,</span> <span class="st">'assets/level1.json'</span>)<span class="op">;</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Our current game skips <code>preload()</code> entirely because all textures are generated programmatically. This is useful for prototyping — no asset pipeline needed.</p>
+</section>
+<section id="animations" class="level4">
+<h4 class="anchored" data-anchor-id="animations">Animations</h4>
+<p><code>this.anims</code> manages sprite animations. An animation is a sequence of frames from a spritesheet played at a given frame rate:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Define once in create()</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">anims</span><span class="op">.</span><span class="fu">create</span>({</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">key</span><span class="op">:</span> <span class="st">'run'</span><span class="op">,</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">frames</span><span class="op">:</span> <span class="kw">this</span><span class="op">.</span><span class="at">anims</span><span class="op">.</span><span class="fu">generateFrameNumbers</span>(<span class="st">'player'</span><span class="op">,</span> { <span class="dt">start</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">end</span><span class="op">:</span> <span class="dv">3</span> })<span class="op">,</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">frameRate</span><span class="op">:</span> <span class="dv">12</span><span class="op">,</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">repeat</span><span class="op">:</span> <span class="op">-</span><span class="dv">1</span>       <span class="co">// -1 = loop forever</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">// Play it on a sprite</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">player</span><span class="op">.</span><span class="fu">play</span>(<span class="st">'run'</span>)<span class="op">;</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">player</span><span class="op">.</span><span class="fu">play</span>(<span class="st">'idle'</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Our current game has no animations because the player is a plain rectangle. Adding a spritesheet and animations is the natural next step.</p>
+</section>
+<section id="audio" class="level4">
+<h4 class="anchored" data-anchor-id="audio">Audio</h4>
+<p><code>this.sound</code> plays audio files loaded in <code>preload()</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">// One-shot sound effect</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">sound</span><span class="op">.</span><span class="fu">play</span>(<span class="st">'jump'</span>)<span class="op">;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Looping background music</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">bgMusic</span> <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">sound</span><span class="op">.</span><span class="fu">add</span>(<span class="st">'music'</span><span class="op">,</span> { <span class="dt">loop</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span> <span class="dt">volume</span><span class="op">:</span> <span class="fl">0.5</span> })<span class="op">;</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">bgMusic</span><span class="op">.</span><span class="fu">play</span>()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="how-phaser-is-structured-as-a-package" class="level3" data-number="1.1.4">
+<h3 data-number="1.1.4" class="anchored" data-anchor-id="how-phaser-is-structured-as-a-package"><span class="header-section-number">1.1.4</span> How Phaser Is Structured as a Package</h3>
+<p>When you run <code>npm install</code>, Phaser is downloaded into <code>node_modules/phaser/</code>. The library is one large bundle that includes all its subsystems. You import it in <code>main.js</code> as:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="op">*</span> <span class="im">as</span> Phaser <span class="im">from</span> <span class="st">'phaser'</span><span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Vite then performs <strong>tree-shaking</strong> at build time — it analyzes which parts of Phaser your code actually uses and strips out the rest. This keeps the final <code>dist/</code> bundle smaller than the full library.</p>
+<p>The <code>^4.0.0</code> version in <code>package.json</code> means Phaser 4, which was released in 2024. Phaser 4 is a significant rewrite of Phaser 3, with a new renderer architecture and updated APIs. Most online tutorials and documentation target Phaser 3; be aware of version differences when reading external resources.</p>
+<hr>
+</section>
+</section>
+<section id="the-local-development-workflow" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="the-local-development-workflow"><span class="header-section-number">1.2</span> The Local Development Workflow</h2>
+<p>Because we use Vite’s dev server (<code>npm run dev</code>), there is no build step during development:</p>
+<ol type="1">
+<li>Edit any file in VS Code and save</li>
+<li>Reload the browser tab</li>
+<li>Changes are live immediately</li>
+</ol>
+<p>Vite serves your files directly from disk in dev mode — there is no <code>dist/</code> folder until you run <code>npm run build</code>. The <code>dist/</code> folder only exists for deployment.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>npm run dev vs npm run build
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 37%">
+<col style="width: 37%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Command</th>
+<th>What it does</th>
+<th>When to use</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>npm run dev</code></td>
+<td>Starts a local dev server (e.g.&nbsp;<code>localhost:5174</code>). No output folder. Hot-reload friendly.</td>
+<td>During development</td>
+</tr>
+<tr class="even">
+<td><code>npm run build</code></td>
+<td>Bundles and minifies everything into <code>dist/</code>. No server.</td>
+<td>Before deploying</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<hr>
+</section>
+<section id="project-structure-and-bootstrapping-phaser" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="project-structure-and-bootstrapping-phaser"><span class="header-section-number">1.3</span> Project Structure and Bootstrapping Phaser</h2>
+<p>Every Phaser project built with Vite has the same three core files. Understanding what each one does — and how they connect — is the foundation for everything that follows.</p>
+<pre><code>phaser/
+├── index.html      ← shell page loaded by the browser
+├── src/
+│   ├── main.js     ← configures and starts the Phaser engine
+│   └── GameScene.js ← all game logic lives here
+└── package.json    ← Vite + Phaser dependencies</code></pre>
+<section id="index.html-the-shell" class="level3" data-number="1.3.1">
+<h3 data-number="1.3.1" class="anchored" data-anchor-id="index.html-the-shell"><span class="header-section-number">1.3.1</span> index.html — The Shell</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;!DOCTYPE</span> html<span class="dt">&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">html</span><span class="ot"> lang</span><span class="op">=</span><span class="st">"en"</span><span class="dt">&gt;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">head</span><span class="dt">&gt;</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">meta</span><span class="ot"> charset</span><span class="op">=</span><span class="st">"UTF-8"</span><span class="ot"> </span><span class="dt">/&gt;</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">title</span><span class="dt">&gt;</span>Phaser Starter<span class="dt">&lt;/</span><span class="kw">title</span><span class="dt">&gt;</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">style</span><span class="dt">&gt;</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span> { <span class="kw">margin</span><span class="ch">:</span> <span class="dv">0</span><span class="op">;</span> <span class="kw">padding</span><span class="ch">:</span> <span class="dv">0</span><span class="op">;</span> <span class="kw">box-sizing</span><span class="ch">:</span> <span class="dv">border-box</span><span class="op">;</span> }</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    body { <span class="kw">background</span><span class="ch">:</span> <span class="cn">#2e251a</span><span class="op">;</span> <span class="kw">display</span><span class="ch">:</span> <span class="dv">flex</span><span class="op">;</span> <span class="kw">justify-content</span><span class="ch">:</span> <span class="dv">center</span><span class="op">;</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>           <span class="kw">align-items</span><span class="ch">:</span> <span class="dv">center</span><span class="op">;</span> <span class="kw">height</span><span class="ch">:</span> <span class="dv">100</span><span class="dt">vh</span><span class="op">;</span> }</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;/</span><span class="kw">style</span><span class="dt">&gt;</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">head</span><span class="dt">&gt;</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">body</span><span class="dt">&gt;</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">script</span><span class="ot"> type=</span><span class="st">"module"</span><span class="ot"> src</span><span class="op">=</span><span class="st">"/src/main.js"</span><span class="dt">&gt;&lt;/</span><span class="kw">script</span><span class="dt">&gt;</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">body</span><span class="dt">&gt;</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">html</span><span class="dt">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>index.html</code> is nearly empty by design. Its only real job is this one line:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">script</span><span class="ot"> type=</span><span class="st">"module"</span><span class="ot"> src</span><span class="op">=</span><span class="st">"/src/main.js"</span><span class="dt">&gt;&lt;/</span><span class="kw">script</span><span class="dt">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This tells the browser to load <code>main.js</code> as a JavaScript module, which kicks off the entire game. The CSS centers the canvas and sets the page background color so the game sits flush in the middle of the screen.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>type="module"</code> is required here because <code>main.js</code> uses ES module <code>import</code> syntax. Without it, the browser would throw a syntax error on the <code>import</code> statement.</p>
+</div>
+</div>
+</section>
+<section id="main.js-configuring-and-starting-phaser" class="level3" data-number="1.3.2">
+<h3 data-number="1.3.2" class="anchored" data-anchor-id="main.js-configuring-and-starting-phaser"><span class="header-section-number">1.3.2</span> main.js — Configuring and Starting Phaser</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="op">*</span> <span class="im">as</span> Phaser <span class="im">from</span> <span class="st">'phaser'</span><span class="op">;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> GameScene <span class="im">from</span> <span class="st">'./GameScene.js'</span><span class="op">;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> config <span class="op">=</span> {</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">type</span><span class="op">:</span> Phaser<span class="op">.</span><span class="at">AUTO</span><span class="op">,</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">width</span><span class="op">:</span> <span class="dv">800</span><span class="op">,</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">height</span><span class="op">:</span> <span class="dv">500</span><span class="op">,</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">backgroundColor</span><span class="op">:</span> <span class="st">'#2d2d44'</span><span class="op">,</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">physics</span><span class="op">:</span> {</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">default</span><span class="op">:</span> <span class="st">'arcade'</span><span class="op">,</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">arcade</span><span class="op">:</span> { <span class="dt">gravity</span><span class="op">:</span> { <span class="dt">y</span><span class="op">:</span> <span class="dv">600</span> }<span class="op">,</span> <span class="dt">debug</span><span class="op">:</span> <span class="kw">false</span> }</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">scene</span><span class="op">:</span> [GameScene]</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="kw">new</span> Phaser<span class="op">.</span><span class="fu">Game</span>(config)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>config</code> is a plain JavaScript object that describes how the game should be set up. It is passed directly to <code>new Phaser.Game()</code>.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 19%">
+<col style="width: 26%">
+<col style="width: 53%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Key</th>
+<th>Value</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>type</code></td>
+<td><code>Phaser.AUTO</code></td>
+<td>Let Phaser choose WebGL or Canvas based on what the browser supports. You can force one with <code>Phaser.WEBGL</code> or <code>Phaser.CANVAS</code>.</td>
+</tr>
+<tr class="even">
+<td><code>width</code> / <code>height</code></td>
+<td><code>800</code> / <code>500</code></td>
+<td>Canvas size in pixels.</td>
+</tr>
+<tr class="odd">
+<td><code>backgroundColor</code></td>
+<td><code>'#2d2d44'</code></td>
+<td>Color painted behind all game objects.</td>
+</tr>
+<tr class="even">
+<td><code>physics.default</code></td>
+<td><code>'arcade'</code></td>
+<td>Which physics engine to use.</td>
+</tr>
+<tr class="odd">
+<td><code>physics.arcade.gravity.y</code></td>
+<td><code>600</code></td>
+<td>Downward gravitational pull in units per second². Higher = heavier feel.</td>
+</tr>
+<tr class="even">
+<td><code>physics.arcade.debug</code></td>
+<td><code>false</code></td>
+<td>When <code>true</code>, draws collision boxes over every physics body. Useful during development.</td>
+</tr>
+<tr class="odd">
+<td><code>scene</code></td>
+<td><code>[GameScene]</code></td>
+<td>The list of scenes to register. The first scene starts automatically.</td>
+</tr>
+</tbody>
+</table>
+<p>Phaser ships with two physics engines:</p>
+<ul>
+<li><strong><code>arcade</code></strong> — Simple, fast, axis-aligned rectangles and circles. Ideal for most 2D games. Does not support rotation-based collisions.</li>
+<li><strong><code>matter</code></strong> — Full rigid-body physics via Matter.js. Supports rotation, complex polygon shapes, joints, and constraints. More realistic but computationally heavier.</li>
+</ul>
+<p><strong><code>new Phaser.Game(config)</code></strong> is what actually starts the game. When called, Phaser:</p>
+<ol type="1">
+<li>Creates the <code>&lt;canvas&gt;</code> element and injects it into the DOM</li>
+<li>Initializes the renderer (WebGL or Canvas per <code>type</code>)</li>
+<li>Sets up the physics engine</li>
+<li>Starts the game loop (the update/render cycle that runs every frame)</li>
+<li>Launches the first scene in the <code>scene</code> array — in this case, <code>GameScene</code></li>
+</ol>
+<p>Without it, <code>config</code> is just an inert object in memory.</p>
+</section>
+<section id="package.json-project-manifest" class="level3" data-number="1.3.3">
+<h3 data-number="1.3.3" class="anchored" data-anchor-id="package.json-project-manifest"><span class="header-section-number">1.3.3</span> package.json — Project Manifest</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"name"</span><span class="fu">:</span> <span class="st">"phaser"</span><span class="fu">,</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"version"</span><span class="fu">:</span> <span class="st">"1.0.0"</span><span class="fu">,</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"description"</span><span class="fu">:</span> <span class="st">""</span><span class="fu">,</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"main"</span><span class="fu">:</span> <span class="st">"index.js"</span><span class="fu">,</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"scripts"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"dev"</span><span class="fu">:</span> <span class="st">"vite"</span><span class="fu">,</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"build"</span><span class="fu">:</span> <span class="st">"vite build"</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"keywords"</span><span class="fu">:</span> <span class="ot">[]</span><span class="fu">,</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"author"</span><span class="fu">:</span> <span class="st">""</span><span class="fu">,</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"license"</span><span class="fu">:</span> <span class="st">"ISC"</span><span class="fu">,</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"commonjs"</span><span class="fu">,</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"dependencies"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"phaser"</span><span class="fu">:</span> <span class="st">"^4.0.0"</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"devDependencies"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"vite"</span><span class="fu">:</span> <span class="st">"^8.0.8"</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>package.json</code> is the manifest file that Node.js and npm use to understand your project. Every JavaScript project that uses npm has one.</p>
+<p><strong>Metadata fields:</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 30%">
+<col style="width: 39%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Field</th>
+<th>Value</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>name</code></td>
+<td><code>"phaser"</code></td>
+<td>The project name. Matters if you publish to npm; otherwise just a label.</td>
+</tr>
+<tr class="even">
+<td><code>version</code></td>
+<td><code>"1.0.0"</code></td>
+<td>Semantic version of your project (<code>major.minor.patch</code>).</td>
+</tr>
+<tr class="odd">
+<td><code>description</code></td>
+<td><code>""</code></td>
+<td>Short description — empty here, but useful for published packages.</td>
+</tr>
+<tr class="even">
+<td><code>main</code></td>
+<td><code>"index.js"</code></td>
+<td>The entry point if this package were imported by another project. Not used directly by Vite, but kept for compatibility.</td>
+</tr>
+<tr class="odd">
+<td><code>keywords</code></td>
+<td><code>[]</code></td>
+<td>Tags for npm search. Not relevant for a private game project.</td>
+</tr>
+<tr class="even">
+<td><code>author</code></td>
+<td><code>""</code></td>
+<td>Your name or organization.</td>
+</tr>
+<tr class="odd">
+<td><code>license</code></td>
+<td><code>"ISC"</code></td>
+<td>The open-source license. ISC is a permissive license similar to MIT.</td>
+</tr>
+</tbody>
+</table>
+<p><strong><code>scripts</code></strong> are shortcuts you run with <code>npm run &lt;name&gt;</code>:</p>
+<ul>
+<li><strong><code>npm run dev</code></strong> — runs <code>vite</code>, starting the local dev server</li>
+<li><strong><code>npm run build</code></strong> — runs <code>vite build</code>, bundling the project into <code>dist/</code></li>
+</ul>
+<p><strong><code>type: "commonjs"</code></strong> tells Node.js which module system to use for <code>.js</code> files. This governs the build process; the <code>type="module"</code> attribute in <code>index.html</code> is a separate, browser-side setting. Vite bridges the two automatically.</p>
+<p><strong><code>dependencies</code> vs <code>devDependencies</code>:</strong></p>
+<ul>
+<li><strong><code>dependencies</code></strong> — packages your game needs at runtime. Phaser belongs here because it runs in the browser alongside your game code.</li>
+<li><strong><code>devDependencies</code></strong> — packages only needed during development. Vite belongs here because once the game is built, the browser never sees it.</li>
+</ul>
+<p><strong>Version ranges:</strong> The caret (<code>^</code>) in <code>"phaser": "^4.0.0"</code> means accept any version <code>&gt;=4.0.0</code> and <code>&lt;5.0.0</code>. When you run <code>npm install</code>, the exact versions installed are written into <code>package-lock.json</code>, which locks the environment for everyone on the project.</p>
+</section>
+<section id="how-the-three-files-connect" class="level3" data-number="1.3.4">
+<h3 data-number="1.3.4" class="anchored" data-anchor-id="how-the-three-files-connect"><span class="header-section-number">1.3.4</span> How the Three Files Connect</h3>
+<pre><code>Browser loads index.html
+    └── &lt;script type="module"&gt; loads main.js
+            ├── imports Phaser from node_modules
+            ├── imports GameScene from ./GameScene.js
+            ├── defines config {}
+            └── new Phaser.Game(config)
+                    └── starts the game loop → runs GameScene</code></pre>
+<p><code>index.html</code> delegates everything to <code>main.js</code>. <code>main.js</code> delegates everything to <code>new Phaser.Game()</code>. From that point on, Phaser takes over and calls into your scene’s <code>create()</code> and <code>update()</code> methods on every frame.</p>
+<hr>
+</section>
+</section>
+<section id="gamescene.js-the-game-logic" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="gamescene.js-the-game-logic"><span class="header-section-number">1.4</span> GameScene.js — The Game Logic</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/chapter1/MindMap.png" class="img-fluid figure-img"></p>
+<figcaption>GameScene mind map</figcaption>
+</figure>
+</div>
+<p><code>GameScene.js</code> is where the entire game lives. It is a single class that extends <code>Phaser.Scene</code> and implements three things: a constructor that registers the scene, a <code>create()</code> method that builds the world, and an <code>update()</code> method that runs every frame. Two small helper methods handle procedural texture generation.</p>
+<p>Here is the full file, followed by a walkthrough of each block:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="op">*</span> <span class="im">as</span> Phaser <span class="im">from</span> <span class="st">'phaser'</span><span class="op">;</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="im">default</span> <span class="kw">class</span> GameScene <span class="kw">extends</span> Phaser<span class="op">.</span><span class="at">Scene</span> {</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">constructor</span>() {</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">super</span>({ <span class="dt">key</span><span class="op">:</span> <span class="st">'GameScene'</span> })<span class="op">;</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">create</span>() {</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> W <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">scale</span><span class="op">.</span><span class="at">width</span><span class="op">;</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> H <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">scale</span><span class="op">.</span><span class="at">height</span><span class="op">;</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="fu">genRect</span>(<span class="st">'ground'</span><span class="op">,</span>   W<span class="op">,</span>   <span class="dv">32</span><span class="op">,</span> <span class="bn">0x4caf50</span>)<span class="op">;</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="fu">genRect</span>(<span class="st">'platform'</span><span class="op">,</span> <span class="dv">160</span><span class="op">,</span> <span class="dv">18</span><span class="op">,</span> <span class="bn">0x8b6914</span>)<span class="op">;</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="fu">genRect</span>(<span class="st">'plat_sm'</span><span class="op">,</span>  <span class="dv">120</span><span class="op">,</span> <span class="dv">18</span><span class="op">,</span> <span class="bn">0x8b6914</span>)<span class="op">;</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="fu">genRect</span>(<span class="st">'player'</span><span class="op">,</span>   <span class="dv">32</span><span class="op">,</span>  <span class="dv">48</span><span class="op">,</span> <span class="bn">0x5c9ded</span>)<span class="op">;</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="fu">genCircle</span>(<span class="st">'coin'</span><span class="op">,</span>   <span class="dv">10</span><span class="op">,</span>      <span class="bn">0xffd700</span>)<span class="op">;</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> ground <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">staticImage</span>(W <span class="op">/</span> <span class="dv">2</span><span class="op">,</span> H <span class="op">-</span> <span class="dv">16</span><span class="op">,</span> <span class="st">'ground'</span>)<span class="op">;</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">platforms</span> <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">staticGroup</span>()<span class="op">;</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">platforms</span><span class="op">.</span><span class="fu">create</span>(<span class="dv">200</span><span class="op">,</span> <span class="dv">350</span><span class="op">,</span> <span class="st">'platform'</span>)<span class="op">;</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">platforms</span><span class="op">.</span><span class="fu">create</span>(<span class="dv">500</span><span class="op">,</span> <span class="dv">250</span><span class="op">,</span> <span class="st">'platform'</span>)<span class="op">;</span></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">platforms</span><span class="op">.</span><span class="fu">create</span>(<span class="dv">350</span><span class="op">,</span> <span class="dv">160</span><span class="op">,</span> <span class="st">'plat_sm'</span>)<span class="op">;</span></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">player</span> <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">sprite</span>(<span class="dv">100</span><span class="op">,</span> H <span class="op">-</span> <span class="dv">80</span><span class="op">,</span> <span class="st">'player'</span>)<span class="op">;</span></span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">player</span><span class="op">.</span><span class="fu">setCollideWorldBounds</span>(<span class="kw">true</span>)<span class="op">;</span></span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">collider</span>(<span class="kw">this</span><span class="op">.</span><span class="at">player</span><span class="op">,</span> ground)<span class="op">;</span></span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">collider</span>(<span class="kw">this</span><span class="op">.</span><span class="at">player</span><span class="op">,</span> <span class="kw">this</span><span class="op">.</span><span class="at">platforms</span>)<span class="op">;</span></span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">coins</span> <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">staticGroup</span>()<span class="op">;</span></span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">coins</span><span class="op">.</span><span class="fu">create</span>(<span class="dv">150</span><span class="op">,</span> H <span class="op">-</span> <span class="dv">60</span><span class="op">,</span> <span class="st">'coin'</span>)<span class="op">;</span></span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">coins</span><span class="op">.</span><span class="fu">create</span>(<span class="dv">480</span><span class="op">,</span> H <span class="op">-</span> <span class="dv">60</span><span class="op">,</span> <span class="st">'coin'</span>)<span class="op">;</span></span>
+<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">coins</span><span class="op">.</span><span class="fu">create</span>(<span class="dv">200</span><span class="op">,</span> <span class="dv">320</span><span class="op">,</span>    <span class="st">'coin'</span>)<span class="op">;</span></span>
+<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">coins</span><span class="op">.</span><span class="fu">create</span>(<span class="dv">500</span><span class="op">,</span> <span class="dv">220</span><span class="op">,</span>    <span class="st">'coin'</span>)<span class="op">;</span></span>
+<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">coins</span><span class="op">.</span><span class="fu">create</span>(<span class="dv">350</span><span class="op">,</span> <span class="dv">130</span><span class="op">,</span>    <span class="st">'coin'</span>)<span class="op">;</span></span>
+<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">overlap</span>(<span class="kw">this</span><span class="op">.</span><span class="at">player</span><span class="op">,</span> <span class="kw">this</span><span class="op">.</span><span class="at">coins</span><span class="op">,</span> (_player<span class="op">,</span> coin) <span class="kw">=&gt;</span> {</span>
+<span id="cb16-39"><a href="#cb16-39" aria-hidden="true" tabindex="-1"></a>      coin<span class="op">.</span><span class="fu">destroy</span>()<span class="op">;</span></span>
+<span id="cb16-40"><a href="#cb16-40" aria-hidden="true" tabindex="-1"></a>      <span class="kw">this</span><span class="op">.</span><span class="at">score</span><span class="op">++;</span></span>
+<span id="cb16-41"><a href="#cb16-41" aria-hidden="true" tabindex="-1"></a>      <span class="kw">this</span><span class="op">.</span><span class="at">scoreText</span><span class="op">.</span><span class="fu">setText</span>(<span class="st">'Score: '</span> <span class="op">+</span> <span class="kw">this</span><span class="op">.</span><span class="at">score</span>)<span class="op">;</span></span>
+<span id="cb16-42"><a href="#cb16-42" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
+<span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-44"><a href="#cb16-44" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">score</span> <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb16-45"><a href="#cb16-45" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">scoreText</span> <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">text</span>(<span class="dv">16</span><span class="op">,</span> <span class="dv">16</span><span class="op">,</span> <span class="st">'Score: 0'</span><span class="op">,</span> {</span>
+<span id="cb16-46"><a href="#cb16-46" aria-hidden="true" tabindex="-1"></a>      <span class="dt">fontSize</span><span class="op">:</span> <span class="st">'20px'</span><span class="op">,</span> <span class="dt">color</span><span class="op">:</span> <span class="st">'#ffffff'</span><span class="op">,</span> <span class="dt">fontFamily</span><span class="op">:</span> <span class="st">'monospace'</span></span>
+<span id="cb16-47"><a href="#cb16-47" aria-hidden="true" tabindex="-1"></a>    })<span class="op">.</span><span class="fu">setDepth</span>(<span class="dv">1</span>)<span class="op">;</span></span>
+<span id="cb16-48"><a href="#cb16-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-49"><a href="#cb16-49" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">text</span>(W <span class="op">/</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">16</span><span class="op">,</span> <span class="st">'← → to move   ↑ or Space to jump'</span><span class="op">,</span> {</span>
+<span id="cb16-50"><a href="#cb16-50" aria-hidden="true" tabindex="-1"></a>      <span class="dt">fontSize</span><span class="op">:</span> <span class="st">'13px'</span><span class="op">,</span> <span class="dt">color</span><span class="op">:</span> <span class="st">'#aaaacc'</span><span class="op">,</span> <span class="dt">fontFamily</span><span class="op">:</span> <span class="st">'monospace'</span></span>
+<span id="cb16-51"><a href="#cb16-51" aria-hidden="true" tabindex="-1"></a>    })<span class="op">.</span><span class="fu">setOrigin</span>(<span class="fl">0.5</span><span class="op">,</span> <span class="dv">0</span>)<span class="op">.</span><span class="fu">setDepth</span>(<span class="dv">1</span>)<span class="op">;</span></span>
+<span id="cb16-52"><a href="#cb16-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-53"><a href="#cb16-53" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">cursors</span> <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">input</span><span class="op">.</span><span class="at">keyboard</span><span class="op">.</span><span class="fu">createCursorKeys</span>()<span class="op">;</span></span>
+<span id="cb16-54"><a href="#cb16-54" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">wasd</span> <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">input</span><span class="op">.</span><span class="at">keyboard</span><span class="op">.</span><span class="fu">addKeys</span>({</span>
+<span id="cb16-55"><a href="#cb16-55" aria-hidden="true" tabindex="-1"></a>      <span class="dt">left</span><span class="op">:</span>  Phaser<span class="op">.</span><span class="at">Input</span><span class="op">.</span><span class="at">Keyboard</span><span class="op">.</span><span class="at">KeyCodes</span><span class="op">.</span><span class="at">A</span><span class="op">,</span></span>
+<span id="cb16-56"><a href="#cb16-56" aria-hidden="true" tabindex="-1"></a>      <span class="dt">right</span><span class="op">:</span> Phaser<span class="op">.</span><span class="at">Input</span><span class="op">.</span><span class="at">Keyboard</span><span class="op">.</span><span class="at">KeyCodes</span><span class="op">.</span><span class="at">D</span><span class="op">,</span></span>
+<span id="cb16-57"><a href="#cb16-57" aria-hidden="true" tabindex="-1"></a>      <span class="dt">jump</span><span class="op">:</span>  Phaser<span class="op">.</span><span class="at">Input</span><span class="op">.</span><span class="at">Keyboard</span><span class="op">.</span><span class="at">KeyCodes</span><span class="op">.</span><span class="at">W</span></span>
+<span id="cb16-58"><a href="#cb16-58" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
+<span id="cb16-59"><a href="#cb16-59" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb16-60"><a href="#cb16-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-61"><a href="#cb16-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">update</span>() {</span>
+<span id="cb16-62"><a href="#cb16-62" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> body    <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">player</span><span class="op">.</span><span class="at">body</span><span class="op">;</span></span>
+<span id="cb16-63"><a href="#cb16-63" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> onFloor <span class="op">=</span> body<span class="op">.</span><span class="at">blocked</span><span class="op">.</span><span class="at">down</span><span class="op">;</span></span>
+<span id="cb16-64"><a href="#cb16-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-65"><a href="#cb16-65" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> left  <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">cursors</span><span class="op">.</span><span class="at">left</span><span class="op">.</span><span class="at">isDown</span>  <span class="op">||</span> <span class="kw">this</span><span class="op">.</span><span class="at">wasd</span><span class="op">.</span><span class="at">left</span><span class="op">.</span><span class="at">isDown</span><span class="op">;</span></span>
+<span id="cb16-66"><a href="#cb16-66" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> right <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">cursors</span><span class="op">.</span><span class="at">right</span><span class="op">.</span><span class="at">isDown</span> <span class="op">||</span> <span class="kw">this</span><span class="op">.</span><span class="at">wasd</span><span class="op">.</span><span class="at">right</span><span class="op">.</span><span class="at">isDown</span><span class="op">;</span></span>
+<span id="cb16-67"><a href="#cb16-67" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> jump  <span class="op">=</span> Phaser<span class="op">.</span><span class="at">Input</span><span class="op">.</span><span class="at">Keyboard</span><span class="op">.</span><span class="fu">JustDown</span>(<span class="kw">this</span><span class="op">.</span><span class="at">cursors</span><span class="op">.</span><span class="at">up</span>)</span>
+<span id="cb16-68"><a href="#cb16-68" aria-hidden="true" tabindex="-1"></a>               <span class="op">||</span> Phaser<span class="op">.</span><span class="at">Input</span><span class="op">.</span><span class="at">Keyboard</span><span class="op">.</span><span class="fu">JustDown</span>(<span class="kw">this</span><span class="op">.</span><span class="at">cursors</span><span class="op">.</span><span class="at">space</span>)</span>
+<span id="cb16-69"><a href="#cb16-69" aria-hidden="true" tabindex="-1"></a>               <span class="op">||</span> Phaser<span class="op">.</span><span class="at">Input</span><span class="op">.</span><span class="at">Keyboard</span><span class="op">.</span><span class="fu">JustDown</span>(<span class="kw">this</span><span class="op">.</span><span class="at">wasd</span><span class="op">.</span><span class="at">jump</span>)<span class="op">;</span></span>
+<span id="cb16-70"><a href="#cb16-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-71"><a href="#cb16-71" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (left)       body<span class="op">.</span><span class="fu">setVelocityX</span>(<span class="op">-</span><span class="dv">220</span>)<span class="op">;</span></span>
+<span id="cb16-72"><a href="#cb16-72" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span> <span class="cf">if</span> (right) body<span class="op">.</span><span class="fu">setVelocityX</span>(<span class="dv">220</span>)<span class="op">;</span></span>
+<span id="cb16-73"><a href="#cb16-73" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>            body<span class="op">.</span><span class="fu">setVelocityX</span>(<span class="dv">0</span>)<span class="op">;</span></span>
+<span id="cb16-74"><a href="#cb16-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-75"><a href="#cb16-75" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (jump <span class="op">&amp;&amp;</span> onFloor) body<span class="op">.</span><span class="fu">setVelocityY</span>(<span class="op">-</span><span class="dv">550</span>)<span class="op">;</span></span>
+<span id="cb16-76"><a href="#cb16-76" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb16-77"><a href="#cb16-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-78"><a href="#cb16-78" aria-hidden="true" tabindex="-1"></a>  <span class="fu">genRect</span>(key<span class="op">,</span> w<span class="op">,</span> h<span class="op">,</span> color) {</span>
+<span id="cb16-79"><a href="#cb16-79" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> g <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">make</span><span class="op">.</span><span class="fu">graphics</span>({ <span class="dt">add</span><span class="op">:</span> <span class="kw">false</span> })<span class="op">;</span></span>
+<span id="cb16-80"><a href="#cb16-80" aria-hidden="true" tabindex="-1"></a>    g<span class="op">.</span><span class="fu">fillStyle</span>(color)<span class="op">;</span></span>
+<span id="cb16-81"><a href="#cb16-81" aria-hidden="true" tabindex="-1"></a>    g<span class="op">.</span><span class="fu">fillRect</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> w<span class="op">,</span> h)<span class="op">;</span></span>
+<span id="cb16-82"><a href="#cb16-82" aria-hidden="true" tabindex="-1"></a>    g<span class="op">.</span><span class="fu">generateTexture</span>(key<span class="op">,</span> w<span class="op">,</span> h)<span class="op">;</span></span>
+<span id="cb16-83"><a href="#cb16-83" aria-hidden="true" tabindex="-1"></a>    g<span class="op">.</span><span class="fu">destroy</span>()<span class="op">;</span></span>
+<span id="cb16-84"><a href="#cb16-84" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb16-85"><a href="#cb16-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-86"><a href="#cb16-86" aria-hidden="true" tabindex="-1"></a>  <span class="fu">genCircle</span>(key<span class="op">,</span> radius<span class="op">,</span> color) {</span>
+<span id="cb16-87"><a href="#cb16-87" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> size <span class="op">=</span> radius <span class="op">*</span> <span class="dv">2</span><span class="op">;</span></span>
+<span id="cb16-88"><a href="#cb16-88" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> g <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">make</span><span class="op">.</span><span class="fu">graphics</span>({ <span class="dt">add</span><span class="op">:</span> <span class="kw">false</span> })<span class="op">;</span></span>
+<span id="cb16-89"><a href="#cb16-89" aria-hidden="true" tabindex="-1"></a>    g<span class="op">.</span><span class="fu">fillStyle</span>(color)<span class="op">;</span></span>
+<span id="cb16-90"><a href="#cb16-90" aria-hidden="true" tabindex="-1"></a>    g<span class="op">.</span><span class="fu">fillCircle</span>(radius<span class="op">,</span> radius<span class="op">,</span> radius)<span class="op">;</span></span>
+<span id="cb16-91"><a href="#cb16-91" aria-hidden="true" tabindex="-1"></a>    g<span class="op">.</span><span class="fu">generateTexture</span>(key<span class="op">,</span> size<span class="op">,</span> size)<span class="op">;</span></span>
+<span id="cb16-92"><a href="#cb16-92" aria-hidden="true" tabindex="-1"></a>    g<span class="op">.</span><span class="fu">destroy</span>()<span class="op">;</span></span>
+<span id="cb16-93"><a href="#cb16-93" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb16-94"><a href="#cb16-94" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/chapter1/GameScene_Infographic.png" class="img-fluid figure-img"></p>
+<figcaption>GameScene infographic</figcaption>
+</figure>
+</div>
+<section id="play-it" class="level3" data-number="1.4.1">
+<h3 data-number="1.4.1" class="anchored" data-anchor-id="play-it"><span class="header-section-number">1.4.1</span> Play it</h3>
+<p>Try the game before reading the walkthrough. The sliders below are wired directly to the variables in the source code — move one and watch the game respond instantly.</p>
+<div id="ch1-widget" style="overflow-x:auto; margin: 1rem 0 2rem;">
+
+  <!-- Game iframe -->
+  <iframe id="ch1-frame" src="https://emilsar.github.io/phaser/demo/" width="800" height="520" style="border:none; display:block;" title="Chapter 1 — playable game demo" allow="autoplay">
+  </iframe>
+
+  <!-- Parameter panel -->
+  <div id="ch1-panel" style="
+    width: 800px;
+    margin-top: 2px;
+    padding: 14px 20px 16px;
+    background: var(--bs-tertiary-bg, #f8f9fa);
+    border: 1px solid var(--bs-border-color, #dee2e6);
+    border-top: none;
+    font-family: 'Cascadia Code', 'Fira Code', 'Courier New', monospace;
+    font-size: 0.82rem;
+  ">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+      <span style="font-size:0.75rem; opacity:0.6; font-family:sans-serif;">
+        Live parameters — labels match variable names in the source code
+      </span>
+      <button id="ch1-reset-all" style="
+        font-size:0.75rem; font-family:sans-serif;
+        padding:3px 10px; cursor:pointer;
+        background:none;
+        border:1px solid var(--bs-border-color, #aaa);
+        color:var(--bs-body-color, #222);
+        border-radius:4px;
+      ">Reset all</button>
+    </div>
+
+    <div id="ch1-sliders"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const PARAMS = [
+    { param: 'gravity',      label: 'gravity.y',      min:   0, max: 2000, step:  10, def: 600 },
+    { param: 'jumpVelocity', label: 'jumpVelocity',   min: 100, max: 1200, step:  10, def: 550 },
+    { param: 'moveSpeed',    label: 'moveSpeed',      min:  50, max:  600, step:  10, def: 220 },
+    { param: 'playerW',      label: 'playerW',        min:  10, max:  100, step:   2, def:  32 },
+    { param: 'playerH',      label: 'playerH',        min:  10, max:  120, step:   2, def:  48 },
+    { param: 'coinRadius',   label: 'coinRadius',     min:   4, max:   40, step:   1, def:  10 },
+  ];
+
+  const frame  = document.getElementById('ch1-frame');
+  const container = document.getElementById('ch1-sliders');
+
+  function send(param, value) {
+    frame.contentWindow.postMessage({ param, value }, '*');
+  }
+
+  const inputs = {};
+
+  PARAMS.forEach(p => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:grid; grid-template-columns:130px 1fr 48px 28px; align-items:center; gap:10px; margin-bottom:7px;';
+
+    const lbl = document.createElement('span');
+    lbl.textContent = p.label;
+    lbl.style.cssText = 'color:var(--bs-link-color, #0d6efd);';
+
+    const slider = document.createElement('input');
+    slider.type  = 'range';
+    slider.min   = p.min;
+    slider.max   = p.max;
+    slider.step  = p.step;
+    slider.value = p.def;
+    slider.style.cssText = 'width:100%; cursor:pointer; accent-color:var(--bs-link-color, #0d6efd);';
+
+    const val = document.createElement('span');
+    val.textContent = p.def;
+    val.style.cssText = 'text-align:right; min-width:40px; color:var(--bs-body-color,#222);';
+
+    const reset = document.createElement('button');
+    reset.textContent = '↺';
+    reset.title = 'Reset to default';
+    reset.style.cssText = 'background:none; border:none; cursor:pointer; font-size:1rem; color:var(--bs-secondary-color,#666); padding:0; line-height:1;';
+
+    slider.addEventListener('input', () => {
+      const v = Number(slider.value);
+      val.textContent = v;
+      send(p.param, v);
+    });
+
+    reset.addEventListener('click', () => {
+      slider.value  = p.def;
+      val.textContent = p.def;
+      send(p.param, p.def);
+    });
+
+    inputs[p.param] = { slider, val, def: p.def };
+    row.append(lbl, slider, val, reset);
+    container.appendChild(row);
+  });
+
+  document.getElementById('ch1-reset-all').addEventListener('click', () => {
+    Object.values(inputs).forEach(({ slider, val, def }) => {
+      slider.value = def;
+      val.textContent = def;
+    });
+    PARAMS.forEach(p => send(p.param, p.def));
+  });
+})();
+</script>
+</section>
+<section id="class-declaration-and-constructor" class="level3" data-number="1.4.2">
+<h3 data-number="1.4.2" class="anchored" data-anchor-id="class-declaration-and-constructor"><span class="header-section-number">1.4.2</span> Class declaration and constructor</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="im">default</span> <span class="kw">class</span> GameScene <span class="kw">extends</span> Phaser<span class="op">.</span><span class="at">Scene</span> {</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">constructor</span>() {</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">super</span>({ <span class="dt">key</span><span class="op">:</span> <span class="st">'GameScene'</span> })<span class="op">;</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  }</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This single line packs in six distinct JavaScript concepts. Here is each word:</p>
+<p><strong><code>export</code></strong> makes <code>GameScene</code> available outside this file. ES modules are isolated by default — nothing defined in <code>GameScene.js</code> is visible elsewhere unless explicitly exported. Without <code>export</code>, the <code>import GameScene from './GameScene.js'</code> line in <code>main.js</code> would fail with a reference error.</p>
+<p><strong><code>default</code></strong> marks this as the file’s primary export. A file can have many <em>named</em> exports but only one <em>default</em> export. The distinction changes the import syntax: a default export is imported without curly braces (<code>import GameScene from './GameScene.js'</code>), while a named export would require them (<code>import { GameScene } from './GameScene.js'</code>). Using <code>default</code> here signals to any reader of this file: “this class is the point of this file.”</p>
+<p><strong><code>class</code></strong> declares a JavaScript class — a named blueprint for creating objects. A class groups related data and behavior together under one name. Before ES6 (2015), the same thing was accomplished with constructor functions and prototype chains, which worked but were verbose and error-prone. The <code>class</code> keyword is cleaner syntax for the same mechanism.</p>
+<p><strong><code>GameScene</code></strong> is the name of the class. By convention, class names use PascalCase (each word capitalized, no underscores). This name is what you use to instantiate the class with <code>new GameScene()</code>, and it is what Phaser uses in error messages when something goes wrong inside the scene.</p>
+<p><strong><code>extends</code></strong> sets up <strong>inheritance</strong>: <code>GameScene</code> is declared as a <em>subclass</em> of <code>Phaser.Scene</code>. Inheritance means GameScene gets everything <code>Phaser.Scene</code> already knows how to do, without having to rewrite it. Think of it as a family relationship — <code>Phaser.Scene</code> is the parent; <code>GameScene</code> is the child. The child adds its own behavior on top of the parent’s.</p>
+<p><strong><code>Phaser.Scene</code></strong> is the parent class, defined inside the Phaser library. It contains the machinery every scene needs: the lifecycle system that calls <code>preload()</code>, <code>create()</code>, and <code>update()</code> at the right times; and the plugin system that attaches <code>this.physics</code>, <code>this.add</code>, <code>this.cameras</code>, <code>this.input</code>, and all the other tools you use inside a scene. By extending <code>Phaser.Scene</code>, you inherit all of that infrastructure instantly. If you tried to write a scene class that did <em>not</em> extend <code>Phaser.Scene</code>, none of those tools would exist on <code>this</code>.</p>
+<p><strong>The constructor</strong> runs once when Phaser instantiates the class (which happens when <code>new Phaser.Game(config)</code> registers your scene list). It calls <code>super({ key: 'GameScene' })</code>, which passes a config object up to the parent class constructor. The <code>key</code> is the scene’s internal name — the string you use to switch to it from anywhere else in your code:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">scene</span><span class="op">.</span><span class="fu">start</span>(<span class="st">'GameScene'</span>)<span class="op">;</span>   <span class="co">// from another scene</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">scene</span><span class="op">.</span><span class="fu">restart</span>()<span class="op">;</span>            <span class="co">// restart this scene</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">scene</span><span class="op">.</span><span class="fu">pause</span>(<span class="st">'GameScene'</span>)<span class="op">;</span>   <span class="co">// pause it</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If you don’t call <code>super()</code> in a subclass constructor, JavaScript throws a <code>ReferenceError</code> before the constructor body even runs. It is a hard requirement for any class that uses <code>extends</code>.</p>
+</section>
+<section id="why-all-methods-must-live-inside-the-class" class="level3" data-number="1.4.3">
+<h3 data-number="1.4.3" class="anchored" data-anchor-id="why-all-methods-must-live-inside-the-class"><span class="header-section-number">1.4.3</span> Why all methods must live inside the class</h3>
+<p><code>constructor()</code>, <code>create()</code>, <code>update()</code>, and the helpers <code>genRect</code> and <code>genCircle</code> must all be defined inside the class body — not outside it as standalone functions. There are two reasons.</p>
+<p><strong>Reason 1: <code>this</code> only refers to the scene instance inside a method.</strong> Inside a class method, <code>this</code> refers to the specific instance of the class — the live scene object with all its Phaser tools attached. If you moved <code>create()</code> outside the class as a regular function, <code>this</code> would either be <code>undefined</code> (in strict mode) or the global <code>window</code> object. Every line that says <code>this.physics</code>, <code>this.add</code>, <code>this.input</code>, or <code>this.player</code> would fail.</p>
+<p><strong>Reason 2: Phaser looks for these methods by name on the instance.</strong> When Phaser launches a scene, it effectively does:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> scene <span class="op">=</span> <span class="kw">new</span> <span class="fu">GameScene</span>()<span class="op">;</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>scene<span class="op">.</span><span class="fu">create</span>()<span class="op">;</span>        <span class="co">// called once when the scene starts</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>scene<span class="op">.</span><span class="fu">update</span>(time<span class="op">,</span> delta)<span class="op">;</span>  <span class="co">// called every frame</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If <code>create</code> and <code>update</code> are not on the instance — meaning they are not defined as methods of the class — Phaser simply does not call them. The game would start but nothing would appear. Phaser does not raise an error for a missing <code>create()</code> or <code>update()</code>; it just skips calling them if they are not found.</p>
+<p>The same logic applies to <code>genRect</code> and <code>genCircle</code>: they use <code>this.make.graphics()</code>, which only works because they are class methods with access to the scene instance. As standalone functions, they would have no way to reach Phaser’s scene API.</p>
+</section>
+<section id="when-you-would-have-other-classes" class="level3" data-number="1.4.4">
+<h3 data-number="1.4.4" class="anchored" data-anchor-id="when-you-would-have-other-classes"><span class="header-section-number">1.4.4</span> When you would have other classes</h3>
+<p>Our game has only <code>GameScene</code>, but a more developed game typically has several classes. Some extend Phaser classes; others are plain JavaScript classes used as helper objects.</p>
+<p><strong>Additional scene classes</strong> are the most common. Each major “screen” in the game becomes its own scene:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> BootScene   <span class="kw">extends</span> Phaser<span class="op">.</span><span class="at">Scene</span> { }  <span class="co">// shows a logo, loads minimal assets</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MenuScene   <span class="kw">extends</span> Phaser<span class="op">.</span><span class="at">Scene</span> { }  <span class="co">// title screen, play button</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> GameScene   <span class="kw">extends</span> Phaser<span class="op">.</span><span class="at">Scene</span> { }  <span class="co">// the level itself</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> PauseScene  <span class="kw">extends</span> Phaser<span class="op">.</span><span class="at">Scene</span> { }  <span class="co">// pause overlay, layered on top of GameScene</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> GameOver    <span class="kw">extends</span> Phaser<span class="op">.</span><span class="at">Scene</span> { }  <span class="co">// death screen, score, retry button</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Custom game object classes</strong> let you give enemies, bullets, or pickups their own self-contained logic:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Enemy <span class="kw">extends</span> Phaser<span class="op">.</span><span class="at">GameObjects</span><span class="op">.</span><span class="at">Sprite</span> {</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">constructor</span>(scene<span class="op">,</span> x<span class="op">,</span> y) {</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">super</span>(scene<span class="op">,</span> x<span class="op">,</span> y<span class="op">,</span> <span class="st">'enemy'</span>)<span class="op">;</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">health</span> <span class="op">=</span> <span class="dv">3</span><span class="op">;</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">speed</span>  <span class="op">=</span> <span class="dv">80</span><span class="op">;</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">update</span>() {</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">// enemy-specific movement AI here</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Because <code>Enemy</code> extends <code>Phaser.GameObjects.Sprite</code>, it is a real Phaser sprite with physics, animations, and all the normal sprite properties — plus any custom properties and methods you add to it.</p>
+<p><strong>Plain helper classes</strong> handle logic that has nothing to do with Phaser specifically — managing save data, tracking level progression, or controlling audio:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ScoreManager {</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">constructor</span>() { <span class="kw">this</span><span class="op">.</span><span class="at">score</span> <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> <span class="kw">this</span><span class="op">.</span><span class="at">highScore</span> <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> }</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add</span>(points) { <span class="kw">this</span><span class="op">.</span><span class="at">score</span> <span class="op">+=</span> points<span class="op">;</span> }</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">save</span>() { localStorage<span class="op">.</span><span class="fu">setItem</span>(<span class="st">'highScore'</span><span class="op">,</span> <span class="kw">this</span><span class="op">.</span><span class="at">score</span>)<span class="op">;</span> }</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This class does not extend anything — it is just a clean way to group related state and behavior. You would instantiate it in a scene’s <code>create()</code> and store it as <code>this.scoreManager</code>.</p>
+</section>
+<section id="canvas-dimensions" class="level3" data-number="1.4.5">
+<h3 data-number="1.4.5" class="anchored" data-anchor-id="canvas-dimensions"><span class="header-section-number">1.4.5</span> Canvas dimensions</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> W <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">scale</span><span class="op">.</span><span class="at">width</span><span class="op">;</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> H <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">scale</span><span class="op">.</span><span class="at">height</span><span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>this.scale</code> is Phaser’s Scale Manager. <code>.width</code> and <code>.height</code> return the current canvas dimensions (800 and 500, as set in <code>main.js</code>). Storing them in <code>W</code> and <code>H</code> avoids repeating <code>this.scale.width</code> throughout <code>create()</code> and makes it easy to position objects relative to the canvas size rather than hardcoding pixel values.</p>
+</section>
+<section id="generating-textures-procedurally" class="level3" data-number="1.4.6">
+<h3 data-number="1.4.6" class="anchored" data-anchor-id="generating-textures-procedurally"><span class="header-section-number">1.4.6</span> Generating textures procedurally</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="fu">genRect</span>(<span class="st">'ground'</span><span class="op">,</span>   W<span class="op">,</span>   <span class="dv">32</span><span class="op">,</span> <span class="bn">0x4caf50</span>)<span class="op">;</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="fu">genRect</span>(<span class="st">'platform'</span><span class="op">,</span> <span class="dv">160</span><span class="op">,</span> <span class="dv">18</span><span class="op">,</span> <span class="bn">0x8b6914</span>)<span class="op">;</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="fu">genRect</span>(<span class="st">'plat_sm'</span><span class="op">,</span>  <span class="dv">120</span><span class="op">,</span> <span class="dv">18</span><span class="op">,</span> <span class="bn">0x8b6914</span>)<span class="op">;</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="fu">genRect</span>(<span class="st">'player'</span><span class="op">,</span>   <span class="dv">32</span><span class="op">,</span>  <span class="dv">48</span><span class="op">,</span> <span class="bn">0x5c9ded</span>)<span class="op">;</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="fu">genCircle</span>(<span class="st">'coin'</span><span class="op">,</span>   <span class="dv">10</span><span class="op">,</span>      <span class="bn">0xffd700</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>To understand why these calls are necessary, you need to understand how Phaser draws anything at all.</p>
+<p>Phaser’s sprite and image game objects don’t draw shapes — they draw <strong>textures</strong>. A texture is a bitmap image (a grid of pixels) that lives in the GPU’s memory and is identified by a string key. When you write <code>this.physics.add.sprite(100, H-80, 'player')</code>, the third argument is not a description of the shape — it is a key that Phaser looks up in its internal texture cache. If the key doesn’t exist in the cache yet, you get a blank 32×32 white square as a placeholder (Phaser’s built-in missing-texture indicator).</p>
+<p>Normally you populate the texture cache in <code>preload()</code> by loading image files:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">preload</span>() {</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">this</span><span class="op">.</span><span class="at">load</span><span class="op">.</span><span class="fu">image</span>(<span class="st">'player'</span><span class="op">,</span> <span class="st">'assets/player.png'</span>)<span class="op">;</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>We have no image files. So instead, we create textures programmatically right at the start of <code>create()</code>, using our helper methods. Each <code>genRect</code> and <code>genCircle</code> call draws a colored shape into an off-screen Graphics object and then “bakes” it into a named texture entry in the cache via <code>generateTexture()</code>. By the time the first <code>this.physics.add.staticImage(...)</code> call runs, every key it needs — <code>'ground'</code>, <code>'platform'</code>, <code>'plat_sm'</code>, <code>'player'</code>, <code>'coin'</code> — already exists in the cache and is ready to use.</p>
+<p>This is why the five <code>genRect</code>/<code>genCircle</code> calls appear at the very top of <code>create()</code>, before any game object is created. Swap their order with the ground or player setup, and those objects would get the white placeholder texture instead.</p>
+<p>The colors are hexadecimal values: <code>0x4caf50</code> is a medium green (ground), <code>0x8b6914</code> is brown (platforms), <code>0x5c9ded</code> is blue (player), <code>0xffd700</code> is gold (coin).</p>
+</section>
+<section id="ground" class="level3" data-number="1.4.7">
+<h3 data-number="1.4.7" class="anchored" data-anchor-id="ground"><span class="header-section-number">1.4.7</span> Ground</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> ground <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">staticImage</span>(W <span class="op">/</span> <span class="dv">2</span><span class="op">,</span> H <span class="op">-</span> <span class="dv">16</span><span class="op">,</span> <span class="st">'ground'</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>staticImage</code> creates a physics-enabled image with a <strong>static body</strong> — it has a collider but never moves. The position <code>(W / 2, H - 16)</code> places it centered horizontally, 16 pixels from the bottom edge. Since the ground texture is 32 pixels tall and Phaser positions objects by their center, this puts the bottom edge of the ground exactly at the bottom of the canvas.</p>
+</section>
+<section id="platforms" class="level3" data-number="1.4.8">
+<h3 data-number="1.4.8" class="anchored" data-anchor-id="platforms"><span class="header-section-number">1.4.8</span> Platforms</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">platforms</span> <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">staticGroup</span>()<span class="op">;</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">platforms</span><span class="op">.</span><span class="fu">create</span>(<span class="dv">200</span><span class="op">,</span> <span class="dv">350</span><span class="op">,</span> <span class="st">'platform'</span>)<span class="op">;</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">platforms</span><span class="op">.</span><span class="fu">create</span>(<span class="dv">500</span><span class="op">,</span> <span class="dv">250</span><span class="op">,</span> <span class="st">'platform'</span>)<span class="op">;</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">platforms</span><span class="op">.</span><span class="fu">create</span>(<span class="dv">350</span><span class="op">,</span> <span class="dv">160</span><span class="op">,</span> <span class="st">'plat_sm'</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A <code>staticGroup</code> is a container for static physics objects that are managed together. Adding a collider between the player and the group automatically checks against every member of the group — you don’t need a separate collider for each platform. The three platforms form a staircase pattern: left at y=350, middle at y=250, top at y=160.</p>
+</section>
+<section id="player" class="level3" data-number="1.4.9">
+<h3 data-number="1.4.9" class="anchored" data-anchor-id="player"><span class="header-section-number">1.4.9</span> Player</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">player</span> <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">sprite</span>(<span class="dv">100</span><span class="op">,</span> H <span class="op">-</span> <span class="dv">80</span><span class="op">,</span> <span class="st">'player'</span>)<span class="op">;</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">player</span><span class="op">.</span><span class="fu">setCollideWorldBounds</span>(<span class="kw">true</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>add.sprite</code> creates a <strong>dynamic</strong> physics sprite — one whose body is affected by gravity and velocity each frame. The player starts near the bottom-left of the canvas. <code>setCollideWorldBounds(true)</code> prevents the player from leaving the canvas edges; without it the player could walk off the sides or fall through the floor of the world.</p>
+</section>
+<section id="colliders" class="level3" data-number="1.4.10">
+<h3 data-number="1.4.10" class="anchored" data-anchor-id="colliders"><span class="header-section-number">1.4.10</span> Colliders</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">collider</span>(<span class="kw">this</span><span class="op">.</span><span class="at">player</span><span class="op">,</span> ground)<span class="op">;</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">collider</span>(<span class="kw">this</span><span class="op">.</span><span class="at">player</span><span class="op">,</span> <span class="kw">this</span><span class="op">.</span><span class="at">platforms</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>These two lines wire up solid physics collisions. Each frame, Phaser checks whether the player’s body overlaps with the ground or any platform. If it does, it resolves the overlap by pushing the player back to the surface. This is what makes the player land and stand instead of passing through objects.</p>
+</section>
+<section id="coins-and-overlap" class="level3" data-number="1.4.11">
+<h3 data-number="1.4.11" class="anchored" data-anchor-id="coins-and-overlap"><span class="header-section-number">1.4.11</span> Coins and overlap</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">coins</span> <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">staticGroup</span>()<span class="op">;</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">coins</span><span class="op">.</span><span class="fu">create</span>(<span class="dv">150</span><span class="op">,</span> H <span class="op">-</span> <span class="dv">60</span><span class="op">,</span> <span class="st">'coin'</span>)<span class="op">;</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">coins</span><span class="op">.</span><span class="fu">create</span>(<span class="dv">480</span><span class="op">,</span> H <span class="op">-</span> <span class="dv">60</span><span class="op">,</span> <span class="st">'coin'</span>)<span class="op">;</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">coins</span><span class="op">.</span><span class="fu">create</span>(<span class="dv">200</span><span class="op">,</span> <span class="dv">320</span><span class="op">,</span>    <span class="st">'coin'</span>)<span class="op">;</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">coins</span><span class="op">.</span><span class="fu">create</span>(<span class="dv">500</span><span class="op">,</span> <span class="dv">220</span><span class="op">,</span>    <span class="st">'coin'</span>)<span class="op">;</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">coins</span><span class="op">.</span><span class="fu">create</span>(<span class="dv">350</span><span class="op">,</span> <span class="dv">130</span><span class="op">,</span>    <span class="st">'coin'</span>)<span class="op">;</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">overlap</span>(<span class="kw">this</span><span class="op">.</span><span class="at">player</span><span class="op">,</span> <span class="kw">this</span><span class="op">.</span><span class="at">coins</span><span class="op">,</span> (_player<span class="op">,</span> coin) <span class="kw">=&gt;</span> {</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  coin<span class="op">.</span><span class="fu">destroy</span>()<span class="op">;</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">this</span><span class="op">.</span><span class="at">score</span><span class="op">++;</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>  <span class="kw">this</span><span class="op">.</span><span class="at">scoreText</span><span class="op">.</span><span class="fu">setText</span>(<span class="st">'Score: '</span> <span class="op">+</span> <span class="kw">this</span><span class="op">.</span><span class="at">score</span>)<span class="op">;</span></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Five coins are placed: two near the ground and one above each platform. Unlike platforms, coins use <code>overlap</code> instead of <code>collider</code>. The player passes through coins rather than landing on them. When an overlap is detected, the callback fires — the coin is destroyed (removed from the scene), the score counter increments, and the score text is updated. The callback receives two arguments: the player and the specific coin that was touched. The player argument is prefixed with <code>_</code> to signal it is intentionally unused.</p>
+</section>
+<section id="score-text" class="level3" data-number="1.4.12">
+<h3 data-number="1.4.12" class="anchored" data-anchor-id="score-text"><span class="header-section-number">1.4.12</span> Score text</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">score</span> <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">scoreText</span> <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">text</span>(<span class="dv">16</span><span class="op">,</span> <span class="dv">16</span><span class="op">,</span> <span class="st">'Score: 0'</span><span class="op">,</span> {</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">fontSize</span><span class="op">:</span> <span class="st">'20px'</span><span class="op">,</span> <span class="dt">color</span><span class="op">:</span> <span class="st">'#ffffff'</span><span class="op">,</span> <span class="dt">fontFamily</span><span class="op">:</span> <span class="st">'monospace'</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>})<span class="op">.</span><span class="fu">setDepth</span>(<span class="dv">1</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>this.add.text</code> places a text object at pixel position <code>(16, 16)</code> — top-left corner. The style object controls appearance. <code>setDepth(1)</code> ensures the text renders on top of all other game objects (which default to depth 0). <code>this.score</code> is a plain JavaScript number stored on the scene instance so the overlap callback can access and increment it.</p>
+</section>
+<section id="hint-text" class="level3" data-number="1.4.13">
+<h3 data-number="1.4.13" class="anchored" data-anchor-id="hint-text"><span class="header-section-number">1.4.13</span> Hint text</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">text</span>(W <span class="op">/</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">16</span><span class="op">,</span> <span class="st">'← → to move   ↑ or Space to jump'</span><span class="op">,</span> {</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">fontSize</span><span class="op">:</span> <span class="st">'13px'</span><span class="op">,</span> <span class="dt">color</span><span class="op">:</span> <span class="st">'#aaaacc'</span><span class="op">,</span> <span class="dt">fontFamily</span><span class="op">:</span> <span class="st">'monospace'</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>})<span class="op">.</span><span class="fu">setOrigin</span>(<span class="fl">0.5</span><span class="op">,</span> <span class="dv">0</span>)<span class="op">.</span><span class="fu">setDepth</span>(<span class="dv">1</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This is a static label — it is never updated, so there is no need to save a reference to it. <code>setOrigin(0.5, 0)</code> shifts the text’s anchor point to its horizontal center, top edge. Combined with <code>x = W / 2</code>, this centers the text at the top of the screen. The default origin is <code>(0, 0)</code> (top-left corner), so without <code>setOrigin</code>, the text would start at the center and extend to the right.</p>
+</section>
+<section id="input-setup" class="level3" data-number="1.4.14">
+<h3 data-number="1.4.14" class="anchored" data-anchor-id="input-setup"><span class="header-section-number">1.4.14</span> Input setup</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">cursors</span> <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">input</span><span class="op">.</span><span class="at">keyboard</span><span class="op">.</span><span class="fu">createCursorKeys</span>()<span class="op">;</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">wasd</span> <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">input</span><span class="op">.</span><span class="at">keyboard</span><span class="op">.</span><span class="fu">addKeys</span>({</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">left</span><span class="op">:</span>  Phaser<span class="op">.</span><span class="at">Input</span><span class="op">.</span><span class="at">Keyboard</span><span class="op">.</span><span class="at">KeyCodes</span><span class="op">.</span><span class="at">A</span><span class="op">,</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">right</span><span class="op">:</span> Phaser<span class="op">.</span><span class="at">Input</span><span class="op">.</span><span class="at">Keyboard</span><span class="op">.</span><span class="at">KeyCodes</span><span class="op">.</span><span class="at">D</span><span class="op">,</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">jump</span><span class="op">:</span>  Phaser<span class="op">.</span><span class="at">Input</span><span class="op">.</span><span class="at">Keyboard</span><span class="op">.</span><span class="at">KeyCodes</span><span class="op">.</span><span class="at">W</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>createCursorKeys()</code> returns a pre-built object with keys for the four arrow keys plus Space and Shift. <code>addKeys()</code> maps arbitrary keys to named properties on a new object — here A, D, and W are mapped to <code>left</code>, <code>right</code>, and <code>jump</code>. Both objects are stored on the scene so <code>update()</code> can read them every frame. Setting up input in <code>create()</code> (not <code>update()</code>) is correct — you register the key bindings once, then poll their state repeatedly.</p>
+</section>
+<section id="update-reading-input-state" class="level3" data-number="1.4.15">
+<h3 data-number="1.4.15" class="anchored" data-anchor-id="update-reading-input-state"><span class="header-section-number">1.4.15</span> update() — Reading input state</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> body    <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">player</span><span class="op">.</span><span class="at">body</span><span class="op">;</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> onFloor <span class="op">=</span> body<span class="op">.</span><span class="at">blocked</span><span class="op">.</span><span class="at">down</span><span class="op">;</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> left  <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">cursors</span><span class="op">.</span><span class="at">left</span><span class="op">.</span><span class="at">isDown</span>  <span class="op">||</span> <span class="kw">this</span><span class="op">.</span><span class="at">wasd</span><span class="op">.</span><span class="at">left</span><span class="op">.</span><span class="at">isDown</span><span class="op">;</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> right <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">cursors</span><span class="op">.</span><span class="at">right</span><span class="op">.</span><span class="at">isDown</span> <span class="op">||</span> <span class="kw">this</span><span class="op">.</span><span class="at">wasd</span><span class="op">.</span><span class="at">right</span><span class="op">.</span><span class="at">isDown</span><span class="op">;</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> jump  <span class="op">=</span> Phaser<span class="op">.</span><span class="at">Input</span><span class="op">.</span><span class="at">Keyboard</span><span class="op">.</span><span class="fu">JustDown</span>(<span class="kw">this</span><span class="op">.</span><span class="at">cursors</span><span class="op">.</span><span class="at">up</span>)</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>           <span class="op">||</span> Phaser<span class="op">.</span><span class="at">Input</span><span class="op">.</span><span class="at">Keyboard</span><span class="op">.</span><span class="fu">JustDown</span>(<span class="kw">this</span><span class="op">.</span><span class="at">cursors</span><span class="op">.</span><span class="at">space</span>)</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>           <span class="op">||</span> Phaser<span class="op">.</span><span class="at">Input</span><span class="op">.</span><span class="at">Keyboard</span><span class="op">.</span><span class="fu">JustDown</span>(<span class="kw">this</span><span class="op">.</span><span class="at">wasd</span><span class="op">.</span><span class="at">jump</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>update()</code> runs every frame. The first thing it does is read the current input state. <code>body.blocked.down</code> is <code>true</code> when the player’s physics body is resting on a surface — this is used to prevent jumping in mid-air.</p>
+<p><code>isDown</code> is <code>true</code> on every frame a key is held. <code>JustDown</code> is <code>true</code> only on the single frame the key transitions from up to down. Using <code>JustDown</code> for jumping is essential: without it, holding the jump key would apply upward velocity on every frame for as long as the key is held, launching the player off the screen.</p>
+</section>
+<section id="update-movement-and-jumping" class="level3" data-number="1.4.16">
+<h3 data-number="1.4.16" class="anchored" data-anchor-id="update-movement-and-jumping"><span class="header-section-number">1.4.16</span> update() — Movement and jumping</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (left)       body<span class="op">.</span><span class="fu">setVelocityX</span>(<span class="op">-</span><span class="dv">220</span>)<span class="op">;</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span> <span class="cf">if</span> (right) body<span class="op">.</span><span class="fu">setVelocityX</span>(<span class="dv">220</span>)<span class="op">;</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>            body<span class="op">.</span><span class="fu">setVelocityX</span>(<span class="dv">0</span>)<span class="op">;</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (jump <span class="op">&amp;&amp;</span> onFloor) body<span class="op">.</span><span class="fu">setVelocityY</span>(<span class="op">-</span><span class="dv">550</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Movement is controlled by setting velocity directly each frame. This is the simplest possible movement model — there is no acceleration or deceleration. When no key is pressed, velocity is explicitly zeroed; without this the player would slide indefinitely since arcade physics has no built-in friction.</p>
+<p>The jump condition requires both a <code>JustDown</code> event AND <code>onFloor</code> being true. Setting <code>velocityY</code> to <code>-550</code> fires the player upward (negative Y is up in Phaser’s coordinate system). Gravity defined in <code>main.js</code> (<code>gravity.y: 600</code>) then pulls the player back down over subsequent frames.</p>
+</section>
+<section id="helper-methods-genrect-and-gencircle" class="level3" data-number="1.4.17">
+<h3 data-number="1.4.17" class="anchored" data-anchor-id="helper-methods-genrect-and-gencircle"><span class="header-section-number">1.4.17</span> Helper methods — genRect and genCircle</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">genRect</span>(key<span class="op">,</span> w<span class="op">,</span> h<span class="op">,</span> color) {</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> g <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">make</span><span class="op">.</span><span class="fu">graphics</span>({ <span class="dt">add</span><span class="op">:</span> <span class="kw">false</span> })<span class="op">;</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  g<span class="op">.</span><span class="fu">fillStyle</span>(color)<span class="op">;</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  g<span class="op">.</span><span class="fu">fillRect</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> w<span class="op">,</span> h)<span class="op">;</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  g<span class="op">.</span><span class="fu">generateTexture</span>(key<span class="op">,</span> w<span class="op">,</span> h)<span class="op">;</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>  g<span class="op">.</span><span class="fu">destroy</span>()<span class="op">;</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a><span class="fu">genCircle</span>(key<span class="op">,</span> radius<span class="op">,</span> color) {</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> size <span class="op">=</span> radius <span class="op">*</span> <span class="dv">2</span><span class="op">;</span></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> g <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">make</span><span class="op">.</span><span class="fu">graphics</span>({ <span class="dt">add</span><span class="op">:</span> <span class="kw">false</span> })<span class="op">;</span></span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>  g<span class="op">.</span><span class="fu">fillStyle</span>(color)<span class="op">;</span></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>  g<span class="op">.</span><span class="fu">fillCircle</span>(radius<span class="op">,</span> radius<span class="op">,</span> radius)<span class="op">;</span></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>  g<span class="op">.</span><span class="fu">generateTexture</span>(key<span class="op">,</span> size<span class="op">,</span> size)<span class="op">;</span></span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>  g<span class="op">.</span><span class="fu">destroy</span>()<span class="op">;</span></span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>These are not methods Phaser knows about or calls — they are private utility methods you defined on the class to avoid repeating the same five-line pattern five times. Every time you need a new colored shape as a texture, you call one of them. The only reason they exist as separate methods (rather than being inlined into <code>create()</code>) is that the pattern repeats and giving it a name makes the code at the top of <code>create()</code> easier to read at a glance.</p>
+<p>Both helpers follow the same five-step pattern:</p>
+<ol type="1">
+<li><strong><code>this.make.graphics({ add: false })</code></strong> — creates a temporary <code>Graphics</code> object, which is Phaser’s imperative drawing API (like an HTML Canvas context). The <code>add: false</code> option prevents it from appearing in the scene’s display list — it exists purely as a drawing tool in memory, invisible to the player.</li>
+<li><strong><code>fillStyle(color)</code></strong> — sets the fill color for all subsequent draw calls on this Graphics object.</li>
+<li><strong><code>fillRect</code> / <code>fillCircle</code></strong> — draws the shape at position <code>(0, 0)</code> within the Graphics object’s local coordinate space.</li>
+<li><strong><code>generateTexture(key, w, h)</code></strong> — this is the critical step. It rasterizes everything drawn on the Graphics object into a pixel buffer and registers it in Phaser’s texture cache under <code>key</code>. After this line, any Phaser game object can use <code>key</code> as its texture string, and the GPU has a copy ready to render.</li>
+<li><strong><code>g.destroy()</code></strong> — frees the temporary <code>Graphics</code> object from CPU memory. The texture it generated stays in the GPU cache for the lifetime of the game; only the drawing tool used to create it is discarded.</li>
+</ol>
+<p><code>genCircle</code> draws the circle at center <code>(radius, radius)</code> because <code>fillCircle</code> takes center coordinates as its first two arguments, and the texture canvas is <code>radius * 2</code> pixels on each side. This places the circle exactly centered in the texture with no clipping at the edges.</p>
+<p>The connection back to <code>create()</code> is direct: when you see:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="fu">genRect</span>(<span class="st">'player'</span><span class="op">,</span> <span class="dv">32</span><span class="op">,</span> <span class="dv">48</span><span class="op">,</span> <span class="bn">0x5c9ded</span>)<span class="op">;</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="co">// ... later ...</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">player</span> <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">sprite</span>(<span class="dv">100</span><span class="op">,</span> H <span class="op">-</span> <span class="dv">80</span><span class="op">,</span> <span class="st">'player'</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The string <code>'player'</code> is the thread that connects them. <code>genRect</code> registers it in the texture cache; <code>add.sprite</code> retrieves it from the cache. Remove the <code>genRect</code> call and the sprite renders as a blank white rectangle.</p>
+<hr>
+</section>
+</section>
+<section id="how-the-browser-runs-gamescene.js" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="how-the-browser-runs-gamescene.js"><span class="header-section-number">1.5</span> How the Browser Runs GameScene.js</h2>
+<p>Understanding what the browser is doing <em>under the hood</em> while your game runs changes how you think about every line of code in <code>GameScene.js</code>.</p>
+<section id="javascript-is-single-threaded" class="level3" data-number="1.5.1">
+<h3 data-number="1.5.1" class="anchored" data-anchor-id="javascript-is-single-threaded"><span class="header-section-number">1.5.1</span> JavaScript is single-threaded</h3>
+<p>The browser’s JavaScript engine (V8 in Chrome, SpiderMonkey in Firefox) runs on a single thread. It processes one task at a time. There is no parallel execution — if two things need to happen, one waits for the other to finish. This is the fundamental constraint that governs everything below.</p>
+</section>
+<section id="the-event-loop-and-the-task-queue" class="level3" data-number="1.5.2">
+<h3 data-number="1.5.2" class="anchored" data-anchor-id="the-event-loop-and-the-task-queue"><span class="header-section-number">1.5.2</span> The event loop and the task queue</h3>
+<p>JavaScript in the browser is driven by an <strong>event loop</strong>. The loop continuously checks a queue of pending tasks and runs them one at a time. Tasks come from many sources: a timer firing, a network response arriving, a user clicking, or a frame being requested. The loop picks up the next task, runs it to completion, then picks up the next one.</p>
+<p>Your game code does not run continuously — it runs in discrete tasks, each scheduled by the browser.</p>
+</section>
+<section id="requestanimationframe-how-phaser-hooks-in" class="level3" data-number="1.5.3">
+<h3 data-number="1.5.3" class="anchored" data-anchor-id="requestanimationframe-how-phaser-hooks-in"><span class="header-section-number">1.5.3</span> requestAnimationFrame — how Phaser hooks in</h3>
+<p>When <code>new Phaser.Game(config)</code> starts, Phaser calls <code>requestAnimationFrame(loop)</code>, which tells the browser: “call this <code>loop</code> function right before you paint the next frame to the screen.” The browser calls it approximately 60 times per second, synchronized to the display’s refresh rate (60 Hz on most monitors). Each call is one <strong>tick</strong> — one iteration of the game loop.</p>
+<p>After each tick completes, Phaser immediately schedules the next one with another <code>requestAnimationFrame</code> call. This creates the continuous loop:</p>
+<pre><code>rAF fires → tick runs → rAF fires again → tick runs → ...</code></pre>
+<p>Between ticks, the browser is free to handle other tasks: responding to a click, running a network callback, updating the DOM. Your game is not monopolizing the thread — it is sharing it politely, yielding between frames.</p>
+</section>
+<section id="the-order-of-operations-inside-one-tick" class="level3" data-number="1.5.4">
+<h3 data-number="1.5.4" class="anchored" data-anchor-id="the-order-of-operations-inside-one-tick"><span class="header-section-number">1.5.4</span> The order of operations inside one tick</h3>
+<p>Within a single tick, Phaser runs a fixed sequence of steps. The order matters:</p>
+<pre><code>1. Input sampling     — keyboard/mouse state is read and recorded
+2. Physics step       — gravity applied, positions updated, collisions resolved
+3. Overlap callbacks  — any registered overlap callbacks fire (e.g. coin collection)
+4. Your update()      — your code in update() runs
+5. Render             — all game objects are drawn to the canvas</code></pre>
+<p>This ordering has practical consequences:</p>
+<ul>
+<li><p><strong>Input is sampled before your code runs.</strong> By the time <code>update()</code> reads <code>cursors.left.isDown</code>, the keyboard state already reflects what is physically pressed at the start of this frame. You are never reading a stale value from the previous frame.</p></li>
+<li><p><strong>Overlap callbacks fire before <code>update()</code>.</strong> If the player touches a coin and the callback runs <code>coin.destroy()</code>, by the time your <code>update()</code> code executes in the same frame, the coin is already gone from the scene. You never observe a half-destroyed state.</p></li>
+<li><p><strong>Render happens last.</strong> No matter what velocities or positions you set in <code>update()</code>, none of it becomes visible until the render step. All changes made during a single tick appear simultaneously in the next frame — the player never sees an intermediate state.</p></li>
+</ul>
+</section>
+<section id="priorities-and-what-listening-means" class="level3" data-number="1.5.5">
+<h3 data-number="1.5.5" class="anchored" data-anchor-id="priorities-and-what-listening-means"><span class="header-section-number">1.5.5</span> Priorities and what “listening” means</h3>
+<p>In the context of your game, “listening” means <strong>Phaser has registered a callback that it will invoke at the right moment in the tick sequence</strong>. When you write:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">overlap</span>(<span class="kw">this</span><span class="op">.</span><span class="at">player</span><span class="op">,</span> <span class="kw">this</span><span class="op">.</span><span class="at">coins</span><span class="op">,</span> (_player<span class="op">,</span> coin) <span class="kw">=&gt;</span> {</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  coin<span class="op">.</span><span class="fu">destroy</span>()<span class="op">;</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">this</span><span class="op">.</span><span class="at">score</span><span class="op">++;</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">this</span><span class="op">.</span><span class="at">scoreText</span><span class="op">.</span><span class="fu">setText</span>(<span class="st">'Score: '</span> <span class="op">+</span> <span class="kw">this</span><span class="op">.</span><span class="at">score</span>)<span class="op">;</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>You are not asking Phaser to check overlaps immediately. You are registering a callback that Phaser stores internally and calls during the physics step of every subsequent tick — but only if an overlap is detected. Your callback code has no priority level of its own; its place in the sequence is determined by when in the tick Phaser chooses to invoke it (during the physics step, before your <code>update()</code>).</p>
+<p>The same is true of colliders:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">collider</span>(<span class="kw">this</span><span class="op">.</span><span class="at">player</span><span class="op">,</span> <span class="kw">this</span><span class="op">.</span><span class="at">platforms</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This registers a collision handler that Phaser checks every tick. You do not poll it yourself — Phaser runs it automatically as part of the physics step.</p>
+</section>
+<section id="create-runs-outside-the-loop" class="level3" data-number="1.5.6">
+<h3 data-number="1.5.6" class="anchored" data-anchor-id="create-runs-outside-the-loop"><span class="header-section-number">1.5.6</span> create() runs outside the loop</h3>
+<p><code>create()</code> is special: it runs exactly once, synchronously, before the first tick of the game loop begins. This means:</p>
+<ul>
+<li>No physics is running while <code>create()</code> executes</li>
+<li>No frames are being rendered</li>
+<li>The entire scene setup — textures, objects, colliders, input bindings — completes in a single uninterrupted task</li>
+</ul>
+<p>This is why it is safe to write sequential setup code in <code>create()</code> without worrying about race conditions. Everything runs in order, top to bottom, before the game loop ever starts.</p>
+</section>
+<section id="frame-rate-and-delta" class="level3" data-number="1.5.7">
+<h3 data-number="1.5.7" class="anchored" data-anchor-id="frame-rate-and-delta"><span class="header-section-number">1.5.7</span> Frame rate and delta</h3>
+<p>Phaser passes <code>time</code> and <code>delta</code> as arguments to <code>update(time, delta)</code>. <code>delta</code> is the number of milliseconds since the last frame — normally around 16.7 ms at 60 fps, but it can be longer if the browser was busy with something else. Our current game ignores <code>delta</code>, which means movement speed is frame-rate dependent (slightly faster on a 144 Hz monitor than a 60 Hz one). A more robust approach multiplies velocities by <code>delta / 1000</code> to make speed measured in pixels per second, independent of frame rate.</p>
+</section>
+<section id="what-this-means-for-your-code" class="level3" data-number="1.5.8">
+<h3 data-number="1.5.8" class="anchored" data-anchor-id="what-this-means-for-your-code"><span class="header-section-number">1.5.8</span> What this means for your code</h3>
+<p>The practical lesson: <strong>everything in <code>update()</code> is code that runs 60 times per second, so keep it lean.</strong> Creating new objects, allocating arrays, or doing heavy calculations inside <code>update()</code> will cause frame drops. Setup work belongs in <code>create()</code>. The update loop is for reading state and setting velocities — not for construction.</p>
+<p>The browser will not warn you if <code>update()</code> takes too long. It will simply drop frames silently, and the game will feel choppy. A frame that takes longer than ~16.7 ms to complete misses its render window and the player sees a stutter.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./index.html" class="pagination-link" aria-label="Preface">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Preface</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./chapter2.html" class="pagination-link" aria-label="Enemies, Winning, and Losing">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Enemies, Winning, and Losing</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

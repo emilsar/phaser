@@ -1,0 +1,1575 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Appendix A: JavaScript Primer – Building Games with Phaser</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./chapter2.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-597958c53c93a607afca12fd375c57ed.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-7ac2f9da8c2617a4fdd15004b4601015.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-597958c53c93a607afca12fd375c57ed.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-3319fbb98f460c45a53faaed12a75962.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-b90361f16a3f98a5213818fd12da5acb.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-3319fbb98f460c45a53faaed12a75962.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./appendix_a.html">Appendices</a></li><li class="breadcrumb-item"><a href="./appendix_a.html">Appendix A: JavaScript Primer</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Building Games with Phaser</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Getting Started with Phaser</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Enemies, Winning, and Losing</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./appendix_a.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Appendix A: JavaScript Primer</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#a.1-values-and-types" id="toc-a.1-values-and-types" class="nav-link active" data-scroll-target="#a.1-values-and-types">A.1 Values and Types</a>
+  <ul class="collapse">
+  <li><a href="#numbers" id="toc-numbers" class="nav-link" data-scroll-target="#numbers">Numbers</a></li>
+  <li><a href="#strings" id="toc-strings" class="nav-link" data-scroll-target="#strings">Strings</a></li>
+  <li><a href="#booleans" id="toc-booleans" class="nav-link" data-scroll-target="#booleans">Booleans</a></li>
+  </ul></li>
+  <li><a href="#a.2-variables-const-and-let" id="toc-a.2-variables-const-and-let" class="nav-link" data-scroll-target="#a.2-variables-const-and-let">A.2 Variables: <code>const</code> and <code>let</code></a></li>
+  <li><a href="#a.3-objects" id="toc-a.3-objects" class="nav-link" data-scroll-target="#a.3-objects">A.3 Objects</a>
+  <ul class="collapse">
+  <li><a href="#object-literals" id="toc-object-literals" class="nav-link" data-scroll-target="#object-literals">Object literals</a></li>
+  <li><a href="#accessing-properties" id="toc-accessing-properties" class="nav-link" data-scroll-target="#accessing-properties">Accessing properties</a></li>
+  <li><a href="#objects-vs-classes" id="toc-objects-vs-classes" class="nav-link" data-scroll-target="#objects-vs-classes">Objects vs classes</a></li>
+  </ul></li>
+  <li><a href="#a.4-arrays" id="toc-a.4-arrays" class="nav-link" data-scroll-target="#a.4-arrays">A.4 Arrays</a></li>
+  <li><a href="#a.5-functions" id="toc-a.5-functions" class="nav-link" data-scroll-target="#a.5-functions">A.5 Functions</a>
+  <ul class="collapse">
+  <li><a href="#parameters-and-return-values" id="toc-parameters-and-return-values" class="nav-link" data-scroll-target="#parameters-and-return-values">Parameters and return values</a></li>
+  <li><a href="#arrow-functions" id="toc-arrow-functions" class="nav-link" data-scroll-target="#arrow-functions">Arrow functions</a></li>
+  <li><a href="#arrow-functions-and-this" id="toc-arrow-functions-and-this" class="nav-link" data-scroll-target="#arrow-functions-and-this">Arrow functions and <code>this</code></a></li>
+  </ul></li>
+  <li><a href="#a.6-classes-and-object-oriented-programming" id="toc-a.6-classes-and-object-oriented-programming" class="nav-link" data-scroll-target="#a.6-classes-and-object-oriented-programming">A.6 Classes and Object-Oriented Programming</a>
+  <ul class="collapse">
+  <li><a href="#the-problem-classes-solve" id="toc-the-problem-classes-solve" class="nav-link" data-scroll-target="#the-problem-classes-solve">The problem classes solve</a></li>
+  <li><a href="#class-syntax" id="toc-class-syntax" class="nav-link" data-scroll-target="#class-syntax">Class syntax</a></li>
+  <li><a href="#new-creating-an-instance" id="toc-new-creating-an-instance" class="nav-link" data-scroll-target="#new-creating-an-instance"><code>new</code> — creating an instance</a></li>
+  <li><a href="#instance-properties-and-this" id="toc-instance-properties-and-this" class="nav-link" data-scroll-target="#instance-properties-and-this">Instance properties and <code>this</code></a></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a></li>
+  <li><a href="#inheritance-extends-and-super" id="toc-inheritance-extends-and-super" class="nav-link" data-scroll-target="#inheritance-extends-and-super">Inheritance: <code>extends</code> and <code>super</code></a></li>
+  <li><a href="#how-phaser-uses-your-methods" id="toc-how-phaser-uses-your-methods" class="nav-link" data-scroll-target="#how-phaser-uses-your-methods">How Phaser uses your methods</a></li>
+  <li><a href="#when-youd-have-more-classes" id="toc-when-youd-have-more-classes" class="nav-link" data-scroll-target="#when-youd-have-more-classes">When you’d have more classes</a></li>
+  <li><a href="#the-underscore-convention-private-methods" id="toc-the-underscore-convention-private-methods" class="nav-link" data-scroll-target="#the-underscore-convention-private-methods">The underscore convention: “private” methods</a></li>
+  </ul></li>
+  <li><a href="#a.7-this-in-depth" id="toc-a.7-this-in-depth" class="nav-link" data-scroll-target="#a.7-this-in-depth">A.7 <code>this</code> in Depth</a>
+  <ul class="collapse">
+  <li><a href="#the-core-rule-for-class-methods" id="toc-the-core-rule-for-class-methods" class="nav-link" data-scroll-target="#the-core-rule-for-class-methods">The core rule for class methods</a></li>
+  <li><a href="#properties-set-in-one-method-are-available-in-all-others" id="toc-properties-set-in-one-method-are-available-in-all-others" class="nav-link" data-scroll-target="#properties-set-in-one-method-are-available-in-all-others">Properties set in one method are available in all others</a></li>
+  <li><a href="#when-this-goes-wrong" id="toc-when-this-goes-wrong" class="nav-link" data-scroll-target="#when-this-goes-wrong">When <code>this</code> goes wrong</a></li>
+  </ul></li>
+  <li><a href="#a.8-es-modules-import-and-export" id="toc-a.8-es-modules-import-and-export" class="nav-link" data-scroll-target="#a.8-es-modules-import-and-export">A.8 ES Modules: <code>import</code> and <code>export</code></a>
+  <ul class="collapse">
+  <li><a href="#export" id="toc-export" class="nav-link" data-scroll-target="#export"><code>export</code></a></li>
+  <li><a href="#import" id="toc-import" class="nav-link" data-scroll-target="#import"><code>import</code></a></li>
+  <li><a href="#module-file-paths" id="toc-module-file-paths" class="nav-link" data-scroll-target="#module-file-paths">Module file paths</a></li>
+  <li><a href="#typemodule-in-html" id="toc-typemodule-in-html" class="nav-link" data-scroll-target="#typemodule-in-html"><code>type="module"</code> in HTML</a></li>
+  </ul></li>
+  <li><a href="#a.9-control-flow" id="toc-a.9-control-flow" class="nav-link" data-scroll-target="#a.9-control-flow">A.9 Control Flow</a>
+  <ul class="collapse">
+  <li><a href="#if-else-if-else" id="toc-if-else-if-else" class="nav-link" data-scroll-target="#if-else-if-else"><code>if</code>, <code>else if</code>, <code>else</code></a></li>
+  <li><a href="#guard-clauses" id="toc-guard-clauses" class="nav-link" data-scroll-target="#guard-clauses">Guard clauses</a></li>
+  <li><a href="#logical-operators" id="toc-logical-operators" class="nav-link" data-scroll-target="#logical-operators">Logical operators</a></li>
+  <li><a href="#strict-equality" id="toc-strict-equality" class="nav-link" data-scroll-target="#strict-equality">Strict equality: <code>===</code></a></li>
+  <li><a href="#increment-and-compound-assignment" id="toc-increment-and-compound-assignment" class="nav-link" data-scroll-target="#increment-and-compound-assignment">Increment and compound assignment</a></li>
+  </ul></li>
+  <li><a href="#a.10-callbacks" id="toc-a.10-callbacks" class="nav-link" data-scroll-target="#a.10-callbacks">A.10 Callbacks</a>
+  <ul class="collapse">
+  <li><a href="#idempotent-guards-in-callbacks" id="toc-idempotent-guards-in-callbacks" class="nav-link" data-scroll-target="#idempotent-guards-in-callbacks">Idempotent guards in callbacks</a></li>
+  </ul></li>
+  <li><a href="#putting-it-all-together" id="toc-putting-it-all-together" class="nav-link" data-scroll-target="#putting-it-all-together">Putting it all together</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./appendix_a.html">Appendices</a></li><li class="breadcrumb-item"><a href="./appendix_a.html">Appendix A: JavaScript Primer</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Appendix A: JavaScript Primer</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>The game in this book is written entirely in JavaScript. If you’ve programmed before — in Python, Java, C++, or another language — most of the concepts will feel familiar. If JavaScript is your first language, this appendix walks through everything the game actually uses, in the order you’ll need it.</p>
+<p>Every concept here connects directly to code from Chapter 1 or Chapter 2. Think of it as a reference: read it before you start, or come back to a specific section when something in the source code isn’t clicking.</p>
+<hr>
+<section id="a.1-values-and-types" class="level2">
+<h2 class="anchored" data-anchor-id="a.1-values-and-types">A.1 Values and Types</h2>
+<p>JavaScript works with several kinds of values. The game uses three of them constantly.</p>
+<section id="numbers" class="level3">
+<h3 class="anchored" data-anchor-id="numbers">Numbers</h3>
+<p>JavaScript has a single number type — it handles both integers and decimals.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">800</span>          <span class="co">// canvas width</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="op">-</span><span class="dv">220</span>         <span class="co">// velocity (negative = moving left)</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fl">0.55</span>         <span class="co">// overlay opacity (a decimal between 0 and 1)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>One number syntax that appears throughout the game is <strong>hexadecimal</strong> — base-16 notation for colors. In JavaScript, hexadecimal literals are written with a <code>0x</code> prefix:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bn">0x4caf50</span>     <span class="co">// medium green (ground)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bn">0xff4444</span>     <span class="co">// soft red (enemy)</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="bn">0xffd700</span>     <span class="co">// gold (coin)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>These represent the same colors as <code>#4caf50</code> in CSS — just written differently. The <code>0x</code> prefix tells JavaScript to interpret the digits in base 16, where <code>a</code>=10, <code>b</code>=11, <code>c</code>=12, <code>d</code>=13, <code>e</code>=14, <code>f</code>=15. So <code>0xff</code> = 255, the maximum value per color channel.</p>
+</section>
+<section id="strings" class="level3">
+<h3 class="anchored" data-anchor-id="strings">Strings</h3>
+<p>A string is a sequence of characters, written between single quotes, double quotes, or backticks. The game uses single quotes throughout.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="st">'Score: 0'</span>          <span class="co">// text to display</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="st">'#ffffff'</span>           <span class="co">// CSS-style color string (for Phaser text objects)</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="st">'monospace'</span>         <span class="co">// font family name</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="st">'GameScene'</span>         <span class="co">// scene key</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The game builds strings by <strong>concatenation</strong> — joining them with <code>+</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">scoreText</span><span class="op">.</span><span class="fu">setText</span>(<span class="st">'Score: '</span> <span class="op">+</span> <span class="kw">this</span><span class="op">.</span><span class="at">score</span>)<span class="op">;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">// If this.score is 3, this produces the string 'Score: 3'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>When you add a string and a number with <code>+</code>, JavaScript converts the number to a string and joins them. <code>'Score: ' + 3</code> gives <code>'Score: 3'</code>, not an error.</p>
+</section>
+<section id="booleans" class="level3">
+<h3 class="anchored" data-anchor-id="booleans">Booleans</h3>
+<p>A boolean is simply <code>true</code> or <code>false</code>. Booleans appear wherever the game needs to track a yes/no state:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">gameOver</span> <span class="op">=</span> <span class="kw">false</span><span class="op">;</span>    <span class="co">// game is running</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>debug<span class="op">:</span> <span class="kw">false</span>              <span class="co">// physics debug mode off</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>yoyo<span class="op">:</span> <span class="kw">true</span>                <span class="co">// tween reverses when it reaches its target</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Boolean values also appear as the result of comparisons and conditions:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> onFloor <span class="op">=</span> body<span class="op">.</span><span class="at">blocked</span><span class="op">.</span><span class="at">down</span><span class="op">;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">// blocked.down is true when the player is resting on a surface</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+<section id="a.2-variables-const-and-let" class="level2">
+<h2 class="anchored" data-anchor-id="a.2-variables-const-and-let">A.2 Variables: <code>const</code> and <code>let</code></h2>
+<p>JavaScript declares variables with <code>const</code> or <code>let</code>. (There is a third keyword, <code>var</code>, which you’ll see in older code — avoid it in new code; it has confusing scoping behavior.)</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> W <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">scale</span><span class="op">.</span><span class="at">width</span><span class="op">;</span>   <span class="co">// W cannot be reassigned</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> count <span class="op">=</span> <span class="dv">0</span><span class="op">;</span>                <span class="co">// count can be reassigned later</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong><code>const</code></strong> means the binding cannot be reassigned after its initial value. It does <em>not</em> mean the value is frozen — you can still call methods on it and change its properties.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> player <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">sprite</span>(<span class="dv">100</span><span class="op">,</span> <span class="dv">420</span><span class="op">,</span> <span class="st">'player'</span>)<span class="op">;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>player<span class="op">.</span><span class="fu">setCollideWorldBounds</span>(<span class="kw">true</span>)<span class="op">;</span>   <span class="co">// fine — calling a method, not reassigning</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>player <span class="op">=</span> somethingElse<span class="op">;</span>              <span class="co">// TypeError — reassignment is not allowed</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong><code>let</code></strong> allows reassignment:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> score <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>score<span class="op">++;</span>         <span class="co">// score is now 1 — this works</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>score <span class="op">=</span> <span class="dv">10</span><span class="op">;</span>      <span class="co">// also fine</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>In the game, almost everything is <code>const</code>. The only values that need reassignment are counters and flags — and those live on <code>this</code> rather than as local variables, so they don’t use <code>let</code> directly either.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Rule of thumb
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Default to <code>const</code>. Switch to <code>let</code> only when you know you will reassign the variable. Using <code>const</code> everywhere it fits makes it easy to spot, at a glance, which variables are mutation points.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="a.3-objects" class="level2">
+<h2 class="anchored" data-anchor-id="a.3-objects">A.3 Objects</h2>
+<p>An <strong>object</strong> is an unordered collection of key-value pairs called <strong>properties</strong>. It is one of JavaScript’s most fundamental structures — and one of the most-used in the game.</p>
+<section id="object-literals" class="level3">
+<h3 class="anchored" data-anchor-id="object-literals">Object literals</h3>
+<p>You create an object by writing its contents between <code>{}</code>. Each entry is <code>key: value</code>, and entries are separated by commas.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> config <span class="op">=</span> {</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">type</span><span class="op">:</span> Phaser<span class="op">.</span><span class="at">AUTO</span><span class="op">,</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">width</span><span class="op">:</span> <span class="dv">800</span><span class="op">,</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">height</span><span class="op">:</span> <span class="dv">500</span><span class="op">,</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">backgroundColor</span><span class="op">:</span> <span class="st">'#040434'</span><span class="op">,</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">physics</span><span class="op">:</span> {</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">default</span><span class="op">:</span> <span class="st">'arcade'</span><span class="op">,</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">arcade</span><span class="op">:</span> { <span class="dt">gravity</span><span class="op">:</span> { <span class="dt">y</span><span class="op">:</span> <span class="dv">600</span> }<span class="op">,</span> <span class="dt">debug</span><span class="op">:</span> <span class="kw">false</span> }</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">scene</span><span class="op">:</span> [GameScene]</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This is the configuration object passed to <code>new Phaser.Game(config)</code> in <code>main.js</code>. Phaser reads it to know the canvas size, which physics engine to use, how strong gravity should be, and which scenes to register.</p>
+</section>
+<section id="accessing-properties" class="level3">
+<h3 class="anchored" data-anchor-id="accessing-properties">Accessing properties</h3>
+<p>Use dot notation to reach a property:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>config<span class="op">.</span><span class="at">width</span>               <span class="co">// 800</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>config<span class="op">.</span><span class="at">physics</span>             <span class="co">// { default: 'arcade', arcade: { ... } }</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>config<span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">default</span>     <span class="co">// 'arcade'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Chain dots to reach nested properties:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>config<span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">arcade</span><span class="op">.</span><span class="at">gravity</span><span class="op">.</span><span class="at">y</span>   <span class="co">// 600</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="objects-vs-classes" class="level3">
+<h3 class="anchored" data-anchor-id="objects-vs-classes">Objects vs classes</h3>
+<p>An object literal is just data — it has no associated behavior. The <code>config</code> object is a plain container. Classes (covered in [A.6]) are blueprints that bundle data <em>and</em> methods together, and they produce objects with a specific prototype. The distinction: a <code>config</code> object is a bag of values; a <code>GameScene</code> instance is a live, behavior-rich object.</p>
+<hr>
+</section>
+</section>
+<section id="a.4-arrays" class="level2">
+<h2 class="anchored" data-anchor-id="a.4-arrays">A.4 Arrays</h2>
+<p>An <strong>array</strong> is an ordered list of values, written with <code>[]</code>.</p>
+<p>The game uses arrays in one key place:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>scene<span class="op">:</span> [GameScene]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This tells Phaser which scene classes to register. The first element starts automatically. A multi-scene game might look like:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>scene<span class="op">:</span> [BootScene<span class="op">,</span> MenuScene<span class="op">,</span> GameScene<span class="op">,</span> GameOverScene]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Array elements are accessed by zero-based index:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> scenes <span class="op">=</span> [BootScene<span class="op">,</span> MenuScene<span class="op">,</span> GameScene]<span class="op">;</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>scenes[<span class="dv">0</span>]   <span class="co">// BootScene</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>scenes[<span class="dv">2</span>]   <span class="co">// GameScene</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Arrays also appear inside Phaser’s tween API:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">tweens</span><span class="op">.</span><span class="fu">add</span>({</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">targets</span><span class="op">:</span> <span class="kw">this</span><span class="op">.</span><span class="at">enemy</span><span class="op">,</span>   <span class="co">// could also be: targets: [enemy1, enemy2]</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">...</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+<section id="a.5-functions" class="level2">
+<h2 class="anchored" data-anchor-id="a.5-functions">A.5 Functions</h2>
+<p>A <strong>function</strong> is a reusable block of code. You define it once and call it whenever you need it.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">add</span>(a<span class="op">,</span> b) {</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> a <span class="op">+</span> b<span class="op">;</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">add</span>(<span class="dv">3</span><span class="op">,</span> <span class="dv">4</span>)<span class="op">;</span>   <span class="co">// 7</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="parameters-and-return-values" class="level3">
+<h3 class="anchored" data-anchor-id="parameters-and-return-values">Parameters and return values</h3>
+<p>Functions receive inputs as <strong>parameters</strong> (the names listed in the definition) and can send back an output with <code>return</code>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">describe</span>(key<span class="op">,</span> w<span class="op">,</span> h) {</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> key <span class="op">+</span> <span class="st">' is '</span> <span class="op">+</span> w <span class="op">+</span> <span class="st">'×'</span> <span class="op">+</span> h<span class="op">;</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">describe</span>(<span class="st">'ground'</span><span class="op">,</span> <span class="dv">800</span><span class="op">,</span> <span class="dv">32</span>)<span class="op">;</span>   <span class="co">// 'ground is 800×32'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If a function has no <code>return</code> statement, it implicitly returns <code>undefined</code>.</p>
+</section>
+<section id="arrow-functions" class="level3">
+<h3 class="anchored" data-anchor-id="arrow-functions">Arrow functions</h3>
+<p>ES6 (2015) introduced a shorter function syntax using <code>=&gt;</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Traditional function expression</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> add <span class="op">=</span> <span class="kw">function</span>(a<span class="op">,</span> b) { <span class="cf">return</span> a <span class="op">+</span> b<span class="op">;</span> }<span class="op">;</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Arrow function — same behavior, shorter syntax</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> add <span class="op">=</span> (a<span class="op">,</span> b) <span class="kw">=&gt;</span> { <span class="cf">return</span> a <span class="op">+</span> b<span class="op">;</span> }<span class="op">;</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co">// Even shorter when the body is a single expression (implicit return)</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> add <span class="op">=</span> (a<span class="op">,</span> b) <span class="kw">=&gt;</span> a <span class="op">+</span> b<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Arrow functions appear in the game wherever a short callback is needed inline:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">overlap</span>(<span class="kw">this</span><span class="op">.</span><span class="at">player</span><span class="op">,</span> <span class="kw">this</span><span class="op">.</span><span class="at">coins</span><span class="op">,</span> (_player<span class="op">,</span> coin) <span class="kw">=&gt;</span> {</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  coin<span class="op">.</span><span class="fu">destroy</span>()<span class="op">;</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">this</span><span class="op">.</span><span class="at">score</span><span class="op">++;</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">this</span><span class="op">.</span><span class="at">scoreText</span><span class="op">.</span><span class="fu">setText</span>(<span class="st">'Score: '</span> <span class="op">+</span> <span class="kw">this</span><span class="op">.</span><span class="at">score</span>)<span class="op">;</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The function <code>(_player, coin) =&gt; { ... }</code> is written inline and passed directly to <code>overlap</code>. It is never given a name — it doesn’t need one because it is used in only this one place.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The underscore parameter prefix
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>_player</code> uses a leading underscore to signal that the first argument is intentionally not used. The overlap callback always receives two arguments (the two overlapping objects). Here only <code>coin</code> is needed; <code>_player</code> is ignored. The underscore is a convention, not syntax — JavaScript doesn’t enforce it, but readers (and linters) understand it to mean “I know this parameter exists; I’m deliberately leaving it unused.”</p>
+</div>
+</div>
+</section>
+<section id="arrow-functions-and-this" class="level3">
+<h3 class="anchored" data-anchor-id="arrow-functions-and-this">Arrow functions and <code>this</code></h3>
+<p>Arrow functions have one critical behavioral difference from regular functions: they do <strong>not</strong> create their own <code>this</code>. Instead, they <strong>capture <code>this</code> from the surrounding scope</strong> — the enclosing method they are written inside.</p>
+<p>This matters in the overlap callback:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Inside create() — a class method where `this` is the scene instance</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">overlap</span>(<span class="kw">this</span><span class="op">.</span><span class="at">player</span><span class="op">,</span> <span class="kw">this</span><span class="op">.</span><span class="at">coins</span><span class="op">,</span> (_player<span class="op">,</span> coin) <span class="kw">=&gt;</span> {</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  coin<span class="op">.</span><span class="fu">destroy</span>()<span class="op">;</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">this</span><span class="op">.</span><span class="at">score</span><span class="op">++;</span>           <span class="co">// `this` here is the scene — correct</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">this</span><span class="op">.</span><span class="at">scoreText</span><span class="op">.</span><span class="fu">setText</span>(<span class="st">'Score: '</span> <span class="op">+</span> <span class="kw">this</span><span class="op">.</span><span class="at">score</span>)<span class="op">;</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If the same code used a regular <code>function</code> keyword instead:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">overlap</span>(<span class="kw">this</span><span class="op">.</span><span class="at">player</span><span class="op">,</span> <span class="kw">this</span><span class="op">.</span><span class="at">coins</span><span class="op">,</span> <span class="kw">function</span>(_player<span class="op">,</span> coin) {</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">this</span><span class="op">.</span><span class="at">score</span><span class="op">++;</span>   <span class="co">// `this` is wrong here — not the scene</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>When Phaser calls a regular <code>function</code> callback, <code>this</code> inside that function is no longer the scene — it’s whatever Phaser’s internal code sets it to (usually <code>undefined</code> in strict mode). The arrow function avoids this completely by locking <code>this</code> to the value it had when <code>create()</code> was running.</p>
+<p><strong>This is the most common source of bugs for developers moving into class-based JavaScript.</strong> Arrow functions in callbacks are the idiomatic solution.</p>
+<hr>
+</section>
+</section>
+<section id="a.6-classes-and-object-oriented-programming" class="level2">
+<h2 class="anchored" data-anchor-id="a.6-classes-and-object-oriented-programming">A.6 Classes and Object-Oriented Programming</h2>
+<p>This is the most important concept in the book. The entire game lives inside a class. Understanding classes unlocks everything else.</p>
+<section id="the-problem-classes-solve" class="level3">
+<h3 class="anchored" data-anchor-id="the-problem-classes-solve">The problem classes solve</h3>
+<p>Imagine writing the game without classes. You’d have a loose collection of variables:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> playerX <span class="op">=</span> <span class="dv">100</span><span class="op">;</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> playerY <span class="op">=</span> <span class="dv">420</span><span class="op">;</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> playerScore <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> enemyX <span class="op">=</span> <span class="dv">440</span><span class="op">;</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> enemyY <span class="op">=</span> <span class="dv">227</span><span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>And a collection of functions that operate on them:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">movePlayerLeft</span>()  { playerX <span class="op">-=</span> <span class="dv">220</span><span class="op">;</span> }</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">movePlayerRight</span>() { playerX <span class="op">+=</span> <span class="dv">220</span><span class="op">;</span> }</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">killEnemy</span>()       { enemyX <span class="op">=</span> <span class="op">-</span><span class="dv">9999</span><span class="op">;</span> }</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This works for a tiny program. But the moment you want two players or five enemies, it falls apart — there’s no structure to say which variables belong to which object. How do you give each enemy its own x position? How do you copy state? How do you prevent a function for one enemy from accidentally touching another’s data?</p>
+<p><strong>Classes solve this by bundling related data and behavior into a single unit.</strong> Each <strong>instance</strong> of the class is its own self-contained object with its own copy of the data.</p>
+</section>
+<section id="class-syntax" class="level3">
+<h3 class="anchored" data-anchor-id="class-syntax">Class syntax</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> GameScene <span class="kw">extends</span> Phaser<span class="op">.</span><span class="at">Scene</span> {</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">constructor</span>() {</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">super</span>({ <span class="dt">key</span><span class="op">:</span> <span class="st">'GameScene'</span> })<span class="op">;</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">create</span>()  { <span class="op">...</span> }</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">update</span>()  { <span class="op">...</span> }</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">genRect</span>(key<span class="op">,</span> w<span class="op">,</span> h<span class="op">,</span> color) { <span class="op">...</span> }</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 60%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Keyword</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>class</code></td>
+<td>Declares the class</td>
+</tr>
+<tr class="even">
+<td><code>GameScene</code></td>
+<td>The class name — PascalCase by convention</td>
+</tr>
+<tr class="odd">
+<td><code>extends Phaser.Scene</code></td>
+<td>Inherits everything from <code>Phaser.Scene</code></td>
+</tr>
+<tr class="even">
+<td><code>constructor()</code></td>
+<td>Runs once when the class is instantiated with <code>new</code></td>
+</tr>
+<tr class="odd">
+<td><code>super()</code></td>
+<td>Calls the parent class constructor</td>
+</tr>
+<tr class="even">
+<td>Method definitions</td>
+<td>Functions that belong to every instance</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="new-creating-an-instance" class="level3">
+<h3 class="anchored" data-anchor-id="new-creating-an-instance"><code>new</code> — creating an instance</h3>
+<p>A class is a <strong>blueprint</strong>, not an object. To create an actual object from the blueprint, you use the <code>new</code> keyword:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">new</span> Phaser<span class="op">.</span><span class="fu">Game</span>(config)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This creates a new <code>Phaser.Game</code> instance. What <code>new</code> does internally:</p>
+<ol type="1">
+<li>Creates a fresh empty object</li>
+<li>Links it to <code>Phaser.Game</code>’s prototype</li>
+<li>Runs the <code>Phaser.Game</code> constructor with the arguments you provided</li>
+<li>Returns the new object</li>
+</ol>
+<p>You usually store the result in a variable. For <code>Phaser.Game</code>, you typically don’t — starting the game is a one-time side effect, and you don’t need to reference the game object afterward.</p>
+<p>Phaser does the same thing with your <code>GameScene</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> scene <span class="op">=</span> <span class="kw">new</span> <span class="fu">GameScene</span>()<span class="op">;</span>   <span class="co">// Phaser does this internally</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Each <code>new</code> call creates an independent instance with its own data.</p>
+</section>
+<section id="instance-properties-and-this" class="level3">
+<h3 class="anchored" data-anchor-id="instance-properties-and-this">Instance properties and <code>this</code></h3>
+<p>Inside a class method, <strong><code>this</code></strong> refers to the specific instance the method was called on. When <code>create()</code> runs and you write:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">player</span> <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">sprite</span>(<span class="dv">100</span><span class="op">,</span> H <span class="op">-</span> <span class="dv">80</span><span class="op">,</span> <span class="st">'player'</span>)<span class="op">;</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">score</span>  <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">gameOver</span> <span class="op">=</span> <span class="kw">false</span><span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>You are attaching properties to <em>this particular</em> scene instance. They persist for the lifetime of the instance. That’s why <code>this.score</code> set in <code>create()</code> is still readable in <code>update()</code> 60 frames later — it lives on the instance, not inside any single method call.</p>
+<p>If you had two separate <code>GameScene</code> instances, each would have its own <code>this.player</code>, its own <code>this.score</code>, its own <code>this.gameOver</code>, completely independent of the other.</p>
+</section>
+<section id="methods" class="level3">
+<h3 class="anchored" data-anchor-id="methods">Methods</h3>
+<p>Methods are functions defined inside a class body. They have automatic access to <code>this</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> GameScene <span class="kw">extends</span> Phaser<span class="op">.</span><span class="at">Scene</span> {</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">genRect</span>(key<span class="op">,</span> w<span class="op">,</span> h<span class="op">,</span> color) {</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> g <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">make</span><span class="op">.</span><span class="fu">graphics</span>({ <span class="dt">add</span><span class="op">:</span> <span class="kw">false</span> })<span class="op">;</span>  <span class="co">// `this` works here</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    g<span class="op">.</span><span class="fu">fillStyle</span>(color)<span class="op">;</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    g<span class="op">.</span><span class="fu">fillRect</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> w<span class="op">,</span> h)<span class="op">;</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    g<span class="op">.</span><span class="fu">generateTexture</span>(key<span class="op">,</span> w<span class="op">,</span> h)<span class="op">;</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>    g<span class="op">.</span><span class="fu">destroy</span>()<span class="op">;</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>You call it from another method as <code>this.genRect('ground', W, 32, 0x4caf50)</code>, and <code>this</code> is automatically the scene instance.</p>
+<p>Notice there is no <code>function</code> keyword inside a class body — method definitions use the shorthand syntax:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">methodName</span>(param1<span class="op">,</span> param2) {</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">// body</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="inheritance-extends-and-super" class="level3">
+<h3 class="anchored" data-anchor-id="inheritance-extends-and-super">Inheritance: <code>extends</code> and <code>super</code></h3>
+<p><strong>Inheritance</strong> lets one class build on another. In the game:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="im">default</span> <span class="kw">class</span> GameScene <span class="kw">extends</span> Phaser<span class="op">.</span><span class="at">Scene</span> {</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>GameScene</code> is a <strong>subclass</strong> of <code>Phaser.Scene</code>. It inherits everything <code>Phaser.Scene</code> already has: the lifecycle system, <code>this.physics</code>, <code>this.add</code>, <code>this.input</code>, <code>this.cameras</code>, <code>this.tweens</code>, and all the rest. Without <code>extends Phaser.Scene</code>, none of those would exist on <code>this</code>, and every line that uses them would throw a <code>TypeError</code>.</p>
+<p>Think of it as specialization: <code>Phaser.Scene</code> is a general-purpose scene engine. <code>GameScene</code> is a specific kind of scene — one that knows how to build this particular game level.</p>
+<p><strong><code>super()</code></strong> calls the parent class constructor. In a subclass, you must call <code>super()</code> before accessing <code>this</code>. If you forget:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">constructor</span>() {</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">this</span><span class="op">.</span><span class="at">score</span> <span class="op">=</span> <span class="dv">0</span><span class="op">;</span>                <span class="co">// ReferenceError: Must call super constructor first</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">super</span>({ <span class="dt">key</span><span class="op">:</span> <span class="st">'GameScene'</span> })<span class="op">;</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>JavaScript enforces this because the parent constructor needs to run first to set up the object foundation. <code>super({ key: 'GameScene' })</code> passes the scene’s name up to <code>Phaser.Scene</code>’s constructor, which registers it internally.</p>
+</section>
+<section id="how-phaser-uses-your-methods" class="level3">
+<h3 class="anchored" data-anchor-id="how-phaser-uses-your-methods">How Phaser uses your methods</h3>
+<p>When Phaser launches a scene, it effectively does this:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> scene <span class="op">=</span> <span class="kw">new</span> <span class="fu">GameScene</span>()<span class="op">;</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>scene<span class="op">.</span><span class="fu">create</span>()<span class="op">;</span>              <span class="co">// called once when the scene starts</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>scene<span class="op">.</span><span class="fu">update</span>(time<span class="op">,</span> delta)<span class="op">;</span>   <span class="co">// called every frame</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If you define <code>create()</code> in your class, Phaser calls it. If you don’t, Phaser skips it silently — no error. The same for <code>update()</code> and <code>preload()</code>. This is why those three method names are significant: Phaser looks for them by name on your scene instance.</p>
+<p>Methods you define with any other name — like <code>genRect</code> or <code>_endGame</code> — Phaser never calls on its own. You call them yourself from within <code>create()</code> or <code>update()</code>.</p>
+</section>
+<section id="when-youd-have-more-classes" class="level3">
+<h3 class="anchored" data-anchor-id="when-youd-have-more-classes">When you’d have more classes</h3>
+<p>Our game has only <code>GameScene</code>, but a more developed game typically has several classes. Some extend Phaser classes; others are plain JavaScript objects.</p>
+<p><strong>Additional scene classes</strong> are the most common:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> BootScene   <span class="kw">extends</span> Phaser<span class="op">.</span><span class="at">Scene</span> { }  <span class="co">// shows a logo while assets load</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MenuScene   <span class="kw">extends</span> Phaser<span class="op">.</span><span class="at">Scene</span> { }  <span class="co">// title screen, play button</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> GameScene   <span class="kw">extends</span> Phaser<span class="op">.</span><span class="at">Scene</span> { }  <span class="co">// the level</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> GameOver    <span class="kw">extends</span> Phaser<span class="op">.</span><span class="at">Scene</span> { }  <span class="co">// death screen, score, retry button</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Custom game object classes</strong> let enemies, projectiles, and pickups carry their own logic:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Enemy <span class="kw">extends</span> Phaser<span class="op">.</span><span class="at">GameObjects</span><span class="op">.</span><span class="at">Sprite</span> {</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">constructor</span>(scene<span class="op">,</span> x<span class="op">,</span> y) {</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">super</span>(scene<span class="op">,</span> x<span class="op">,</span> y<span class="op">,</span> <span class="st">'enemy'</span>)<span class="op">;</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">health</span> <span class="op">=</span> <span class="dv">3</span><span class="op">;</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">speed</span>  <span class="op">=</span> <span class="dv">80</span><span class="op">;</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">takeDamage</span>() {</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">health</span><span class="op">--;</span></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="kw">this</span><span class="op">.</span><span class="at">health</span> <span class="op">&lt;=</span> <span class="dv">0</span>) <span class="kw">this</span><span class="op">.</span><span class="fu">destroy</span>()<span class="op">;</span></span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Because <code>Enemy</code> extends a Phaser sprite class, it is a real Phaser sprite — with physics, animations, and all normal sprite properties — plus whatever custom behavior you add.</p>
+<p><strong>Plain helper classes</strong> handle logic with no Phaser dependency:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ScoreManager {</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">constructor</span>() { <span class="kw">this</span><span class="op">.</span><span class="at">score</span> <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> <span class="kw">this</span><span class="op">.</span><span class="at">highScore</span> <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> }</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add</span>(points) { <span class="kw">this</span><span class="op">.</span><span class="at">score</span> <span class="op">+=</span> points<span class="op">;</span> }</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">save</span>() { localStorage<span class="op">.</span><span class="fu">setItem</span>(<span class="st">'highScore'</span><span class="op">,</span> <span class="kw">this</span><span class="op">.</span><span class="at">score</span>)<span class="op">;</span> }</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>No <code>extends</code>, no Phaser. Just a clean bundle of related state and behavior. You’d instantiate it in <code>create()</code> and store it as <code>this.scoreManager</code>.</p>
+</section>
+<section id="the-underscore-convention-private-methods" class="level3">
+<h3 class="anchored" data-anchor-id="the-underscore-convention-private-methods">The underscore convention: “private” methods</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">_endGame</span>(message<span class="op">,</span> color) { <span class="op">...</span> }</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The leading underscore is a naming convention, not a language rule. It signals: “this is an internal implementation detail — don’t call it from outside this class.” It’s a message to other programmers (and your future self).</p>
+<p>JavaScript does have truly private methods using <code>#</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>#<span class="fu">endGame</span>(message<span class="op">,</span> color) { <span class="op">...</span> }</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span>#<span class="fu">endGame</span>(<span class="st">'You Win!'</span><span class="op">,</span> <span class="bn">0x2e7d32</span>)<span class="op">;</span>   <span class="co">// works inside the class</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="co">// scene.#endGame(...)                  // SyntaxError if called from outside</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Private <code>#</code> methods are enforced by the engine. The underscore convention is softer and more common in Phaser codebases — both communicate the same intent.</p>
+<hr>
+</section>
+</section>
+<section id="a.7-this-in-depth" class="level2">
+<h2 class="anchored" data-anchor-id="a.7-this-in-depth">A.7 <code>this</code> in Depth</h2>
+<p><code>this</code> is one of JavaScript’s most frequently misunderstood features. It appears constantly in the game code, and understanding it clearly removes a whole class of potential bugs.</p>
+<section id="the-core-rule-for-class-methods" class="level3">
+<h3 class="anchored" data-anchor-id="the-core-rule-for-class-methods">The core rule for class methods</h3>
+<p>Inside a class method, <code>this</code> is the instance the method was called on:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> GameScene <span class="kw">extends</span> Phaser<span class="op">.</span><span class="at">Scene</span> {</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">create</span>() {</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">score</span> <span class="op">=</span> <span class="dv">0</span><span class="op">;</span>   <span class="co">// `this` = the GameScene instance</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">update</span>() {</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">score</span><span class="op">++;</span>     <span class="co">// same `this` — the same instance, still alive</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>When Phaser calls <code>scene.create()</code>, JavaScript sets <code>this</code> to <code>scene</code> for the duration of that call. Same for every subsequent <code>update()</code> call.</p>
+</section>
+<section id="properties-set-in-one-method-are-available-in-all-others" class="level3">
+<h3 class="anchored" data-anchor-id="properties-set-in-one-method-are-available-in-all-others">Properties set in one method are available in all others</h3>
+<p>Because all methods share the same <code>this</code>, a property written in <code>create()</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">player</span> <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">sprite</span>(<span class="dv">100</span><span class="op">,</span> H <span class="op">-</span> <span class="dv">80</span><span class="op">,</span> <span class="st">'player'</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>…is readable in <code>update()</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> body <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">player</span><span class="op">.</span><span class="at">body</span><span class="op">;</span>   <span class="co">// same property, same instance</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>And in helper methods:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">_endGame</span>(message<span class="op">,</span> color) {</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="fu">pause</span>()<span class="op">;</span>   <span class="co">// `this` is still the scene instance</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This is the glue that holds the whole class together. Without <code>this</code>, each method would be isolated with no way to share state.</p>
+</section>
+<section id="when-this-goes-wrong" class="level3">
+<h3 class="anchored" data-anchor-id="when-this-goes-wrong">When <code>this</code> goes wrong</h3>
+<p>The problem arises when a function is called in a context where <code>this</code> isn’t set to what you expect. The most common case is passing a method as a callback:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co">// WRONG: passing a method as a callback</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> fn <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">someMethod</span><span class="op">;</span>   <span class="co">// detaches `this`</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="fu">fn</span>()<span class="op">;</span>                         <span class="co">// `this` inside someMethod is now undefined</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>And specifically with regular <code>function</code> callbacks passed to Phaser:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co">// WRONG: regular function loses `this`</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">overlap</span>(a<span class="op">,</span> b<span class="op">,</span> <span class="kw">function</span>() {</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">this</span><span class="op">.</span><span class="at">score</span><span class="op">++;</span>   <span class="co">// TypeError: Cannot read properties of undefined</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a><span class="co">// CORRECT: arrow function captures `this` from the enclosing scope</span></span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">overlap</span>(a<span class="op">,</span> b<span class="op">,</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">this</span><span class="op">.</span><span class="at">score</span><span class="op">++;</span>   <span class="co">// works — `this` is the scene</span></span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The rule: <strong>use arrow functions for any callback written inside a class method.</strong> Arrow functions don’t have their own <code>this</code>; they inherit it from the enclosing scope at the moment they are written. That scope is <code>create()</code>, where <code>this</code> is the scene instance — exactly what you want.</p>
+<hr>
+</section>
+</section>
+<section id="a.8-es-modules-import-and-export" class="level2">
+<h2 class="anchored" data-anchor-id="a.8-es-modules-import-and-export">A.8 ES Modules: <code>import</code> and <code>export</code></h2>
+<p>Modern JavaScript is organized into <strong>modules</strong> — files that are isolated by default. Nothing defined in one file is visible to another unless explicitly shared.</p>
+<section id="export" class="level3">
+<h3 class="anchored" data-anchor-id="export"><code>export</code></h3>
+<p>To make something available to other files, you export it:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb45"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co">// GameScene.js</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="im">default</span> <span class="kw">class</span> GameScene <span class="kw">extends</span> Phaser<span class="op">.</span><span class="at">Scene</span> { <span class="op">...</span> }</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>export default</code> marks <code>GameScene</code> as the primary export of this file. A file can have only one default export. You can also have named exports (multiple per file):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="kw">const</span> VERSION <span class="op">=</span> <span class="st">'2.0'</span><span class="op">;</span>           <span class="co">// named export</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="kw">function</span> <span class="fu">helper</span>() { <span class="op">...</span> }        <span class="co">// named export</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="im">default</span> <span class="kw">class</span> GameScene { <span class="op">...</span> }  <span class="co">// default export</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="import" class="level3">
+<h3 class="anchored" data-anchor-id="import"><code>import</code></h3>
+<p>To use something from another file:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co">// main.js</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="op">*</span> <span class="im">as</span> Phaser <span class="im">from</span> <span class="st">'phaser'</span><span class="op">;</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> GameScene <span class="im">from</span> <span class="st">'./GameScene.js'</span><span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Import form</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>import GameScene from './GameScene.js'</code></td>
+<td>Imports the <strong>default</strong> export and names it <code>GameScene</code></td>
+</tr>
+<tr class="even">
+<td><code>import * as Phaser from 'phaser'</code></td>
+<td>Imports <strong>all exports</strong> as a namespace object called <code>Phaser</code></td>
+</tr>
+<tr class="odd">
+<td><code>import { Scene, AUTO } from 'phaser'</code></td>
+<td>Imports specific named exports</td>
+</tr>
+</tbody>
+</table>
+<p>The second form — <code>import * as Phaser</code> — is a <strong>namespace import</strong>. After it, you access everything through <code>Phaser.Scene</code>, <code>Phaser.AUTO</code>, <code>Phaser.Input.Keyboard.KeyCodes.A</code>, etc. The Phaser library exports dozens of named things; the namespace import brings them all in under one name without polluting the global scope.</p>
+</section>
+<section id="module-file-paths" class="level3">
+<h3 class="anchored" data-anchor-id="module-file-paths">Module file paths</h3>
+<ul>
+<li><code>'phaser'</code> — a package name. Vite looks it up in <code>node_modules/phaser/</code>.</li>
+<li><code>'./GameScene.js'</code> — a <strong>relative path</strong>. <code>./</code> means “same directory as this file.”</li>
+</ul>
+</section>
+<section id="typemodule-in-html" class="level3">
+<h3 class="anchored" data-anchor-id="typemodule-in-html"><code>type="module"</code> in HTML</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">script</span><span class="ot"> type=</span><span class="st">"module"</span><span class="ot"> src</span><span class="op">=</span><span class="st">"/src/main.js"</span><span class="dt">&gt;&lt;/</span><span class="kw">script</span><span class="dt">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This attribute tells the browser to treat <code>main.js</code> as an ES module, enabling <code>import</code> statements. Without it, the browser would throw a <code>SyntaxError</code> on the very first <code>import</code> line.</p>
+<hr>
+</section>
+</section>
+<section id="a.9-control-flow" class="level2">
+<h2 class="anchored" data-anchor-id="a.9-control-flow">A.9 Control Flow</h2>
+<section id="if-else-if-else" class="level3">
+<h3 class="anchored" data-anchor-id="if-else-if-else"><code>if</code>, <code>else if</code>, <code>else</code></h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (left)       body<span class="op">.</span><span class="fu">setVelocityX</span>(<span class="op">-</span><span class="dv">220</span>)<span class="op">;</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span> <span class="cf">if</span> (right) body<span class="op">.</span><span class="fu">setVelocityX</span>(<span class="dv">220</span>)<span class="op">;</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>            body<span class="op">.</span><span class="fu">setVelocityX</span>(<span class="dv">0</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Reading this: if the player is pressing left, set negative x velocity; if pressing right instead, set positive x velocity; otherwise (no direction key held), zero the velocity to stop movement.</p>
+<p>When the branch body is a single statement, curly braces <code>{}</code> are optional. When it’s more than one line, they are required.</p>
+</section>
+<section id="guard-clauses" class="level3">
+<h3 class="anchored" data-anchor-id="guard-clauses">Guard clauses</h3>
+<p>A <strong>guard clause</strong> is an early <code>return</code> that handles a special case at the top of a function, before the main logic runs:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">update</span>() {</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (Phaser<span class="op">.</span><span class="at">Input</span><span class="op">.</span><span class="at">Keyboard</span><span class="op">.</span><span class="fu">JustDown</span>(<span class="kw">this</span><span class="op">.</span><span class="at">rKey</span>)) {</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">scene</span><span class="op">.</span><span class="fu">restart</span>()<span class="op">;</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span><span class="op">;</span>            <span class="co">// exit immediately — nothing else matters this frame</span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="kw">this</span><span class="op">.</span><span class="at">gameOver</span>) <span class="cf">return</span><span class="op">;</span>   <span class="co">// game is over — skip all normal logic</span></span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Normal logic runs only when neither guard has triggered</span></span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> body    <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">player</span><span class="op">.</span><span class="at">body</span><span class="op">;</span></span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> onFloor <span class="op">=</span> body<span class="op">.</span><span class="at">blocked</span><span class="op">.</span><span class="at">down</span><span class="op">;</span></span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>  <span class="co">// ...</span></span>
+<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Guard clauses are the idiomatic alternative to deeply nested <code>if</code> blocks. Without them, the same logic would look like:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb51"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">update</span>() {</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>Phaser<span class="op">.</span><span class="at">Input</span><span class="op">.</span><span class="at">Keyboard</span><span class="op">.</span><span class="fu">JustDown</span>(<span class="kw">this</span><span class="op">.</span><span class="at">rKey</span>)) {</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="op">!</span><span class="kw">this</span><span class="op">.</span><span class="at">gameOver</span>) {</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>      <span class="co">// normal logic buried two levels deep</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Guards keep the normal path readable by disposing of the exceptional cases first.</p>
+</section>
+<section id="logical-operators" class="level3">
+<h3 class="anchored" data-anchor-id="logical-operators">Logical operators</h3>
+<p><strong><code>||</code> (OR):</strong> True if <em>at least one</em> operand is truthy.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb52"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> left <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">cursors</span><span class="op">.</span><span class="at">left</span><span class="op">.</span><span class="at">isDown</span> <span class="op">||</span> <span class="kw">this</span><span class="op">.</span><span class="at">wasd</span><span class="op">.</span><span class="at">left</span><span class="op">.</span><span class="at">isDown</span><span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The player moves left if the left arrow key OR the A key is held — either one is enough.</p>
+<p><strong><code>&amp;&amp;</code> (AND):</strong> True only when <em>both</em> operands are truthy.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb53"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (jump <span class="op">&amp;&amp;</span> onFloor) body<span class="op">.</span><span class="fu">setVelocityY</span>(<span class="op">-</span><span class="dv">550</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Jump only if the jump key was just pressed AND the player is currently on the ground.</p>
+<p><strong>Short-circuit evaluation:</strong> JavaScript stops evaluating an <code>||</code> expression as soon as it finds a truthy value, and stops evaluating <code>&amp;&amp;</code> as soon as it finds a falsy one. If <code>this.cursors.left.isDown</code> is <code>true</code>, JavaScript never evaluates <code>this.wasd.left.isDown</code> — it already has its answer.</p>
+</section>
+<section id="strict-equality" class="level3">
+<h3 class="anchored" data-anchor-id="strict-equality">Strict equality: <code>===</code></h3>
+<p>JavaScript has two equality operators:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Operator</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>==</code></td>
+<td><strong>Loose equality</strong> — converts types before comparing. <code>'5' == 5</code> is <code>true</code>.</td>
+</tr>
+<tr class="even">
+<td><code>===</code></td>
+<td><strong>Strict equality</strong> — no type conversion. <code>'5' === 5</code> is <code>false</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>Always use <code>===</code>. Loose equality produces counterintuitive results:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb54"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="st">''</span>   <span class="op">==</span> <span class="kw">false</span>     <span class="co">// true (!)</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="dv">0</span>    <span class="op">==</span> <span class="kw">false</span>     <span class="co">// true (!)</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="kw">null</span> <span class="op">==</span> <span class="kw">undefined</span> <span class="co">// true (!)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The game uses <code>===</code> for the win check:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb55"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="kw">this</span><span class="op">.</span><span class="at">score</span> <span class="op">===</span> <span class="kw">this</span><span class="op">.</span><span class="at">totalCoins</span>) {</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">this</span><span class="op">.</span><span class="fu">_endGame</span>(<span class="st">'You Win!'</span><span class="op">,</span> <span class="bn">0x2e7d32</span>)<span class="op">;</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Both values are numbers, so <code>==</code> would happen to work here too. Use <code>===</code> anyway — it’s the safe default.</p>
+</section>
+<section id="increment-and-compound-assignment" class="level3">
+<h3 class="anchored" data-anchor-id="increment-and-compound-assignment">Increment and compound assignment</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb56"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">score</span><span class="op">++;</span>        <span class="co">// equivalent to: this.score = this.score + 1</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">score</span> <span class="op">+=</span> <span class="dv">5</span><span class="op">;</span>     <span class="co">// equivalent to: this.score = this.score + 5</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>++</code> appears every time a coin is collected. <code>+=</code> is useful when the increment isn’t exactly 1.</p>
+<hr>
+</section>
+</section>
+<section id="a.10-callbacks" class="level2">
+<h2 class="anchored" data-anchor-id="a.10-callbacks">A.10 Callbacks</h2>
+<p>A <strong>callback</strong> is a function passed as an argument to another function, to be called later.</p>
+<p>This pattern appears everywhere in Phaser:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb57"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co">// You write:</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">overlap</span>(<span class="kw">this</span><span class="op">.</span><span class="at">player</span><span class="op">,</span> <span class="kw">this</span><span class="op">.</span><span class="at">coins</span><span class="op">,</span> (_player<span class="op">,</span> coin) <span class="kw">=&gt;</span> {</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  coin<span class="op">.</span><span class="fu">destroy</span>()<span class="op">;</span></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">this</span><span class="op">.</span><span class="at">score</span><span class="op">++;</span></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">this</span><span class="op">.</span><span class="at">scoreText</span><span class="op">.</span><span class="fu">setText</span>(<span class="st">'Score: '</span> <span class="op">+</span> <span class="kw">this</span><span class="op">.</span><span class="at">score</span>)<span class="op">;</span></span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a><span class="co">// Phaser stores the callback internally.</span></span>
+<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a><span class="co">// Every frame, during the physics step, Phaser checks for overlaps.</span></span>
+<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a><span class="co">// When it finds one, it calls your function with the overlapping objects:</span></span>
+<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a><span class="fu">yourCallback</span>(playerObject<span class="op">,</span> coinObject)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>You are not calling the callback directly. You are handing it to Phaser, and Phaser calls it for you at the right moment — with the right arguments — from deep inside its physics step.</p>
+<p>This is the same pattern across all Phaser event APIs:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 39%">
+<col style="width: 60%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Phaser API call</th>
+<th>When your callback fires</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>physics.add.overlap(a, b, fn)</code></td>
+<td>Every frame an overlap is detected between <code>a</code> and <code>b</code></td>
+</tr>
+<tr class="even">
+<td><code>physics.add.collider(a, b, fn)</code></td>
+<td>Every frame a collision is resolved between <code>a</code> and <code>b</code></td>
+</tr>
+<tr class="odd">
+<td><code>tweens.add({ onComplete: fn })</code></td>
+<td>When a tween finishes playing</td>
+</tr>
+<tr class="even">
+<td><code>input.keyboard.on('keydown', fn)</code></td>
+<td>When any key is pressed</td>
+</tr>
+</tbody>
+</table>
+<p>You declare the relationship (“when these overlap, do this”) and Phaser manages the timing entirely.</p>
+<section id="idempotent-guards-in-callbacks" class="level3">
+<h3 class="anchored" data-anchor-id="idempotent-guards-in-callbacks">Idempotent guards in callbacks</h3>
+<p>In Chapter 2, the coin callback has an extra guard:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb58"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">overlap</span>(<span class="kw">this</span><span class="op">.</span><span class="at">player</span><span class="op">,</span> <span class="kw">this</span><span class="op">.</span><span class="at">coins</span><span class="op">,</span> (_player<span class="op">,</span> coin) <span class="kw">=&gt;</span> {</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="kw">this</span><span class="op">.</span><span class="at">gameOver</span>) <span class="cf">return</span><span class="op">;</span>   <span class="co">// ← early exit if game already ended</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  coin<span class="op">.</span><span class="fu">destroy</span>()<span class="op">;</span></span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">// ...</span></span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>And <code>_endGame</code> has one too:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb59"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">_endGame</span>(message<span class="op">,</span> color) {</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="kw">this</span><span class="op">.</span><span class="at">gameOver</span>) <span class="cf">return</span><span class="op">;</span>   <span class="co">// ← early exit if already called</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">this</span><span class="op">.</span><span class="at">gameOver</span> <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">// ...</span></span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Both are examples of making a function <strong>idempotent</strong> — safe to call more than once, always producing the same result. The physics engine may fire overlap callbacks multiple times in rapid succession (including on the same frame that the game ends). Guards like these prevent double-triggering.</p>
+<hr>
+</section>
+</section>
+<section id="putting-it-all-together" class="level2">
+<h2 class="anchored" data-anchor-id="putting-it-all-together">Putting it all together</h2>
+<p>Here is a condensed version of <code>GameScene.js</code> with annotations linking every line back to a section in this appendix:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb60"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="op">*</span> <span class="im">as</span> Phaser <span class="im">from</span> <span class="st">'phaser'</span><span class="op">;</span>      <span class="co">// [A.8] namespace import</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="im">default</span> <span class="kw">class</span> GameScene         <span class="co">// [A.6] class, [A.8] default export</span></span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">extends</span> Phaser<span class="op">.</span><span class="at">Scene</span> {               <span class="co">// [A.6] inheritance</span></span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">constructor</span>() {</span>
+<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">super</span>({ <span class="dt">key</span><span class="op">:</span> <span class="st">'GameScene'</span> })<span class="op">;</span>        <span class="co">// [A.6] super() — required, [A.3] object literal</span></span>
+<span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb60-9"><a href="#cb60-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-10"><a href="#cb60-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">create</span>() {</span>
+<span id="cb60-11"><a href="#cb60-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> W <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">scale</span><span class="op">.</span><span class="at">width</span><span class="op">;</span>         <span class="co">// [A.2] const, [A.6] this</span></span>
+<span id="cb60-12"><a href="#cb60-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> H <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">scale</span><span class="op">.</span><span class="at">height</span><span class="op">;</span>        <span class="co">// [A.1] numbers</span></span>
+<span id="cb60-13"><a href="#cb60-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-14"><a href="#cb60-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">score</span>    <span class="op">=</span> <span class="dv">0</span><span class="op">;</span>                  <span class="co">// [A.1] number, [A.6] instance property</span></span>
+<span id="cb60-15"><a href="#cb60-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">gameOver</span> <span class="op">=</span> <span class="kw">false</span><span class="op">;</span>              <span class="co">// [A.1] boolean, [A.6] instance property</span></span>
+<span id="cb60-16"><a href="#cb60-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-17"><a href="#cb60-17" aria-hidden="true" tabindex="-1"></a>    <span class="co">// ... textures, ground, platforms ...</span></span>
+<span id="cb60-18"><a href="#cb60-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-19"><a href="#cb60-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">player</span> <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">sprite</span>(<span class="dv">100</span><span class="op">,</span> H <span class="op">-</span> <span class="dv">80</span><span class="op">,</span> <span class="st">'player'</span>)<span class="op">;</span></span>
+<span id="cb60-20"><a href="#cb60-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-21"><a href="#cb60-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="at">add</span><span class="op">.</span><span class="fu">overlap</span>(          <span class="co">// [A.10] callback registration</span></span>
+<span id="cb60-22"><a href="#cb60-22" aria-hidden="true" tabindex="-1"></a>      <span class="kw">this</span><span class="op">.</span><span class="at">player</span><span class="op">,</span> <span class="kw">this</span><span class="op">.</span><span class="at">coins</span><span class="op">,</span></span>
+<span id="cb60-23"><a href="#cb60-23" aria-hidden="true" tabindex="-1"></a>      (_player<span class="op">,</span> coin) <span class="kw">=&gt;</span> {             <span class="co">// [A.5] arrow function, [A.7] captures `this`</span></span>
+<span id="cb60-24"><a href="#cb60-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (<span class="kw">this</span><span class="op">.</span><span class="at">gameOver</span>) <span class="cf">return</span><span class="op">;</span>     <span class="co">// [A.9] guard clause</span></span>
+<span id="cb60-25"><a href="#cb60-25" aria-hidden="true" tabindex="-1"></a>        coin<span class="op">.</span><span class="fu">destroy</span>()<span class="op">;</span></span>
+<span id="cb60-26"><a href="#cb60-26" aria-hidden="true" tabindex="-1"></a>        <span class="kw">this</span><span class="op">.</span><span class="at">score</span><span class="op">++;</span>                  <span class="co">// [A.9] ++</span></span>
+<span id="cb60-27"><a href="#cb60-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (<span class="kw">this</span><span class="op">.</span><span class="at">score</span> <span class="op">===</span> <span class="kw">this</span><span class="op">.</span><span class="at">totalCoins</span>) {   <span class="co">// [A.9] ===</span></span>
+<span id="cb60-28"><a href="#cb60-28" aria-hidden="true" tabindex="-1"></a>          <span class="kw">this</span><span class="op">.</span><span class="fu">_endGame</span>(<span class="st">'You Win!'</span><span class="op">,</span> <span class="bn">0x2e7d32</span>)<span class="op">;</span>  <span class="co">// [A.6] method call, [A.1] hex color</span></span>
+<span id="cb60-29"><a href="#cb60-29" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb60-30"><a href="#cb60-30" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb60-31"><a href="#cb60-31" aria-hidden="true" tabindex="-1"></a>    )<span class="op">;</span></span>
+<span id="cb60-32"><a href="#cb60-32" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb60-33"><a href="#cb60-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-34"><a href="#cb60-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">update</span>() {</span>
+<span id="cb60-35"><a href="#cb60-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="kw">this</span><span class="op">.</span><span class="at">gameOver</span>) <span class="cf">return</span><span class="op">;</span>           <span class="co">// [A.9] guard clause</span></span>
+<span id="cb60-36"><a href="#cb60-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-37"><a href="#cb60-37" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> left <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">cursors</span><span class="op">.</span><span class="at">left</span><span class="op">.</span><span class="at">isDown</span> <span class="op">||</span> <span class="kw">this</span><span class="op">.</span><span class="at">wasd</span><span class="op">.</span><span class="at">left</span><span class="op">.</span><span class="at">isDown</span><span class="op">;</span>  <span class="co">// [A.9] ||</span></span>
+<span id="cb60-38"><a href="#cb60-38" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> jump <span class="op">=</span> Phaser<span class="op">.</span><span class="at">Input</span><span class="op">.</span><span class="at">Keyboard</span><span class="op">.</span><span class="fu">JustDown</span>(<span class="kw">this</span><span class="op">.</span><span class="at">cursors</span><span class="op">.</span><span class="at">up</span>)</span>
+<span id="cb60-39"><a href="#cb60-39" aria-hidden="true" tabindex="-1"></a>              <span class="op">||</span> Phaser<span class="op">.</span><span class="at">Input</span><span class="op">.</span><span class="at">Keyboard</span><span class="op">.</span><span class="fu">JustDown</span>(<span class="kw">this</span><span class="op">.</span><span class="at">cursors</span><span class="op">.</span><span class="at">space</span>)<span class="op">;</span></span>
+<span id="cb60-40"><a href="#cb60-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-41"><a href="#cb60-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (left)       <span class="kw">this</span><span class="op">.</span><span class="at">player</span><span class="op">.</span><span class="at">body</span><span class="op">.</span><span class="fu">setVelocityX</span>(<span class="op">-</span><span class="dv">220</span>)<span class="op">;</span> <span class="co">// [A.9] if/else</span></span>
+<span id="cb60-42"><a href="#cb60-42" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span> <span class="cf">if</span> (right) <span class="kw">this</span><span class="op">.</span><span class="at">player</span><span class="op">.</span><span class="at">body</span><span class="op">.</span><span class="fu">setVelocityX</span>(<span class="dv">220</span>)<span class="op">;</span></span>
+<span id="cb60-43"><a href="#cb60-43" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>            <span class="kw">this</span><span class="op">.</span><span class="at">player</span><span class="op">.</span><span class="at">body</span><span class="op">.</span><span class="fu">setVelocityX</span>(<span class="dv">0</span>)<span class="op">;</span></span>
+<span id="cb60-44"><a href="#cb60-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-45"><a href="#cb60-45" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (jump <span class="op">&amp;&amp;</span> <span class="kw">this</span><span class="op">.</span><span class="at">player</span><span class="op">.</span><span class="at">body</span><span class="op">.</span><span class="at">blocked</span><span class="op">.</span><span class="at">down</span>)   <span class="co">// [A.9] &amp;&amp;</span></span>
+<span id="cb60-46"><a href="#cb60-46" aria-hidden="true" tabindex="-1"></a>      <span class="kw">this</span><span class="op">.</span><span class="at">player</span><span class="op">.</span><span class="at">body</span><span class="op">.</span><span class="fu">setVelocityY</span>(<span class="op">-</span><span class="dv">550</span>)<span class="op">;</span></span>
+<span id="cb60-47"><a href="#cb60-47" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb60-48"><a href="#cb60-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-49"><a href="#cb60-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">_endGame</span>(message<span class="op">,</span> color) {            <span class="co">// [A.6] underscore = private by convention</span></span>
+<span id="cb60-50"><a href="#cb60-50" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="kw">this</span><span class="op">.</span><span class="at">gameOver</span>) <span class="cf">return</span><span class="op">;</span>          <span class="co">// [A.10] idempotent guard</span></span>
+<span id="cb60-51"><a href="#cb60-51" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">gameOver</span> <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb60-52"><a href="#cb60-52" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">physics</span><span class="op">.</span><span class="fu">pause</span>()<span class="op">;</span></span>
+<span id="cb60-53"><a href="#cb60-53" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">tweens</span><span class="op">.</span><span class="fu">killAll</span>()<span class="op">;</span></span>
+<span id="cb60-54"><a href="#cb60-54" aria-hidden="true" tabindex="-1"></a>    <span class="co">// ... overlay rendering ...</span></span>
+<span id="cb60-55"><a href="#cb60-55" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb60-56"><a href="#cb60-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-57"><a href="#cb60-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">genRect</span>(key<span class="op">,</span> w<span class="op">,</span> h<span class="op">,</span> color) {           <span class="co">// [A.5] method with parameters</span></span>
+<span id="cb60-58"><a href="#cb60-58" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> g <span class="op">=</span> <span class="kw">this</span><span class="op">.</span><span class="at">make</span><span class="op">.</span><span class="fu">graphics</span>({ <span class="dt">add</span><span class="op">:</span> <span class="kw">false</span> })<span class="op">;</span>  <span class="co">// [A.3] object literal</span></span>
+<span id="cb60-59"><a href="#cb60-59" aria-hidden="true" tabindex="-1"></a>    g<span class="op">.</span><span class="fu">fillStyle</span>(color)<span class="op">;</span></span>
+<span id="cb60-60"><a href="#cb60-60" aria-hidden="true" tabindex="-1"></a>    g<span class="op">.</span><span class="fu">fillRect</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> w<span class="op">,</span> h)<span class="op">;</span></span>
+<span id="cb60-61"><a href="#cb60-61" aria-hidden="true" tabindex="-1"></a>    g<span class="op">.</span><span class="fu">generateTexture</span>(key<span class="op">,</span> w<span class="op">,</span> h)<span class="op">;</span></span>
+<span id="cb60-62"><a href="#cb60-62" aria-hidden="true" tabindex="-1"></a>    g<span class="op">.</span><span class="fu">destroy</span>()<span class="op">;</span></span>
+<span id="cb60-63"><a href="#cb60-63" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb60-64"><a href="#cb60-64" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Every line of game code uses one or more of the concepts above. As you read Chapter 1 and Chapter 2, come back here whenever the JavaScript itself — not the Phaser API — is the part that needs unpacking.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./chapter2.html" class="pagination-link" aria-label="Enemies, Winning, and Losing">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Enemies, Winning, and Losing</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
