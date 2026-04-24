@@ -1,6 +1,127 @@
 # Getting Started with Phaser
 
-![The running game](images/chapter1/Game_Screen.png)
+This chapter walks through building a simple 2D platformer in Phaser, from project setup through a playable game. Play the finished version below before reading the walkthrough — it is exactly what we are going to build.
+
+---
+
+## Play it
+
+Move with **← →** (or **A** / **D**), jump with **↑** or **Space** (or **W**), and collect all five gold coins. The sliders below are wired directly to the variables in the source code — move one and watch the game respond instantly.
+
+```{=html}
+<div id="ch1-widget" style="overflow-x:auto; margin: 1rem 0 2rem;">
+
+  <!-- Game iframe -->
+  <iframe
+    id="ch1-frame"
+    src="https://emilsar.github.io/phaser/demo/"
+    width="800" height="520"
+    style="border:none; display:block;"
+    title="Chapter 1 — playable game demo"
+    allow="autoplay">
+  </iframe>
+
+  <!-- Parameter panel -->
+  <div id="ch1-panel" style="
+    width: 800px;
+    margin-top: 2px;
+    padding: 14px 20px 16px;
+    background: var(--bs-tertiary-bg, #f8f9fa);
+    border: 1px solid var(--bs-border-color, #dee2e6);
+    border-top: none;
+    font-family: 'Cascadia Code', 'Fira Code', 'Courier New', monospace;
+    font-size: 0.82rem;
+  ">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+      <span style="font-size:0.75rem; opacity:0.6; font-family:sans-serif;">
+        Live parameters — labels match variable names in the source code
+      </span>
+      <button id="ch1-reset-all" style="
+        font-size:0.75rem; font-family:sans-serif;
+        padding:3px 10px; cursor:pointer;
+        background:none;
+        border:1px solid var(--bs-border-color, #aaa);
+        color:var(--bs-body-color, #222);
+        border-radius:4px;
+      ">Reset all</button>
+    </div>
+
+    <div id="ch1-sliders"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const PARAMS = [
+    { param: 'gravity',      label: 'gravity.y',      min:   0, max: 2000, step:  10, def: 600 },
+    { param: 'jumpVelocity', label: 'jumpVelocity',   min: 100, max: 1200, step:  10, def: 550 },
+    { param: 'moveSpeed',    label: 'moveSpeed',      min:  50, max:  600, step:  10, def: 220 },
+    { param: 'playerW',      label: 'playerW',        min:  10, max:  100, step:   2, def:  32 },
+    { param: 'playerH',      label: 'playerH',        min:  10, max:  120, step:   2, def:  48 },
+    { param: 'coinRadius',   label: 'coinRadius',     min:   4, max:   40, step:   1, def:  10 },
+  ];
+
+  const frame  = document.getElementById('ch1-frame');
+  const container = document.getElementById('ch1-sliders');
+
+  function send(param, value) {
+    frame.contentWindow.postMessage({ param, value }, '*');
+  }
+
+  const inputs = {};
+
+  PARAMS.forEach(p => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:grid; grid-template-columns:130px 1fr 48px 28px; align-items:center; gap:10px; margin-bottom:7px;';
+
+    const lbl = document.createElement('span');
+    lbl.textContent = p.label;
+    lbl.style.cssText = 'color:var(--bs-link-color, #0d6efd);';
+
+    const slider = document.createElement('input');
+    slider.type  = 'range';
+    slider.min   = p.min;
+    slider.max   = p.max;
+    slider.step  = p.step;
+    slider.value = p.def;
+    slider.style.cssText = 'width:100%; cursor:pointer; accent-color:var(--bs-link-color, #0d6efd);';
+
+    const val = document.createElement('span');
+    val.textContent = p.def;
+    val.style.cssText = 'text-align:right; min-width:40px; color:var(--bs-body-color,#222);';
+
+    const reset = document.createElement('button');
+    reset.textContent = '↺';
+    reset.title = 'Reset to default';
+    reset.style.cssText = 'background:none; border:none; cursor:pointer; font-size:1rem; color:var(--bs-secondary-color,#666); padding:0; line-height:1;';
+
+    slider.addEventListener('input', () => {
+      const v = Number(slider.value);
+      val.textContent = v;
+      send(p.param, v);
+    });
+
+    reset.addEventListener('click', () => {
+      slider.value  = p.def;
+      val.textContent = p.def;
+      send(p.param, p.def);
+    });
+
+    inputs[p.param] = { slider, val, def: p.def };
+    row.append(lbl, slider, val, reset);
+    container.appendChild(row);
+  });
+
+  document.getElementById('ch1-reset-all').addEventListener('click', () => {
+    Object.values(inputs).forEach(({ slider, val, def }) => {
+      slider.value = def;
+      val.textContent = def;
+    });
+    PARAMS.forEach(p => send(p.param, p.def));
+  });
+})();
+</script>
+```
 
 ---
 
@@ -530,125 +651,6 @@ export default class GameScene extends Phaser.Scene {
 ```
 
 ![GameScene infographic](images/chapter1/GameScene_Infographic.png)
-
-### Play it
-
-Try the game before reading the walkthrough. The sliders below are wired directly to the variables in the source code — move one and watch the game respond instantly.
-
-```{=html}
-<div id="ch1-widget" style="overflow-x:auto; margin: 1rem 0 2rem;">
-
-  <!-- Game iframe -->
-  <iframe
-    id="ch1-frame"
-    src="https://emilsar.github.io/phaser/demo/"
-    width="800" height="520"
-    style="border:none; display:block;"
-    title="Chapter 1 — playable game demo"
-    allow="autoplay">
-  </iframe>
-
-  <!-- Parameter panel -->
-  <div id="ch1-panel" style="
-    width: 800px;
-    margin-top: 2px;
-    padding: 14px 20px 16px;
-    background: var(--bs-tertiary-bg, #f8f9fa);
-    border: 1px solid var(--bs-border-color, #dee2e6);
-    border-top: none;
-    font-family: 'Cascadia Code', 'Fira Code', 'Courier New', monospace;
-    font-size: 0.82rem;
-  ">
-    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-      <span style="font-size:0.75rem; opacity:0.6; font-family:sans-serif;">
-        Live parameters — labels match variable names in the source code
-      </span>
-      <button id="ch1-reset-all" style="
-        font-size:0.75rem; font-family:sans-serif;
-        padding:3px 10px; cursor:pointer;
-        background:none;
-        border:1px solid var(--bs-border-color, #aaa);
-        color:var(--bs-body-color, #222);
-        border-radius:4px;
-      ">Reset all</button>
-    </div>
-
-    <div id="ch1-sliders"></div>
-  </div>
-</div>
-
-<script>
-(function () {
-  const PARAMS = [
-    { param: 'gravity',      label: 'gravity.y',      min:   0, max: 2000, step:  10, def: 600 },
-    { param: 'jumpVelocity', label: 'jumpVelocity',   min: 100, max: 1200, step:  10, def: 550 },
-    { param: 'moveSpeed',    label: 'moveSpeed',      min:  50, max:  600, step:  10, def: 220 },
-    { param: 'playerW',      label: 'playerW',        min:  10, max:  100, step:   2, def:  32 },
-    { param: 'playerH',      label: 'playerH',        min:  10, max:  120, step:   2, def:  48 },
-    { param: 'coinRadius',   label: 'coinRadius',     min:   4, max:   40, step:   1, def:  10 },
-  ];
-
-  const frame  = document.getElementById('ch1-frame');
-  const container = document.getElementById('ch1-sliders');
-
-  function send(param, value) {
-    frame.contentWindow.postMessage({ param, value }, '*');
-  }
-
-  const inputs = {};
-
-  PARAMS.forEach(p => {
-    const row = document.createElement('div');
-    row.style.cssText = 'display:grid; grid-template-columns:130px 1fr 48px 28px; align-items:center; gap:10px; margin-bottom:7px;';
-
-    const lbl = document.createElement('span');
-    lbl.textContent = p.label;
-    lbl.style.cssText = 'color:var(--bs-link-color, #0d6efd);';
-
-    const slider = document.createElement('input');
-    slider.type  = 'range';
-    slider.min   = p.min;
-    slider.max   = p.max;
-    slider.step  = p.step;
-    slider.value = p.def;
-    slider.style.cssText = 'width:100%; cursor:pointer; accent-color:var(--bs-link-color, #0d6efd);';
-
-    const val = document.createElement('span');
-    val.textContent = p.def;
-    val.style.cssText = 'text-align:right; min-width:40px; color:var(--bs-body-color,#222);';
-
-    const reset = document.createElement('button');
-    reset.textContent = '↺';
-    reset.title = 'Reset to default';
-    reset.style.cssText = 'background:none; border:none; cursor:pointer; font-size:1rem; color:var(--bs-secondary-color,#666); padding:0; line-height:1;';
-
-    slider.addEventListener('input', () => {
-      const v = Number(slider.value);
-      val.textContent = v;
-      send(p.param, v);
-    });
-
-    reset.addEventListener('click', () => {
-      slider.value  = p.def;
-      val.textContent = p.def;
-      send(p.param, p.def);
-    });
-
-    inputs[p.param] = { slider, val, def: p.def };
-    row.append(lbl, slider, val, reset);
-    container.appendChild(row);
-  });
-
-  document.getElementById('ch1-reset-all').addEventListener('click', () => {
-    Object.values(inputs).forEach(({ slider, val, def }) => {
-      slider.value = def;
-      val.textContent = def;
-    });
-    PARAMS.forEach(p => send(p.param, p.def));
-  });
-})();
-</script>
-```
 
 ### Class declaration and constructor
 
