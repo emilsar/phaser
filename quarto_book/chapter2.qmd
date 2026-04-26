@@ -480,4 +480,4 @@ Chapter 2 introduces the minimum machinery needed to turn a sandbox into a *game
 - **`scene.restart()`** is the simplest possible reset: tear down everything, rebuild from scratch, start over.
 - **Depth layering** — `setDepth(n)` on the overlay ensures the end-game UI draws on top of the frozen game state, without disturbing the objects below.
 
-In the next chapter we'll move beyond procedurally-generated rectangles and introduce real sprite art with **spritesheets and animations** — so the blue box becomes a running, jumping character and the red square becomes something that actually looks threatening.
+In the next chapter we'll break this single overgrown scene into three: a start menu, the gameplay, and a separate game-over screen — introducing Phaser's **Scene system** and the way scenes hand data off to one another. The depth-stacked overlay and the `gameOver` flag both go away, replaced by something cleaner.

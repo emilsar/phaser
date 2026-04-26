@@ -1,0 +1,552 @@
+# Scenes: Start, Game, Game Over
+
+In Chapter 2 the win and loss screens were a hand-rendered overlay drawn on top of the still-running `GameScene`. A dimming rectangle, a banner, two text objects, a `gameOver` flag to suppress input, and `this.scene.restart()` to reset everything — all crammed into the same scene that was running the gameplay.
+
+That works for one screen. It doesn't scale. Chapter 3 introduces the right tool: Phaser's **Scene system**. We split the single scene into three independent ones — a start menu, the gameplay, and a game-over screen — and let Phaser manage transitions between them.
+
+Three new ideas enter the codebase:
+
+- **Multiple scenes** — `main.js` registers a list, and the first one auto-starts.
+- **`this.scene.start(key, data)`** — shut down the current scene and boot another, optionally handing it data.
+- **The `init(data)` lifecycle hook** — a per-scene method that runs *before* `create()` and receives whatever data was passed to `scene.start`.
+
+Everything else from Chapter 2 carries over: the same textures, the same physics setup, the same enemy tween, the same coin overlap. The gameplay logic itself is untouched — only its *boundaries* change.
+
+---
+
+## Play it
+
+The live game is embedded below. Press **SPACE** at the title screen to begin. Collect every coin to win or touch the red enemy to lose. From the game-over screen, press **SPACE** to play again or **M** to return to the menu.
+
+```{=html}
+<div style="overflow-x:auto; margin: 1rem 0 2rem;">
+  <iframe
+    src="https://emilsar.github.io/phaser/chapter03/"
+    width="800" height="520"
+    style="border:none; display:block;"
+    title="Chapter 3 — playable game demo"
+    allow="autoplay">
+  </iframe>
+</div>
+```
+
+---
+
+## The full files
+
+There are now three scenes plus `main.js`. We'll go smallest to largest: `StartScene`, then the new `main.js`, then `GameScene` (slimmed from Chapter 2), then `GameOverScene`.
+
+### `StartScene.js`
+
+```javascript
+import * as Phaser from 'phaser';
+
+export default class StartScene extends Phaser.Scene {
+  constructor() {
+    super({ key: 'StartScene' });
+  }
+
+  create() {
+    const W = this.scale.width;
+    const H = this.scale.height;
+
+    this.add.text(W / 2, H / 2 - 70, 'COIN QUEST', {
+      fontSize: '48px', color: '#ffd700', fontFamily: 'monospace', fontStyle: 'bold'
+    }).setOrigin(0.5);
+
+    this.add.text(W / 2, H / 2 - 20, 'collect every coin   ·   avoid the red enemy', {
+      fontSize: '14px', color: '#aaaacc', fontFamily: 'monospace'
+    }).setOrigin(0.5);
+
+    this.add.text(W / 2, H / 2 + 40, 'press SPACE to start', {
+      fontSize: '20px', color: '#ffffff', fontFamily: 'monospace'
+    }).setOrigin(0.5);
+
+    this.add.text(W / 2, H - 30, '← → to move   ↑ or Space to jump', {
+      fontSize: '13px', color: '#777799', fontFamily: 'monospace'
+    }).setOrigin(0.5);
+
+    this.spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+  }
+
+  update() {
+    if (Phaser.Input.Keyboard.JustDown(this.spaceKey)) {
+      this.scene.start('GameScene');
+    }
+  }
+}
+```
+
+### `main.js`
+
+```javascript
+import * as Phaser from 'phaser';
+import StartScene    from './StartScene.js';
+import GameScene     from './GameScene.js';
+import GameOverScene from './GameOverScene.js';
+
+const config = {
+  type: Phaser.AUTO,
+  width: 800,
+  height: 500,
+  backgroundColor: '#040434',
+  physics: {
+    default: 'arcade',
+    arcade: { gravity: { y: 600 }, debug: false }
+  },
+  scene: [StartScene, GameScene, GameOverScene]
+};
+
+new Phaser.Game(config);
+```
+
+### `GameScene.js`
+
+```javascript
+import * as Phaser from 'phaser';
+
+export default class GameScene extends Phaser.Scene {
+  constructor() {
+    super({ key: 'GameScene' });
+  }
+
+  create() {
+    const W = this.scale.width;
+    const H = this.scale.height;
+
+    // Textures
+    this.genRect('ground',   W,   32, 0x4caf50);
+    this.genRect('platform', 160, 18, 0x8b6914);
+    this.genRect('plat_sm',  120, 18, 0x8b6914);
+    this.genRect('player',   32,  48, 0x5c9ded);
+    this.genRect('enemy',    28,  28, 0xff4444);
+    this.genCircle('coin',   10,      0xffd700);
+
+    // Ground
+    const ground = this.physics.add.staticImage(W / 2, H - 16, 'ground');
+
+    // Platforms
+    this.platforms = this.physics.add.staticGroup();
+    this.platforms.create(200, 350, 'platform');
+    this.platforms.create(500, 250, 'platform');
+    this.platforms.create(350, 160, 'plat_sm');
+
+    // Player
+    this.player = this.physics.add.sprite(100, H - 80, 'player');
+    this.player.setCollideWorldBounds(true);
+
+    this.physics.add.collider(this.player, ground);
+    this.physics.add.collider(this.player, this.platforms);
+
+    // Coins
+    this.coins = this.physics.add.staticGroup();
+    this.coins.create(150, H - 60, 'coin');
+    this.coins.create(480, H - 60, 'coin');
+    this.coins.create(200, 320,    'coin');
+    this.coins.create(500, 220,    'coin');
+    this.coins.create(350, 130,    'coin');
+    this.totalCoins = 5;
+
+    this.physics.add.overlap(this.player, this.coins, (_player, coin) => {
+      coin.destroy();
+      this.score++;
+      this.scoreText.setText('Score: ' + this.score);
+      if (this.score === this.totalCoins) {
+        this.scene.start('GameOverScene', { won: true, score: this.score });
+      }
+    });
+
+    // Enemy — patrols on top of the middle platform
+    this.enemy = this.physics.add.image(440, 227, 'enemy');
+    this.enemy.body.setAllowGravity(false);
+    this.enemy.body.setImmovable(true);
+
+    this.tweens.add({
+      targets: this.enemy,
+      x: 560,
+      duration: 1400,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut'
+    });
+
+    this.physics.add.overlap(this.player, this.enemy, () => {
+      this.scene.start('GameOverScene', { won: false, score: this.score });
+    });
+
+    // Score & hint
+    this.score = 0;
+    this.scoreText = this.add.text(16, 16, 'Score: 0', {
+      fontSize: '20px', color: '#ffffff', fontFamily: 'monospace'
+    }).setDepth(1);
+
+    this.add.text(W / 2, 16, '← → to move   ↑ or Space to jump', {
+      fontSize: '13px', color: '#aaaacc', fontFamily: 'monospace'
+    }).setOrigin(0.5, 0).setDepth(1);
+
+    // Input
+    this.cursors = this.input.keyboard.createCursorKeys();
+    this.wasd = this.input.keyboard.addKeys({
+      left:  Phaser.Input.Keyboard.KeyCodes.A,
+      right: Phaser.Input.Keyboard.KeyCodes.D,
+      jump:  Phaser.Input.Keyboard.KeyCodes.W
+    });
+  }
+
+  update() {
+    const body    = this.player.body;
+    const onFloor = body.blocked.down;
+
+    const left  = this.cursors.left.isDown  || this.wasd.left.isDown;
+    const right = this.cursors.right.isDown || this.wasd.right.isDown;
+    const jump  = Phaser.Input.Keyboard.JustDown(this.cursors.up)
+               || Phaser.Input.Keyboard.JustDown(this.cursors.space)
+               || Phaser.Input.Keyboard.JustDown(this.wasd.jump);
+
+    if (left)       body.setVelocityX(-220);
+    else if (right) body.setVelocityX(220);
+    else            body.setVelocityX(0);
+
+    if (jump && onFloor) body.setVelocityY(-550);
+  }
+
+  genRect(key, w, h, color) {
+    const g = this.make.graphics({ add: false });
+    g.fillStyle(color);
+    g.fillRect(0, 0, w, h);
+    g.generateTexture(key, w, h);
+    g.destroy();
+  }
+
+  genCircle(key, radius, color) {
+    const size = radius * 2;
+    const g = this.make.graphics({ add: false });
+    g.fillStyle(color);
+    g.fillCircle(radius, radius, radius);
+    g.generateTexture(key, size, size);
+    g.destroy();
+  }
+}
+```
+
+### `GameOverScene.js`
+
+```javascript
+import * as Phaser from 'phaser';
+
+export default class GameOverScene extends Phaser.Scene {
+  constructor() {
+    super({ key: 'GameOverScene' });
+  }
+
+  init(data) {
+    this.won   = data.won;
+    this.score = data.score;
+  }
+
+  create() {
+    const W = this.scale.width;
+    const H = this.scale.height;
+
+    const message = this.won ? 'You Win!'  : 'Game Over';
+    const color   = this.won ? 0x2e7d32    : 0xb71c1c;
+
+    this.add.rectangle(W / 2, H / 2, W, H, 0x000000, 0.55);
+
+    this.add.rectangle(W / 2, H / 2 - 20, 360, 90, color, 1);
+    this.add.text(W / 2, H / 2 - 28, message, {
+      fontSize: '32px', color: '#ffffff', fontFamily: 'monospace', fontStyle: 'bold'
+    }).setOrigin(0.5);
+    this.add.text(W / 2, H / 2 + 2, 'Final score: ' + this.score + ' / 5', {
+      fontSize: '14px', color: '#eeeeee', fontFamily: 'monospace'
+    }).setOrigin(0.5);
+
+    this.add.text(W / 2, H / 2 + 60, 'SPACE to play again   ·   M for menu', {
+      fontSize: '14px', color: '#cccccc', fontFamily: 'monospace'
+    }).setOrigin(0.5);
+
+    this.spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+    this.mKey     = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M);
+  }
+
+  update() {
+    if (Phaser.Input.Keyboard.JustDown(this.spaceKey)) {
+      this.scene.start('GameScene');
+    } else if (Phaser.Input.Keyboard.JustDown(this.mKey)) {
+      this.scene.start('StartScene');
+    }
+  }
+}
+```
+
+---
+
+## What changed from Chapter 2
+
+- `main.js` now registers **three** scenes instead of one. The first entry, `StartScene`, auto-starts.
+- `GameScene` lost four things: the `_endGame` method, the `gameOver` flag and its two guard clauses, the R-key binding, and the in-`update` restart logic.
+- The two end-game branches that used to call `_endGame(...)` now call `this.scene.start('GameOverScene', { won, score })` instead.
+- The `'R to restart'` hint is gone — restart is now `GameOverScene`'s job.
+- Two brand-new scenes: `StartScene` (title + SPACE-to-start) and `GameOverScene` (banner + replay/menu).
+
+The gameplay logic — textures, physics, coins, enemy, input, score — is byte-for-byte identical. We only changed *where* the boundaries are drawn.
+
+---
+
+## The Scene system
+
+A **scene** in Phaser is an independent unit with its own `create`, `update`, state, and game objects. Up to now we had one scene and treated it as if it were the whole game. In reality, a Phaser game is a *collection* of scenes, managed by the **Scene Manager**, with one scene active at a time (or several, if you launch them in parallel — which we don't do here).
+
+### Registration
+
+```javascript
+scene: [StartScene, GameScene, GameOverScene]
+```
+
+The order in the `scene` array matters. The first entry is the one Phaser starts automatically when the game boots — that's why `StartScene` comes first. The remaining entries are *registered* with the Scene Manager but not started; they sit dormant until something calls `this.scene.start('GameScene')` or `this.scene.start('GameOverScene')`.
+
+The string keys come from each scene's `super({ key: 'StartScene' })` call in its constructor. That key is how the Scene Manager identifies the scene. If you typo it — `this.scene.start('GameSene')` — Phaser silently does nothing and you stare at a frozen screen wondering why.
+
+### `this.scene.start(key, data)`
+
+```javascript
+this.scene.start('GameOverScene', { won: true, score: this.score });
+```
+
+`scene.start` does two things:
+
+1. **Shuts down the current scene.** Every game object in it is destroyed, every event listener is removed, every tween is killed, the physics world is torn down. The scene's `this.player`, `this.score`, `this.platforms` — gone.
+2. **Boots the target scene from scratch.** If the target was already running, it stops first and starts over. The optional `data` object is handed to the target's `init` method (more on that in a moment).
+
+This is the clean way to move between screens. Nothing leaks: no leftover sprites, no stale event handlers, no half-paused physics.
+
+::: {.callout-note}
+## `scene.start` vs `scene.restart` vs `scene.launch`
+
+- **`this.scene.start('Other')`** — stop the *current* scene, boot a *different* one. (What this chapter uses.)
+- **`this.scene.restart()`** — stop the *current* scene and immediately start the *same one* again from scratch. (What Chapter 2 used for the R key.)
+- **`this.scene.launch('Other')`** — start another scene *in addition to* the current one. Both run simultaneously. Useful for HUDs and pause menus drawn over a still-running game; not what we want here.
+:::
+
+### The `init(data)` lifecycle hook
+
+```javascript
+init(data) {
+  this.won   = data.won;
+  this.score = data.score;
+}
+```
+
+Phaser scenes have three setup hooks that run in this order:
+
+1. **`init(data)`** — receives whatever object was passed to `scene.start`. Used to read input parameters and set initial state.
+2. **`preload()`** — queues asset loading. Phaser waits for all assets to finish loading before continuing.
+3. **`create()`** — builds the scene: textures, sprites, physics, input. Runs once.
+
+Then `update()` starts firing each frame.
+
+We use `init` here purely to capture `data.won` and `data.score` onto `this` before `create` needs them. We could *technically* read `this.scene.settings.data` from inside `create` instead, but `init` is the documented hook for this purpose and it makes intent obvious to anyone reading the code.
+
+Earlier scenes haven't needed `init` because they don't take any input — `StartScene` boots fresh, `GameScene` always starts the same way. Only `GameOverScene` needs to know *what just happened*, so only it has an `init`.
+
+### Why scenes don't share state
+
+Each scene is its own JavaScript object with its own `this`. When `GameScene` ends and `GameOverScene` starts, the new scene has *no* access to the old scene's `this.score`, `this.player`, `this.gameOver`, or anything else — those were properties on a different instance, and that instance has been torn down.
+
+The only thing that crosses the boundary is whatever you explicitly hand off via `scene.start(key, data)`. That's why the win and loss callbacks pass `{ won, score }` rather than assuming the next scene can somehow read the old one's state.
+
+::: {.callout-note}
+## What if I need to share state across many scenes?
+
+For one-off handoffs, the data argument is enough. For state that needs to live across the whole game session (high score, settings, current level), Phaser provides `this.registry` — a global key-value store attached to the Game object, not to any one scene. We don't need it here, but it's the standard pattern when scene-to-scene data passing gets unwieldy.
+:::
+
+### Quiz: Where does scene data arrive?
+
+**You call `this.scene.start('GameOverScene', { won: true, score: 5 })` from inside `GameScene`. In `GameOverScene`, where can you read the `{ won: true, score: 5 }` object?**
+
+<div class="quiz-choices">
+<input type="radio" id="qSceneInit_a" name="qSceneInit" value="wrong1">
+<label for="qSceneInit_a">As an argument to <code>create()</code> — Phaser passes the data straight to <code>create(data)</code>.</label><br>
+<input type="radio" id="qSceneInit_b" name="qSceneInit" value="correct">
+<label for="qSceneInit_b">As an argument to <code>init(data)</code>, which runs before <code>create()</code>. Typically you copy the fields onto <code>this</code> so <code>create()</code> can use them.</label><br>
+<input type="radio" id="qSceneInit_c" name="qSceneInit" value="wrong2">
+<label for="qSceneInit_c">It's stored on the previous scene's <code>this</code>, so you read it from <code>GameScene.score</code>.</label><br>
+<input type="radio" id="qSceneInit_d" name="qSceneInit" value="wrong3">
+<label for="qSceneInit_d">It's automatically merged into <code>this</code> on the new scene — <code>this.won</code> and <code>this.score</code> just exist.</label><br>
+<button class="check-btn" onclick="checkQuiz('qSceneInit')">Check Answer</button>
+<div id="qSceneInit_feedback" class="quiz-feedback"></div>
+</div>
+
+---
+
+## StartScene walk-through
+
+`StartScene` is the smallest scene in the project — no physics, no sprites, no game objects beyond text.
+
+### Centered text via `setOrigin(0.5)`
+
+```javascript
+this.add.text(W / 2, H / 2 - 70, 'COIN QUEST', { ... }).setOrigin(0.5);
+```
+
+By default, a text object's origin is its top-left corner. Calling `setOrigin(0.5)` moves the origin to the center, so positioning at `(W / 2, H / 2 - 70)` places the *middle* of the text at that point — which is what you want for centered UI.
+
+Same trick is used everywhere on the start screen and on the game-over screen. It's the same idea as the `setOrigin(0.5)` in Chapter 2's `_endGame` overlay.
+
+### One key, checked in `update`
+
+```javascript
+this.spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+
+update() {
+  if (Phaser.Input.Keyboard.JustDown(this.spaceKey)) {
+    this.scene.start('GameScene');
+  }
+}
+```
+
+Same idiom as Chapter 2's R key. `addKey` registers a single key, and `JustDown` ensures one press = one transition. Without `JustDown`, holding SPACE for a few frames would trigger several `scene.start('GameScene')` calls in a row — each tearing down and rebooting the GameScene before it had a chance to render.
+
+---
+
+## The new `GameScene`
+
+The diff from Chapter 2 is almost entirely about *removal*.
+
+### What's gone
+
+```javascript
+// REMOVED:
+this.gameOver = false;
+this.rKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
+
+// REMOVED from update():
+if (Phaser.Input.Keyboard.JustDown(this.rKey)) { this.scene.restart(); return; }
+if (this.gameOver) return;
+
+// REMOVED from coin overlap:
+if (this.gameOver) return;
+
+// REMOVED entirely:
+_endGame(message, color) { ... }
+```
+
+Each removal corresponds to a responsibility now owned by another scene:
+
+| Removed | Now lives in |
+|---|---|
+| `gameOver` flag and its guards | The transition itself — there's no "after game over" frame in this scene. |
+| R key + `scene.restart()` | `GameOverScene` (SPACE replays). |
+| The dimming overlay, banner, and end-game text | `GameOverScene`'s `create()`. |
+| `physics.pause()` and `tweens.killAll()` | The scene shutdown that `scene.start` triggers — Phaser does this for us. |
+
+### What replaced the `_endGame` calls
+
+```javascript
+// win
+if (this.score === this.totalCoins) {
+  this.scene.start('GameOverScene', { won: true, score: this.score });
+}
+
+// lose
+this.scene.start('GameOverScene', { won: false, score: this.score });
+```
+
+Two lines replace a 17-line method. The end-game branches now have a single job: *hand off* control along with the data the next scene needs to do its job. Everything else — pausing physics, killing tweens, drawing the overlay — happens automatically as a side effect of `scene.start`.
+
+### Quiz: Why the `gameOver` flag disappeared
+
+**In Chapter 2 the `gameOver` flag was checked at the top of `update()` and inside the coin overlap callback to short-circuit any further game logic. In Chapter 3 the flag is gone entirely. Why is that safe?**
+
+<div class="quiz-choices">
+<input type="radio" id="qNoFlag_a" name="qNoFlag" value="wrong1">
+<label for="qNoFlag_a">It isn't safe — we just got lucky that no test caught the bug.</label><br>
+<input type="radio" id="qNoFlag_b" name="qNoFlag" value="correct">
+<label for="qNoFlag_b">When end-game branches call <code>this.scene.start('GameOverScene', ...)</code>, the GameScene is shut down: every game object is destroyed, physics stops, and <code>update()</code> stops firing. There's no "after game over" frame in this scene that needs guarding.</label><br>
+<input type="radio" id="qNoFlag_c" name="qNoFlag" value="wrong2">
+<label for="qNoFlag_c">Phaser 4 added an automatic <code>this.gameOver</code> property that handles the same thing implicitly.</label><br>
+<input type="radio" id="qNoFlag_d" name="qNoFlag" value="wrong3">
+<label for="qNoFlag_d">The flag is moved to <code>GameOverScene</code> instead, so the same logic still runs — just in the other scene.</label><br>
+<button class="check-btn" onclick="checkQuiz('qNoFlag')">Check Answer</button>
+<div id="qNoFlag_feedback" class="quiz-feedback"></div>
+</div>
+
+---
+
+## GameOverScene walk-through
+
+### `init` populates state, `create` renders
+
+```javascript
+init(data) {
+  this.won   = data.won;
+  this.score = data.score;
+}
+
+create() {
+  const message = this.won ? 'You Win!'  : 'Game Over';
+  const color   = this.won ? 0x2e7d32    : 0xb71c1c;
+  // ...
+}
+```
+
+`init` runs first, captures the incoming data onto `this`, and exits. Then `create` runs and uses the captured values to choose the message text and banner color. Splitting the work this way keeps `create` focused on building the visible scene rather than parameter-handling.
+
+### The visuals
+
+The dimming rectangle and colored banner are the same shapes as Chapter 2's `_endGame` overlay — just relocated to a dedicated scene. There's no `setDepth` here because there's nothing else in this scene to draw underneath: the GameScene was torn down by `scene.start`, so the overlay is the *whole* render now, not a layer on top of running gameplay.
+
+The `'Final score: 5 / 5'` line is new — a small payoff for having `score` in scope.
+
+### Two key bindings, two transitions
+
+```javascript
+update() {
+  if (Phaser.Input.Keyboard.JustDown(this.spaceKey)) {
+    this.scene.start('GameScene');
+  } else if (Phaser.Input.Keyboard.JustDown(this.mKey)) {
+    this.scene.start('StartScene');
+  }
+}
+```
+
+Two keys, two destinations. SPACE drops back into a fresh GameScene; M returns to the title. Both go through `scene.start`, which is the only API we use for transitions in this chapter.
+
+---
+
+## Summary
+
+Chapter 3 doesn't change *what* the game does. It changes *how the code is organized*.
+
+- **Multiple scenes** replace the single overgrown `GameScene` from Chapter 2. Each scene owns one screen and one job.
+- **`scene.start(key, data)`** is the universal transition primitive. It tears down, boots up, and hands off data in one call.
+- **`init(data)`** is where receiving scenes capture the data passed to them, before `create` runs.
+- **The `gameOver` flag, the depth-stacked overlay, and the embedded R-restart logic are gone** — replaced by clean scene transitions. Phaser's scene shutdown already does what those workarounds were trying to do manually.
+
+In the next chapter we'll move beyond procedurally-generated rectangles and introduce real sprite art with **spritesheets and animations** — so the blue box becomes a running, jumping character and the red square becomes something that actually looks threatening.
+
+```{=html}
+<script>
+window.CHAPTER_TITLE = 'Chapter 3 — Scenes';
+window.CHAPTER_QUIZZES = [
+  { id: 'qSceneInit', name: 'Where scene data arrives', anchor: 'quiz-where-does-scene-data-arrive' },
+  { id: 'qNoFlag',    name: 'Why gameOver flag is gone', anchor: 'quiz-why-the-gameover-flag-disappeared' }
+];
+
+window.QUIZ_DATA = {
+  qSceneInit: {
+    correct: 'The data argument to <code>scene.start</code> is delivered to the target scene\'s <code>init(data)</code> hook, which runs before <code>create()</code>. The convention is to copy the fields onto <code>this</code> so the rest of the scene can use them.',
+    wrong1: '<code>create()</code> takes no arguments — Phaser does not pass scene data into it. The dedicated hook is <code>init</code>.',
+    wrong2: 'The previous scene\'s <code>this</code> is gone. <code>scene.start</code> tears down the old scene before booting the new one; you can\'t reach back into a scene that no longer exists.',
+    wrong3: 'Phaser does not automatically merge data onto <code>this</code>. You have to copy the fields yourself inside <code>init</code> (or read from <code>this.scene.settings.data</code>).'
+  },
+  qNoFlag: {
+    correct: 'Exactly. The whole point of the flag in Chapter 2 was to suppress gameplay code that kept running after the overlay appeared. With <code>scene.start</code>, the GameScene is shut down at the moment of transition — its <code>update</code> stops firing and its overlap callbacks are removed. Nothing needs to be guarded because nothing in this scene runs after the transition.',
+    wrong1: 'It is safe by design, not by luck. The flag\'s purpose was to deal with a scene that kept running past the end of the game — once we stop the scene entirely, the flag is redundant.',
+    wrong2: 'There is no such automatic property. <code>scene.start</code> simply makes the flag unnecessary by tearing the scene down.',
+    wrong3: 'No — <code>GameOverScene</code> has no equivalent flag. It doesn\'t need one because it isn\'t running gameplay logic.'
+  }
+};
+</script>
+```
