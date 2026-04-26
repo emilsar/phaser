@@ -102,6 +102,11 @@ new Phaser.Game(config);
 
 ### `GameScene.js`
 
+Most of this file is byte-for-byte identical to Chapter 2 — only the two end-game branches and a few bits of bookkeeping changed. **New/changed code is shown inline; unchanged sections collapse below — click to expand.**
+
+<details>
+<summary><strong>Unchanged from Chapter 2</strong> — imports, constructor, and `create()` preamble through coin setup</summary>
+
 ```javascript
 import * as Phaser from 'phaser';
 
@@ -146,16 +151,30 @@ export default class GameScene extends Phaser.Scene {
     this.coins.create(500, 220,    'coin');
     this.coins.create(350, 130,    'coin');
     this.totalCoins = 5;
+```
 
+</details>
+
+**Changed: coin overlap — the win branch now hands off to `GameOverScene`.**
+
+```javascript
     this.physics.add.overlap(this.player, this.coins, (_player, coin) => {
       coin.destroy();
       this.score++;
       this.scoreText.setText('Score: ' + this.score);
       if (this.score === this.totalCoins) {
-        this.scene.start('GameOverScene', { won: true, score: this.score });
+        this.scene.start('GameOverScene', { won: true, score: this.score });   // ← NEW
+        // (was: this._endGame('You Win!', 0x2e7d32);)
       }
     });
+```
 
+Also removed: the leading `if (this.gameOver) return;` guard from Chapter 2 — no longer needed because there is no "after game over" frame in this scene.
+
+<details>
+<summary><strong>Unchanged from Chapter 2</strong> — enemy texture, body config, and patrol tween</summary>
+
+```javascript
     // Enemy — patrols on top of the middle platform
     this.enemy = this.physics.add.image(440, 227, 'enemy');
     this.enemy.body.setAllowGravity(false);
@@ -169,18 +188,30 @@ export default class GameScene extends Phaser.Scene {
       repeat: -1,
       ease: 'Sine.easeInOut'
     });
+```
 
+</details>
+
+**Changed: enemy overlap — same handoff, with `won: false`.**
+
+```javascript
     this.physics.add.overlap(this.player, this.enemy, () => {
-      this.scene.start('GameOverScene', { won: false, score: this.score });
+      this.scene.start('GameOverScene', { won: false, score: this.score });   // ← NEW
+      // (was: this._endGame('Game Over', 0xb71c1c);)
     });
+```
 
+**Changed: score, hint, and input — small removals from Chapter 2.**
+
+```javascript
     // Score & hint
     this.score = 0;
+    // REMOVED: this.gameOver = false;
     this.scoreText = this.add.text(16, 16, 'Score: 0', {
       fontSize: '20px', color: '#ffffff', fontFamily: 'monospace'
     }).setDepth(1);
 
-    this.add.text(W / 2, 16, '← → to move   ↑ or Space to jump', {
+    this.add.text(W / 2, 16, '← → to move   ↑ or Space to jump', {   // ← " R to restart" removed
       fontSize: '13px', color: '#aaaacc', fontFamily: 'monospace'
     }).setOrigin(0.5, 0).setDepth(1);
 
@@ -191,9 +222,17 @@ export default class GameScene extends Phaser.Scene {
       right: Phaser.Input.Keyboard.KeyCodes.D,
       jump:  Phaser.Input.Keyboard.KeyCodes.W
     });
+    // REMOVED: this.rKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
   }
+```
 
+**Changed: `update()` — R-key block and `gameOver` guard from Chapter 2 are gone.**
+
+```javascript
   update() {
+    // REMOVED from Chapter 2:
+    //   if (Phaser.Input.Keyboard.JustDown(this.rKey)) { this.scene.restart(); return; }
+    //   if (this.gameOver) return;
     const body    = this.player.body;
     const onFloor = body.blocked.down;
 
@@ -209,7 +248,14 @@ export default class GameScene extends Phaser.Scene {
 
     if (jump && onFloor) body.setVelocityY(-550);
   }
+```
 
+**Removed entirely: the `_endGame()` method.** The 17-line helper that drew the overlay, paused physics, and killed tweens is gone — `scene.start('GameOverScene', ...)` does all of that automatically as part of shutting the scene down.
+
+<details>
+<summary><strong>Unchanged from Chapter 2</strong> — `genRect` and `genCircle` helpers, and the class closing brace</summary>
+
+```javascript
   genRect(key, w, h, color) {
     const g = this.make.graphics({ add: false });
     g.fillStyle(color);
@@ -228,6 +274,8 @@ export default class GameScene extends Phaser.Scene {
   }
 }
 ```
+
+</details>
 
 ### `GameOverScene.js`
 
